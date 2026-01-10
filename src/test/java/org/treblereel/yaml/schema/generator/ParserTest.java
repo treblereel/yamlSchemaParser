@@ -16,7 +16,8 @@ public class ParserTest {
 
   @Test
   public void generatorTest() {
-    String schema = "src/main/resources/schema.yaml";
+    //String schema = "src/main/resources/schema.yaml";
+    String schema = "src/main/resources/workflow.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
 
 
