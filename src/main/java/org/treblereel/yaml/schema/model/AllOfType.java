@@ -7,7 +7,6 @@ import java.util.List;
 
 public record AllOfType(SchemaDefinition schema, JsonNode node) implements HasType {
 
-
   public List<HasType> getAllOf() {
     List<HasType> allOfTypes = new ArrayList<>();
     for (JsonNode allOfNode : node.get("allOf")) {
