@@ -35,23 +35,10 @@ public class ParserTest {
       }
     }
 
-    List<List<String>> anyOf = definition.getObjectDefinition().getAnyOf();
+    List<HasType> anyOf = definition.getObjectDefinition().getAnyOf();
 
-    for (List<String> req : anyOf) {
-      System.out.println("AnyOf:");
-      for (String r : req) {
-        System.out.println(r);
-      }
-    }
+    List<HasType> allOf = definition.getObjectDefinition().getAllOf();
 
-    List<List<String>> allOf = definition.getObjectDefinition().getAllOf();
-
-    for (List<String> req : allOf) {
-      System.out.println("AllOf:");
-      for (String r : req) {
-        System.out.println(r);
-      }
-    }
 
 
     Applicators none = definition.getObjectDefinition().getNot();

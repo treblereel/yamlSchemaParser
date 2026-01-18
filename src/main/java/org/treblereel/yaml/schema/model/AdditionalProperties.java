@@ -60,10 +60,6 @@ public class AdditionalProperties {
     return node.has("anyOf");
   }
 
-  public Applicators getApplicators() {
-    return new Applicators(node);
-  }
-
   public boolean isObject() {
     return node.has("type") && "object".equals(node.get("type").asText());
   }

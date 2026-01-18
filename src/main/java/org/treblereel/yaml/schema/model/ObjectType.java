@@ -18,7 +18,7 @@ public class ObjectType implements HasType {
   public ObjectType(SchemaDefinition schema, JsonNode node) {
     this.schema = schema;
     this.node = node;
-    applicators = new Applicators(node);
+    applicators = new Applicators(schema, node);
   }
 
   public boolean additionalProperties() {
@@ -59,7 +59,7 @@ public class ObjectType implements HasType {
     return applicators.hasAnyOf();
   }
 
-  public List<List<String>> getAnyOf() {
+  public List<HasType> getAnyOf() {
     return applicators.getAnyOf();
   }
 
@@ -67,7 +67,7 @@ public class ObjectType implements HasType {
     return applicators.hasAllOf();
   }
 
-  public List<List<String>> getAllOf() {
+  public List<HasType> getAllOf() {
     return applicators.getAllOf();
   }
 
@@ -77,7 +77,7 @@ public class ObjectType implements HasType {
 
   public Applicators getNot() {
     if (hasNot()) {
-      return new Applicators(node.get("not"));
+      return new Applicators(schema, node.get("not"));
     }
     return null;
   }
