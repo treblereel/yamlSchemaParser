@@ -1,0 +1,6 @@
+type: object
+properties:
+  age:
+    type: integer
+  count:
+    type: integer

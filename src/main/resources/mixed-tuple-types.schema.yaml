@@ -1,0 +1,10 @@
+type: array
+items:
+  - type: string
+  - type: number
+  - type: boolean
+  - type: integer
+  - type: object
+    properties:
+      name:
+        type: string

@@ -1,0 +1,19 @@
+type: object
+properties:
+  company:
+    $ref: '#/$defs/Company'
+$defs:
+  Company:
+    type: object
+    properties:
+      name:
+        type: string
+      ceo:
+        $ref: '#/$defs/Person'
+  Person:
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string

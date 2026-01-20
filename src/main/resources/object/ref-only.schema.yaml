@@ -1,0 +1,9 @@
+$ref: '#/$defs/MainType'
+$defs:
+  MainType:
+    type: object
+    properties:
+      id:
+        type: integer
+      data:
+        type: string

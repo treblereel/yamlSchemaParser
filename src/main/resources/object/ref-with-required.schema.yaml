@@ -1,0 +1,16 @@
+type: object
+required:
+  - person
+properties:
+  person:
+    $ref: '#/$defs/Person'
+$defs:
+  Person:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+      age:
+        type: integer

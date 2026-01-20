@@ -1,0 +1,23 @@
+type: object
+properties:
+  person:
+    $ref: '#/$defs/Person'
+$defs:
+  Person:
+    type: object
+    properties:
+      name:
+        type: string
+      friend:
+        $ref: '#/$defs/Person'
+      employer:
+        $ref: '#/$defs/Company'
+  Company:
+    type: object
+    properties:
+      name:
+        type: string
+      employees:
+        type: array
+        items:
+          $ref: '#/$defs/Person'

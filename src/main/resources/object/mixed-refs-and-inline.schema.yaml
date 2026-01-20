@@ -1,0 +1,20 @@
+type: object
+properties:
+  inlineObj:
+    type: object
+    properties:
+      x:
+        type: integer
+  refObj:
+    $ref: '#/$defs/RefObj'
+  anotherInline:
+    type: object
+    properties:
+      y:
+        type: string
+$defs:
+  RefObj:
+    type: object
+    properties:
+      z:
+        type: boolean

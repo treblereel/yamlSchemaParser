@@ -1,0 +1,18 @@
+type: object
+properties:
+  name:
+    type: string
+  children:
+    type: array
+    items:
+      $ref: '#/$defs/Node'
+$defs:
+  Node:
+    type: object
+    properties:
+      name:
+        type: string
+      children:
+        type: array
+        items:
+          $ref: '#/$defs/Node'

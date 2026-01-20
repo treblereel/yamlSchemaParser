@@ -1,0 +1,32 @@
+type: object
+required:
+  - type
+properties:
+  type:
+    type: string
+    enum:
+      - dog
+      - cat
+      - bird
+oneOf:
+  - properties:
+      type:
+        const: "dog"
+      breed:
+        type: string
+      barkVolume:
+        type: integer
+  - properties:
+      type:
+        const: "cat"
+      furColor:
+        type: string
+      indoor:
+        type: boolean
+  - properties:
+      type:
+        const: "bird"
+      wingspan:
+        type: number
+      canFly:
+        type: boolean

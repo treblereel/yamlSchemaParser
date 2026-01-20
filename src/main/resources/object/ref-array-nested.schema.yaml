@@ -1,0 +1,23 @@
+type: object
+properties:
+  departments:
+    type: array
+    items:
+      $ref: '#/$defs/Department'
+$defs:
+  Department:
+    type: object
+    properties:
+      name:
+        type: string
+      employees:
+        type: array
+        items:
+          $ref: '#/$defs/Employee'
+  Employee:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string

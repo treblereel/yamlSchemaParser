@@ -1,0 +1,12 @@
+type: object
+properties:
+  data:
+    allOf:
+      - type: object
+        properties:
+          createdAt:
+            type: string
+      - type: object
+        properties:
+          updatedAt:
+            type: string

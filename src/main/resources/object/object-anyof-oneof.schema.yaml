@@ -1,0 +1,22 @@
+type: object
+properties:
+  config:
+    anyOf:
+      - type: object
+        properties:
+          mode:
+            type: string
+      - type: object
+        properties:
+          level:
+            type: integer
+  setting:
+    oneOf:
+      - type: object
+        properties:
+          enabled:
+            type: boolean
+      - type: object
+        properties:
+          disabled:
+            type: boolean

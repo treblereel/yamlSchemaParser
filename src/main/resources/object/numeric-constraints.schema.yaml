@@ -1,0 +1,22 @@
+type: object
+properties:
+  age:
+    type: integer
+    minimum: 0
+    maximum: 150
+  price:
+    type: number
+    minimum: 0
+    exclusiveMinimum: true
+  discount:
+    type: number
+    minimum: 0
+    maximum: 100
+  quantity:
+    type: integer
+    minimum: 1
+    multipleOf: 1
+  rating:
+    type: number
+    minimum: 0
+    maximum: 5

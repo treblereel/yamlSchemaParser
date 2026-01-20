@@ -1,0 +1,15 @@
+type: object
+properties:
+  base:
+    $ref: '#/$defs/Base'
+    description: Extended base with extra info
+  extra:
+    type: string
+$defs:
+  Base:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string

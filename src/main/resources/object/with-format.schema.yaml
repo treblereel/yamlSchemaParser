@@ -1,0 +1,17 @@
+type: object
+properties:
+  email:
+    type: string
+    format: email
+  website:
+    type: string
+    format: uri
+  birthDate:
+    type: string
+    format: date
+  createdAt:
+    type: string
+    format: date-time
+  uuid:
+    type: string
+    format: uuid

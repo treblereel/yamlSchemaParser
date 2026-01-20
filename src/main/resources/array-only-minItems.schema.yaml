@@ -1,0 +1,4 @@
+type: array
+minItems: 5
+items:
+  type: number

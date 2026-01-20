@@ -1,0 +1,8 @@
+type: object
+properties:
+  version:
+    const: "1.0.0"
+  type:
+    const: "config"
+  enabled:
+    const: true

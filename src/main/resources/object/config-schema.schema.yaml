@@ -1,0 +1,52 @@
+type: object
+required:
+  - version
+  - database
+properties:
+  version:
+    type: string
+  database:
+    type: object
+    required:
+      - host
+      - port
+    properties:
+      host:
+        type: string
+        default: "localhost"
+      port:
+        type: integer
+        default: 5432
+      username:
+        type: string
+      password:
+        type: string
+        writeOnly: true
+      ssl:
+        type: boolean
+        default: false
+  cache:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+        default: true
+      ttl:
+        type: integer
+        default: 3600
+  logging:
+    type: object
+    properties:
+      level:
+        type: string
+        enum:
+          - debug
+          - info
+          - warn
+          - error
+        default: "info"
+      format:
+        type: string
+        enum:
+          - json
+          - text

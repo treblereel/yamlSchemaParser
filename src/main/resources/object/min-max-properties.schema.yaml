@@ -1,0 +1,10 @@
+type: object
+minProperties: 1
+maxProperties: 5
+properties:
+  a:
+    type: string
+  b:
+    type: string
+  c:
+    type: string

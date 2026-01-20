@@ -1,0 +1,17 @@
+type: object
+properties:
+  data:
+    allOf:
+      - type: object
+        properties:
+          base:
+            type: string
+      - oneOf:
+          - type: object
+            properties:
+              optionA:
+                type: integer
+          - type: object
+            properties:
+              optionB:
+                type: boolean

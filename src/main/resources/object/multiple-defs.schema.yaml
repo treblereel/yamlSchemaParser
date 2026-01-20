@@ -1,0 +1,30 @@
+type: object
+properties:
+  user:
+    $ref: '#/$defs/User'
+  product:
+    $ref: '#/$defs/Product'
+  order:
+    $ref: '#/$defs/Order'
+$defs:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+  Product:
+    type: object
+    properties:
+      sku:
+        type: string
+      price:
+        type: number
+  Order:
+    type: object
+    properties:
+      orderId:
+        type: integer
+      total:
+        type: number

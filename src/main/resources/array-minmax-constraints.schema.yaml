@@ -1,0 +1,6 @@
+type: array
+minItems: 2
+maxItems: 10
+uniqueItems: true
+items:
+  type: integer

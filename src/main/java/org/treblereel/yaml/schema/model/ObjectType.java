@@ -50,7 +50,8 @@ public class ObjectType implements HasType {
   }
 
   public Optional<AdditionalProperties> additionalProperties() {
-    return Optional.ofNullable(node.get("additionalProperties")).map(AdditionalProperties::new);
+    return Optional.ofNullable(node.get("additionalProperties"))
+            .map(n -> new AdditionalProperties(n, schema));
   }
 
   public Optional<String> getDescription() {

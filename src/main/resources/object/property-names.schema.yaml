@@ -1,0 +1,7 @@
+type: object
+propertyNames:
+  pattern: "^[a-z][a-zA-Z0-9]*$"
+  minLength: 2
+  maxLength: 20
+additionalProperties:
+  type: string

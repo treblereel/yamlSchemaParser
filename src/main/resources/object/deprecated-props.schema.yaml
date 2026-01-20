@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: integer
+  name:
+    type: string
+  oldField:
+    type: string
+    deprecated: true
+  legacyId:
+    type: integer
+    deprecated: true
+    description: "Use 'id' instead"

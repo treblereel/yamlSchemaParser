@@ -1,0 +1,19 @@
+oneOf:
+  - type: object
+    properties:
+      type:
+        const: "card"
+      cardNumber:
+        type: string
+    required:
+      - type
+      - cardNumber
+  - type: object
+    properties:
+      type:
+        const: "bank"
+      accountNumber:
+        type: string
+    required:
+      - type
+      - accountNumber

@@ -1,0 +1,16 @@
+type: object
+required:
+  - outer
+properties:
+  outer:
+    type: object
+    required:
+      - inner
+    properties:
+      inner:
+        type: object
+        required:
+          - value
+        properties:
+          value:
+            type: string

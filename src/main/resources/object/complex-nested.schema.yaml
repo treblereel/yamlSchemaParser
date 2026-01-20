@@ -1,0 +1,30 @@
+type: object
+properties:
+  order:
+    type: object
+    properties:
+      id:
+        type: integer
+      customer:
+        type: object
+        properties:
+          name:
+            type: string
+          address:
+            type: object
+            properties:
+              street:
+                type: string
+              city:
+                type: string
+      items:
+        type: array
+        items:
+          type: object
+          properties:
+            productId:
+              type: integer
+            quantity:
+              type: integer
+            price:
+              type: number

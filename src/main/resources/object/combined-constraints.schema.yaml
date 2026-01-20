@@ -1,0 +1,20 @@
+type: object
+title: Combined Schema
+description: A schema with multiple constraints
+additionalProperties: false
+required:
+  - id
+  - type
+properties:
+  id:
+    type: integer
+    description: Unique identifier
+  type:
+    type: string
+  metadata:
+    type: object
+    properties:
+      createdBy:
+        type: string
+      createdAt:
+        type: string

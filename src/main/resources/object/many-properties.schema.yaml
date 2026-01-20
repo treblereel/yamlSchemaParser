@@ -1,0 +1,22 @@
+type: object
+properties:
+  prop1:
+    type: string
+  prop2:
+    type: integer
+  prop3:
+    type: boolean
+  prop4:
+    type: number
+  prop5:
+    type: string
+  prop6:
+    type: integer
+  prop7:
+    type: boolean
+  prop8:
+    type: number
+  prop9:
+    type: string
+  prop10:
+    type: integer

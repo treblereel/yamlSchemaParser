@@ -1,0 +1,7 @@
+type: object
+additionalProperties: false
+properties:
+  id:
+    type: integer
+  name:
+    type: string

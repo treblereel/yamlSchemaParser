@@ -1,0 +1,11 @@
+type: object
+properties:
+  name:
+    type: string
+  creditCard:
+    type: string
+  billingAddress:
+    type: string
+dependentRequired:
+  creditCard:
+    - billingAddress

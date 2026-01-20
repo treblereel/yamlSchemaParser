@@ -1,0 +1,12 @@
+type: object
+properties:
+  payment:
+    oneOf:
+      - type: object
+        properties:
+          cardNumber:
+            type: string
+      - type: object
+        properties:
+          bankAccount:
+            type: string

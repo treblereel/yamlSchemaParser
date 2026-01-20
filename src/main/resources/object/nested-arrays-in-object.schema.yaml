@@ -1,0 +1,12 @@
+type: object
+properties:
+  matrix:
+    type: array
+    items:
+      type: array
+      items:
+        type: integer
+  names:
+    type: array
+    items:
+      type: string

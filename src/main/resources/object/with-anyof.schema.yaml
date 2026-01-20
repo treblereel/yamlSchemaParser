@@ -1,0 +1,12 @@
+type: object
+properties:
+  contact:
+    anyOf:
+      - type: object
+        properties:
+          email:
+            type: string
+      - type: object
+        properties:
+          phone:
+            type: string

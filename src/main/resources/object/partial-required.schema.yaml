@@ -1,0 +1,14 @@
+type: object
+required:
+  - id
+properties:
+  id:
+    type: integer
+  name:
+    type: string
+  email:
+    type: string
+  phone:
+    type: string
+  address:
+    type: string

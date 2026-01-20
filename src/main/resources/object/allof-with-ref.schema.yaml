@@ -1,0 +1,14 @@
+allOf:
+  - $ref: '#/$defs/Base'
+  - type: object
+    properties:
+      extra:
+        type: string
+$defs:
+  Base:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string

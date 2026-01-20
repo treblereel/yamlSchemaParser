@@ -1,0 +1,19 @@
+type: object
+properties:
+  stringProp:
+    type: string
+  integerProp:
+    type: integer
+  numberProp:
+    type: number
+  booleanProp:
+    type: boolean
+  arrayProp:
+    type: array
+    items:
+      type: string
+  objectProp:
+    type: object
+    properties:
+      nested:
+        type: string

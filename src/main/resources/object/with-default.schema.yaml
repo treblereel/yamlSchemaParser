@@ -1,0 +1,16 @@
+type: object
+properties:
+  name:
+    type: string
+    default: "unnamed"
+  count:
+    type: integer
+    default: 0
+  enabled:
+    type: boolean
+    default: true
+  tags:
+    type: array
+    items:
+      type: string
+    default: []

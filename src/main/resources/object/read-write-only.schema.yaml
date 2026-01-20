@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: integer
+    readOnly: true
+  password:
+    type: string
+    writeOnly: true
+  name:
+    type: string

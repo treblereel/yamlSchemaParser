@@ -1,0 +1,20 @@
+type: object
+properties:
+  a:
+    $ref: '#/$defs/TypeA'
+$defs:
+  TypeA:
+    type: object
+    properties:
+      b:
+        $ref: '#/$defs/TypeB'
+  TypeB:
+    type: object
+    properties:
+      c:
+        $ref: '#/$defs/TypeC'
+  TypeC:
+    type: object
+    properties:
+      value:
+        type: string

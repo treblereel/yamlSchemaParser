@@ -199,4 +199,167 @@ public class ArrayParserTest {
     ArrayItemType itemType = arrayType.getItems()[0];
     assertInstanceOf(ArrayType.class, itemType.getType());
   }
+
+  @Test
+  public void testBooleanArray() {
+    String schema = "src/main/resources/boolean-array.schema.yaml";
+    SchemaDefinition definition = new Parser().parse(schema);
+    HasType type = definition.model();
+    assertInstanceOf(ArrayType.class, type);
+    ArrayType arrayType = (ArrayType) type;
+    assertEquals(1, arrayType.getItems().length);
+    ArrayItemType itemType = arrayType.getItems()[0];
+    assertInstanceOf(BooleanType.class, itemType.getType());
+  }
+
+  @Test
+  public void testEmptyArrayConstraint() {
+    String schema = "src/main/resources/empty-array-constraint.schema.yaml";
+    SchemaDefinition definition = new Parser().parse(schema);
+    HasType type = definition.model();
+    assertInstanceOf(ArrayType.class, type);
+    ArrayType arrayType = (ArrayType) type;
+    assertTrue(arrayType.minItems().isPresent());
+    assertEquals(0, arrayType.minItems().get());
+    assertTrue(arrayType.maxItems().isPresent());
+    assertEquals(0, arrayType.maxItems().get());
+    assertEquals(1, arrayType.getItems().length);
+    assertInstanceOf(StringType.class, arrayType.getItems()[0].getType());
+  }
+
+  @Test
+  public void testArrayWithAnyOfItems() {
+    String schema = "src/main/resources/array-with-anyof-items.schema.yaml";
+    SchemaDefinition definition = new Parser().parse(schema);
+    HasType type = definition.model();
+    assertInstanceOf(ArrayType.class, type);
+    ArrayType arrayType = (ArrayType) type;
+    assertEquals(1, arrayType.getItems().length);
+    ArrayItemType itemType = arrayType.getItems()[0];
+    assertTrue(itemType.anyOf().isPresent());
+    assertEquals(3, itemType.anyOf().get().size());
+    assertInstanceOf(StringType.class, itemType.anyOf().get().get(0));
+    assertInstanceOf(NumberType.class, itemType.anyOf().get().get(1));
+    assertInstanceOf(BooleanType.class, itemType.anyOf().get().get(2));
+  }
+
+  @Test
+  public void testMixedTupleTypes() {
+    String schema = "src/main/resources/mixed-tuple-types.schema.yaml";
+    SchemaDefinition definition = new Parser().parse(schema);
+    HasType type = definition.model();
+    assertInstanceOf(ArrayType.class, type);
+    ArrayType arrayType = (ArrayType) type;
+    assertEquals(5, arrayType.getItems().length);
+    assertInstanceOf(StringType.class, arrayType.getItems()[0].getType());
+    assertInstanceOf(NumberType.class, arrayType.getItems()[1].getType());
+    assertInstanceOf(BooleanType.class, arrayType.getItems()[2].getType());
+    assertInstanceOf(IntegerType.class, arrayType.getItems()[3].getType());
+    assertInstanceOf(ObjectType.class, arrayType.getItems()[4].getType());
+    ObjectType objectType = (ObjectType) arrayType.getItems()[4].getType();
+    assertTrue(objectType.properties().isPresent());
+    assertTrue(objectType.properties().get().containsKey("name"));
+  }
+
+  @Test
+  public void testArrayMinMaxConstraints() {
+    String schema = "src/main/resources/array-minmax-constraints.schema.yaml";
+    SchemaDefinition definition = new Parser().parse(schema);
+    HasType type = definition.model();
+    assertInstanceOf(ArrayType.class, type);
+    ArrayType arrayType = (ArrayType) type;
+    assertTrue(arrayType.minItems().isPresent());
+    assertEquals(2, arrayType.minItems().get());
+    assertTrue(arrayType.maxItems().isPresent());
+    assertEquals(10, arrayType.maxItems().get());
+    assertTrue(arrayType.uniqueItems().isPresent());
+    assertTrue(arrayType.uniqueItems().get());
+    assertEquals(1, arrayType.getItems().length);
+    assertInstanceOf(IntegerType.class, arrayType.getItems()[0].getType());
+  }
+
+  @Test
+  public void testNestedObjectArray() {
+    String schema = "src/main/resources/nested-object-array.schema.yaml";
+    SchemaDefinition definition = new Parser().parse(schema);
+    HasType type = definition.model();
+    assertInstanceOf(ArrayType.class, type);
+    ArrayType arrayType = (ArrayType) type;
+    assertEquals(1, arrayType.getItems().length);
+    assertInstanceOf(ObjectType.class, arrayType.getItems()[0].getType());
+    ObjectType objectType = (ObjectType) arrayType.getItems()[0].getType();
+    assertTrue(objectType.properties().isPresent());
+    Map<String, HasType> properties = objectType.properties().get();
+    assertEquals(2, properties.size());
+    assertTrue(properties.containsKey("user"));
+    assertInstanceOf(ObjectType.class, properties.get("user"));
+    ObjectType userObject = (ObjectType) properties.get("user");
+    assertTrue(userObject.properties().isPresent());
+    assertTrue(userObject.properties().get().containsKey("id"));
+    assertTrue(userObject.properties().get().containsKey("email"));
+    assertTrue(userObject.required().isPresent());
+    assertTrue(userObject.required().get().contains("id"));
+    assertTrue(properties.containsKey("roles"));
+    assertInstanceOf(ArrayType.class, properties.get("roles"));
+  }
+
+  @Test
+  public void testArrayWithAllOfItems() {
+    String schema = "src/main/resources/array-with-allof-items.schema.yaml";
+    SchemaDefinition definition = new Parser().parse(schema);
+    HasType type = definition.model();
+    assertInstanceOf(ArrayType.class, type);
+    ArrayType arrayType = (ArrayType) type;
+    assertEquals(1, arrayType.getItems().length);
+    ArrayItemType itemType = arrayType.getItems()[0];
+    assertTrue(itemType.allOf().isPresent());
+    assertEquals(2, itemType.allOf().get().size());
+    assertInstanceOf(ObjectType.class, itemType.allOf().get().get(0));
+    assertInstanceOf(ObjectType.class, itemType.allOf().get().get(1));
+  }
+
+  @Test
+  public void testArrayOnlyMinItems() {
+    String schema = "src/main/resources/array-only-minItems.schema.yaml";
+    SchemaDefinition definition = new Parser().parse(schema);
+    HasType type = definition.model();
+    assertInstanceOf(ArrayType.class, type);
+    ArrayType arrayType = (ArrayType) type;
+    assertTrue(arrayType.minItems().isPresent());
+    assertEquals(5, arrayType.minItems().get());
+    assertFalse(arrayType.maxItems().isPresent());
+    assertEquals(1, arrayType.getItems().length);
+    assertInstanceOf(NumberType.class, arrayType.getItems()[0].getType());
+  }
+
+  @Test
+  public void testArrayOnlyMaxItems() {
+    String schema = "src/main/resources/array-only-maxItems.schema.yaml";
+    SchemaDefinition definition = new Parser().parse(schema);
+    HasType type = definition.model();
+    assertInstanceOf(ArrayType.class, type);
+    ArrayType arrayType = (ArrayType) type;
+    assertFalse(arrayType.minItems().isPresent());
+    assertTrue(arrayType.maxItems().isPresent());
+    assertEquals(100, arrayType.maxItems().get());
+    assertEquals(1, arrayType.getItems().length);
+    assertInstanceOf(StringType.class, arrayType.getItems()[0].getType());
+  }
+
+  @Test
+  public void testTripleNestedArray() {
+    String schema = "src/main/resources/triple-nested-array.schema.yaml";
+    SchemaDefinition definition = new Parser().parse(schema);
+    HasType type = definition.model();
+    assertInstanceOf(ArrayType.class, type);
+    ArrayType level1 = (ArrayType) type;
+    assertEquals(1, level1.getItems().length);
+    assertInstanceOf(ArrayType.class, level1.getItems()[0].getType());
+    ArrayType level2 = (ArrayType) level1.getItems()[0].getType();
+    assertEquals(1, level2.getItems().length);
+    assertInstanceOf(ArrayType.class, level2.getItems()[0].getType());
+    ArrayType level3 = (ArrayType) level2.getItems()[0].getType();
+    assertEquals(1, level3.getItems().length);
+    assertInstanceOf(StringType.class, level3.getItems()[0].getType());
+  }
 }
