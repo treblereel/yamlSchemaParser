@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 public record RefType(SchemaDefinition schema, String ref) implements HasType {
 
 
-  public ObjectType getRefType() {
+  public ObjectType refType() {
     if (ref.startsWith("#/$defs/")) {
       String elementName = ref.substring(8);
       JsonNode node = schema.node().get("$defs").get(elementName);

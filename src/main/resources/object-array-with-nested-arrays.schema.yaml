@@ -1,0 +1,13 @@
+type: array
+items:
+  type: object
+  properties:
+    tags:
+      type: array
+      items:
+        type: string
+    scores:
+      type: array
+      items:
+        type: number
+        minimum: 0

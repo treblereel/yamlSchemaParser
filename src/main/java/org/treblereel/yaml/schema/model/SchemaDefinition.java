@@ -2,47 +2,42 @@ package org.treblereel.yaml.schema.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Optional;
 
 public record SchemaDefinition(JsonNode node) {
 
-    public String getId() {
-        if (node.get("$id") == null) {
-            return null;
-        }
-        return node.get("$id").asText();
-    }
+  public Optional<String> id() {
+    return Optional.ofNullable(node.get("$id")).filter(JsonNode::isTextual).map(JsonNode::asText);
+  }
 
-    public String getSchema() {
-        if (node.get("$schema") == null) {
-            return null;
-        }
-        return node.get("$schema").asText();
-    }
+  public Optional<String> schema() {
+    return Optional.ofNullable(node.get("$schema")).filter(JsonNode::isTextual).map(JsonNode::asText);
+  }
 
-    public String getTitle() {
-        if (node.get("title") == null) {
-            return null;
-        }
-        return node.get("title").asText();
-    }
+  public Optional<String> title() {
+    return Optional.ofNullable(node.get("title")).filter(JsonNode::isTextual).map(JsonNode::asText);
+  }
 
-    public ObjectType getObjectDefinition() {
-        return new ObjectType(this, node);
-    }
+  public HasType model() {
+    return NodeFactory.resolveType(this, node);
+  }
 
-    public Map<String, ObjectType> getDefinitions() {
-        if (node.get("$defs") == null) {
-            return Collections.emptyMap();
-        }
-        Map<String, ObjectType> results = new HashMap<>();
-        JsonNode definitionsNode = node.get("$defs");
-        Iterator<Map.Entry<String, JsonNode>> iter = definitionsNode.fields();
-        while (iter.hasNext()) {
-            Map.Entry<String, JsonNode> entry = iter.next();
-            results.put(entry.getKey(), new ObjectType(this, entry.getValue()));
-        }
-        return results;
+  public Map<String, ObjectType> definitions() {
+    if (node.get("$defs") == null) {
+      return Collections.emptyMap();
     }
+    Map<String, ObjectType> results = new HashMap<>();
+    JsonNode definitionsNode = node.get("$defs");
+    Iterator<Map.Entry<String, JsonNode>> iter = definitionsNode.fields();
+    while (iter.hasNext()) {
+      Map.Entry<String, JsonNode> entry = iter.next();
+      results.put(entry.getKey(), new ObjectType(this, entry.getValue()));
+    }
+    return results;
+  }
 
 }

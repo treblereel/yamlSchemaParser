@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 public class ObjectType implements HasType {
@@ -21,91 +22,52 @@ public class ObjectType implements HasType {
     applicators = new Applicators(schema, node);
   }
 
-  public boolean additionalProperties() {
-    return node.has("additionalProperties") && node.get("additionalProperties").asBoolean();
+  public Optional<Boolean> unevaluatedProperties() {
+    return Optional.ofNullable(node.get("unevaluatedProperties")).map(JsonNode::asBoolean);
   }
 
-  public boolean hasUnevaluatedProperties() {
-    return node.get("unevaluatedProperties") != null;
+  public Optional<List<HasType>> oneOf() {
+    return applicators.oneOf();
   }
 
-  public boolean unevaluatedProperties() {
-    return node.get("unevaluatedProperties").asBoolean();
+  public Optional<List<HasType>> anyOf() {
+    return applicators.anyOf();
   }
 
-  public boolean hasRequired() {
-    return node.get("required") != null;
+  public Optional<List<HasType>> allOf() {
+    return applicators.allOf();
   }
 
-  public List<String> getRequired() {
-    List<String> required = new ArrayList<>();
-    if (hasRequired()) {
-      for (JsonNode req : node.get("required")) {
-        required.add(req.asText());
-      }
-    }
-    return required;
+  public Optional<Map<String, HasType>> properties() {
+    return Optional.ofNullable(node.get("properties"))
+            .filter(JsonNode::isObject)
+            .map(propsNode -> {
+              Map<String, HasType> properties = new TreeMap<>(String::compareTo);
+              propsNode.fields().forEachRemaining(entry ->
+                      properties.put(entry.getKey(), NodeFactory.resolveType(schema, entry.getValue())));
+              return properties;
+            });
   }
 
-  public boolean hasOneOf() {
-    return applicators.hasOneOf();
+  public Optional<AdditionalProperties> additionalProperties() {
+    return Optional.ofNullable(node.get("additionalProperties")).map(AdditionalProperties::new);
   }
 
-  public List<List<String>> getOneOf() {
-    return applicators.getOneOf();
+  public Optional<String> getDescription() {
+    return Optional.ofNullable(node.get("description")).map(JsonNode::asText);
   }
 
-  public boolean hasAnyOf() {
-    return applicators.hasAnyOf();
+  public Optional<String> getTitle() {
+    return Optional.ofNullable(node.get("title")).map(JsonNode::asText);
   }
 
-  public List<HasType> getAnyOf() {
-    return applicators.getAnyOf();
-  }
-
-  public boolean hasAllOf() {
-    return applicators.hasAllOf();
-  }
-
-  public List<HasType> getAllOf() {
-    return applicators.getAllOf();
-  }
-
-  public boolean hasNot() {
-    return node.get("not") != null;
-  }
-
-  public Applicators getNot() {
-    if (hasNot()) {
-      return new Applicators(schema, node.get("not"));
-    }
-    return null;
-  }
-
-
-  public Map<String, HasType> properties() {
-    Map<String, HasType> properties = new TreeMap<>(String::compareTo);
-    if (node != null && node.get("properties") != null) {
-      if (node.has("properties") && node.get("properties") != null) {
-        node.get("properties").fields().forEachRemaining(p -> properties.put(p.getKey(), NodeFactory.resolveType(schema, p.getValue())));
-      }
-    }
-    return properties;
-  }
-
-  public boolean hasAdditionalPropertiesDefinition() {
-    return node.has("additionalProperties");
-  }
-
-  public AdditionalProperties getAdditionalProperties() {
-    if (hasAdditionalPropertiesDefinition()) {
-      return new AdditionalProperties(node.get("additionalProperties"));
-    }
-    return null;
-  }
-
-  public String getName() {
-    return node.get("title").asText();
+  public Optional<List<String>> required() {
+    return Optional.ofNullable(node.get("required")).filter(n -> n.isArray())
+            .map(array -> {
+              List<String> required = new ArrayList<>();
+              array.forEach(p -> required.add(p.asText()));
+              return required;
+            });
   }
 
 }
