@@ -7,7 +7,10 @@ import java.util.Optional;
 public record AdditionalProperties(JsonNode node, SchemaDefinition schema) {
 
   public boolean isAllowed() {
-    return !node.isBoolean() || node.asBoolean();
+    if (node.isBoolean()) {
+      return node.asBoolean();
+    }
+    return true; // type schema means allowed
   }
 
   public Optional<HasType> getType() {

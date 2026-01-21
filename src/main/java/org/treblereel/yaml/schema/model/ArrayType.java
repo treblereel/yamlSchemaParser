@@ -8,11 +8,6 @@ import java.util.Optional;
 public record ArrayType(SchemaDefinition schemaDefinition, JsonNode node) implements HasType {
 
   public ArrayItemType[] getItems() {
-    if (node.isArray()) {
-      ArrayItemType[] arrayItemTypes = new ArrayItemType[node.size()];
-
-      //return NodeFactory.resolveType(schemaDefinition, node);
-    }
     JsonNode itemsNode = node.get("items");
     if (itemsNode.getNodeType().equals(JsonNodeType.ARRAY)) {
       ArrayItemType[] arrayItemTypes = new ArrayItemType[itemsNode.size()];
