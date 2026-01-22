@@ -71,4 +71,20 @@ public class ObjectType implements HasType {
             });
   }
 
+  public Optional<Integer> minProperties() {
+    return Optional.ofNullable(node.get("minProperties"))
+            .filter(JsonNode::isInt)
+            .map(JsonNode::intValue);
+  }
+
+  public Optional<Integer> maxProperties() {
+    return Optional.ofNullable(node.get("maxProperties"))
+            .filter(JsonNode::isInt)
+            .map(JsonNode::intValue);
+  }
+
+  public Optional<HasType> not() {
+    return applicators.getNot();
+  }
+
 }

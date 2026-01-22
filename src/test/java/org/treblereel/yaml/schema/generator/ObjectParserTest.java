@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ObjectParserTest {
 
-  private static final String BASE_PATH = "src/main/resources/object/";
+  private static final String BASE_PATH = "src/main/resources/";
 
   @Test
   public void testSimpleStringProps() {
@@ -180,7 +180,7 @@ public class ObjectParserTest {
     assertInstanceOf(RefType.class, props.get("address"));
     RefType refType = (RefType) props.get("address");
     assertEquals("#/$defs/Address", refType.ref());
-    ObjectType addressType = refType.refType();
+    ObjectType addressType = (ObjectType) refType.resolve();
     assertTrue(addressType.properties().isPresent());
     assertTrue(addressType.properties().get().containsKey("street"));
     assertTrue(addressType.properties().get().containsKey("city"));
@@ -213,11 +213,11 @@ public class ObjectParserTest {
     ObjectType objectType = (ObjectType) type;
     assertTrue(objectType.properties().isPresent());
     RefType companyRef = (RefType) objectType.properties().get().get("company");
-    ObjectType companyType = companyRef.refType();
+    ObjectType companyType = (ObjectType) companyRef.resolve();
     assertTrue(companyType.properties().isPresent());
     assertInstanceOf(RefType.class, companyType.properties().get().get("ceo"));
     RefType ceoRef = (RefType) companyType.properties().get().get("ceo");
-    ObjectType personType = ceoRef.refType();
+    ObjectType personType = (ObjectType) ceoRef.resolve();
     assertTrue(personType.properties().isPresent());
     assertTrue(personType.properties().get().containsKey("firstName"));
   }
@@ -232,7 +232,7 @@ public class ObjectParserTest {
     ArrayType employeesArray = (ArrayType) objectType.properties().get().get("employees");
     assertInstanceOf(RefType.class, employeesArray.getItems()[0].getType());
     RefType employeeRef = (RefType) employeesArray.getItems()[0].getType();
-    ObjectType employeeType = employeeRef.refType();
+    ObjectType employeeType = (ObjectType) employeeRef.resolve();
     assertTrue(employeeType.properties().isPresent());
     assertTrue(employeeType.properties().get().containsKey("id"));
     assertTrue(employeeType.properties().get().containsKey("name"));
@@ -396,7 +396,7 @@ public class ObjectParserTest {
     assertInstanceOf(RefType.class, allOfList.get(0));
     assertInstanceOf(ObjectType.class, allOfList.get(1));
     RefType baseRef = (RefType) allOfList.get(0);
-    ObjectType baseType = baseRef.refType();
+    ObjectType baseType = (ObjectType) baseRef.resolve();
     assertTrue(baseType.properties().isPresent());
     assertTrue(baseType.properties().get().containsKey("id"));
   }
@@ -410,7 +410,7 @@ public class ObjectParserTest {
     assertTrue(objectType.required().isPresent());
     assertTrue(objectType.required().get().contains("person"));
     RefType personRef = (RefType) objectType.properties().get().get("person");
-    ObjectType personType = personRef.refType();
+    ObjectType personType = (ObjectType) personRef.resolve();
     assertTrue(personType.required().isPresent());
     assertTrue(personType.required().get().contains("name"));
   }
@@ -464,7 +464,7 @@ public class ObjectParserTest {
     ObjectType objectType = (ObjectType) type;
     ArrayType departmentsArray = (ArrayType) objectType.properties().get().get("departments");
     RefType deptRef = (RefType) departmentsArray.getItems()[0].getType();
-    ObjectType deptType = deptRef.refType();
+    ObjectType deptType = (ObjectType) deptRef.resolve();
     assertTrue(deptType.properties().isPresent());
     ArrayType employeesArray = (ArrayType) deptType.properties().get().get("employees");
     assertInstanceOf(RefType.class, employeesArray.getItems()[0].getType());
@@ -581,11 +581,11 @@ public class ObjectParserTest {
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
     RefType aRef = (RefType) objectType.properties().get().get("a");
-    ObjectType typeA = aRef.refType();
+    ObjectType typeA = (ObjectType) aRef.resolve();
     RefType bRef = (RefType) typeA.properties().get().get("b");
-    ObjectType typeB = bRef.refType();
+    ObjectType typeB = (ObjectType) bRef.resolve();
     RefType cRef = (RefType) typeB.properties().get().get("c");
-    ObjectType typeC = cRef.refType();
+    ObjectType typeC = (ObjectType) cRef.resolve();
     assertTrue(typeC.properties().isPresent());
     assertInstanceOf(StringType.class, typeC.properties().get().get("value"));
   }
@@ -614,7 +614,7 @@ public class ObjectParserTest {
     assertInstanceOf(RefType.class, type);
     RefType refType = (RefType) type;
     assertEquals("#/$defs/MainType", refType.ref());
-    ObjectType mainType = refType.refType();
+    ObjectType mainType = (ObjectType) refType.resolve();
     assertTrue(mainType.properties().isPresent());
     assertTrue(mainType.properties().get().containsKey("id"));
     assertTrue(mainType.properties().get().containsKey("data"));
@@ -849,12 +849,12 @@ public class ObjectParserTest {
     ObjectType objectType = (ObjectType) type;
     assertTrue(objectType.properties().isPresent());
     RefType personRef = (RefType) objectType.properties().get().get("person");
-    ObjectType personType = personRef.refType();
+    ObjectType personType = (ObjectType) personRef.resolve();
     assertTrue(personType.properties().isPresent());
     assertInstanceOf(RefType.class, personType.properties().get().get("friend"));
     assertInstanceOf(RefType.class, personType.properties().get().get("employer"));
     RefType employerRef = (RefType) personType.properties().get().get("employer");
-    ObjectType companyType = employerRef.refType();
+    ObjectType companyType = (ObjectType) employerRef.resolve();
     assertTrue(companyType.properties().isPresent());
     ArrayType employeesArray = (ArrayType) companyType.properties().get().get("employees");
     assertInstanceOf(RefType.class, employeesArray.getItems()[0].getType());

@@ -43,4 +43,16 @@ public record ArrayType(SchemaDefinition schemaDefinition, JsonNode node) implem
             .map(JsonNode::booleanValue);
   }
 
+  public Optional<String> title() {
+    return Optional.ofNullable(node.get("title")).map(JsonNode::asText);
+  }
+
+  public Optional<String> description() {
+    return Optional.ofNullable(node.get("description")).map(JsonNode::asText);
+  }
+
+  public Optional<JsonNode> defaultValue() {
+    return Optional.ofNullable(node.get("default"));
+  }
+
 }
