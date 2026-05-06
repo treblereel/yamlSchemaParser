@@ -216,6 +216,45 @@ public class ObjectType implements HasType {
   }
 
   /**
+   * Returns the dependent required constraints.
+   * <p>
+   * Specifies that if a property (key) is present, then the properties in its
+   * associated list (value) must also be present. This enables conditional
+   * property requirements based on the presence of other properties.
+   * </p>
+   * <p>
+   * Example:
+   * <pre>{@code
+   * ObjectType objectType = (ObjectType) schema.model();
+   * if (objectType.dependentRequired().isPresent()) {
+   *     Map<String, List<String>> deps = objectType.dependentRequired().get();
+   *     List<String> required = deps.get("creditCard");
+   *     // If creditCard is present, these properties must also be present
+   * }
+   * }</pre>
+   * </p>
+   *
+   * @return map of property names to their dependent required properties if specified
+   */
+  public Optional<Map<String, List<String>>> dependentRequired() {
+    return Optional.ofNullable(node.get("dependentRequired"))
+            .filter(JsonNode::isObject)
+            .map(depsNode -> {
+              Map<String, List<String>> deps = new TreeMap<>(String::compareTo);
+              depsNode.fields().forEachRemaining(entry -> {
+                String propertyName = entry.getKey();
+                JsonNode requiredArray = entry.getValue();
+                if (requiredArray.isArray()) {
+                  List<String> requiredProps = new ArrayList<>();
+                  requiredArray.forEach(prop -> requiredProps.add(prop.asText()));
+                  deps.put(propertyName, requiredProps);
+                }
+              });
+              return deps;
+            });
+  }
+
+  /**
    * Returns the minimum number of properties constraint.
    *
    * @return the minimum number of properties if specified

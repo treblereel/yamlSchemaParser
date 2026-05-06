@@ -295,6 +295,54 @@ propertyNames:
   maxLength: 20
 ```
 
+### Dependent Required
+
+Dependent required specifies conditional property requirements: if property X is present, then properties Y and Z must also be present.
+
+```java
+ObjectType objectType = (ObjectType) definition.model();
+
+// Check if dependent requirements are defined
+if (objectType.dependentRequired().isPresent()) {
+    Map<String, List<String>> deps = objectType.dependentRequired().get();
+    
+    // Check what's required when creditCard is present
+    if (deps.containsKey("creditCard")) {
+        List<String> required = deps.get("creditCard");
+        // If creditCard is present, these properties must also be present
+        // e.g., [billingAddress, cvv]
+    }
+    
+    // Iterate over all dependencies
+    for (Map.Entry<String, List<String>> entry : deps.entrySet()) {
+        String triggerProperty = entry.getKey();
+        List<String> requiredProperties = entry.getValue();
+        // If triggerProperty is present, requiredProperties must be present
+    }
+}
+```
+
+Example schema:
+```yaml
+type: object
+properties:
+  name: { type: string }
+  creditCard: { type: string }
+  billingAddress: { type: string }
+  cvv: { type: string }
+dependentRequired:
+  creditCard: [billingAddress, cvv]
+```
+
+Multiple dependencies:
+```yaml
+type: object
+dependentRequired:
+  email: [password]
+  password: [confirmPassword]
+  securityQuestion: [securityAnswer]
+```
+
 ### Schema Combinators
 
 #### allOf
@@ -447,6 +495,7 @@ Represents object schemas.
 - `patternProperties()` - Pattern-based property map (Optional<Map<String, HasType>>)
 - `propertyNames()` - Property name validation schema (Optional<HasType>)
 - `required()` - Required fields (Optional<List<String>>)
+- `dependentRequired()` - Conditional required fields (Optional<Map<String, List<String>>>)
 - `additionalProperties()` - Additional properties config (Optional<AdditionalProperties>)
 - `minProperties()` - Minimum properties (Optional<Integer>)
 - `maxProperties()` - Maximum properties (Optional<Integer>)

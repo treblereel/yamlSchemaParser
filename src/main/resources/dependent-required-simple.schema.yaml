@@ -1,0 +1,14 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+properties:
+  name:
+    type: string
+  creditCard:
+    type: string
+  billingAddress:
+    type: string
+  cvv:
+    type: string
+dependentRequired:
+  creditCard: [billingAddress, cvv]
+description: If creditCard is present, billingAddress and cvv are required

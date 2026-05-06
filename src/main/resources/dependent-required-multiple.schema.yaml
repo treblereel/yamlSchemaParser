@@ -1,0 +1,22 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+properties:
+  username:
+    type: string
+  email:
+    type: string
+  phone:
+    type: string
+  password:
+    type: string
+  confirmPassword:
+    type: string
+  securityQuestion:
+    type: string
+  securityAnswer:
+    type: string
+dependentRequired:
+  email: [password]
+  password: [confirmPassword]
+  securityQuestion: [securityAnswer]
+description: Multiple dependent requirements

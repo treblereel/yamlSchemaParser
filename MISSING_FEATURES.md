@@ -4,9 +4,9 @@
 
 ## 📊 Сводка
 
-**Всего нереализовано:** 9 фич  
-**Реализовано:** 4 фичи (if/then/else, not combinator, patternProperties, propertyNames)  
-**Приоритет:** High (3), Medium (4), Low (2)
+**Всего нереализовано:** 8 фич  
+**Реализовано:** 5 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired)  
+**Приоритет:** High (3), Medium (3), Low (2)
 
 ---
 
@@ -122,7 +122,7 @@ public Optional<HasType> propertyNames(); // ✅ Реализовано
 ---
 
 ### 5. 🔗 dependentRequired
-**Статус:** ❌ Не реализовано  
+**Статус:** ✅ Реализовано  
 **Использование в workflow.yaml:** Нет  
 **JSON Schema Spec:** Draft 2019-09+
 
@@ -138,7 +138,7 @@ dependentRequired:
 **API:**
 ```java
 // ObjectType.java
-public Optional<Map<String, List<String>>> dependentRequired();
+public Optional<Map<String, List<String>>> dependentRequired(); // ✅ Реализовано
 ```
 
 **Сложность:** Low  

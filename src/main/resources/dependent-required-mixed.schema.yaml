@@ -1,0 +1,17 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+properties:
+  name:
+    type: string
+  email:
+    type: string
+  shippingAddress:
+    type: string
+  billingAddress:
+    type: string
+  sameAsBilling:
+    type: boolean
+required: [name, email]
+dependentRequired:
+  sameAsBilling: [billingAddress]
+description: Mix of regular required and dependent required
