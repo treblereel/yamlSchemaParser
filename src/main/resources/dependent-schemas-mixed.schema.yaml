@@ -1,0 +1,26 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+properties:
+  name:
+    type: string
+  type:
+    type: string
+    enum: [person, company]
+required: [name, type]
+dependentSchemas:
+  type:
+    oneOf:
+      - properties:
+          type:
+            const: person
+          age:
+            type: integer
+            minimum: 0
+        required: [age]
+      - properties:
+          type:
+            const: company
+          registrationNumber:
+            type: string
+        required: [registrationNumber]
+description: Mix of required fields and dependent schemas with oneOf

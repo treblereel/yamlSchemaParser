@@ -1,0 +1,24 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+properties:
+  username:
+    type: string
+  email:
+    type: string
+  isPremium:
+    type: boolean
+dependentSchemas:
+  email:
+    properties:
+      emailVerified:
+        type: boolean
+    required: [emailVerified]
+  isPremium:
+    properties:
+      subscriptionId:
+        type: string
+      expiryDate:
+        type: string
+        format: date
+    required: [subscriptionId, expiryDate]
+description: Multiple dependent schemas

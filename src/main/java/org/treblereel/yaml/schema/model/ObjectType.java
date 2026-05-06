@@ -255,6 +255,38 @@ public class ObjectType implements HasType {
   }
 
   /**
+   * Returns the dependent schemas constraints.
+   * <p>
+   * Specifies that if a property (key) is present, then the associated schema (value)
+   * must also be applied to the instance. This enables conditional schema application
+   * based on the presence of properties.
+   * </p>
+   * <p>
+   * Example:
+   * <pre>{@code
+   * ObjectType objectType = (ObjectType) schema.model();
+   * if (objectType.dependentSchemas().isPresent()) {
+   *     Map<String, HasType> deps = objectType.dependentSchemas().get();
+   *     HasType schema = deps.get("creditCard");
+   *     // If creditCard is present, this schema must also be applied
+   * }
+   * }</pre>
+   * </p>
+   *
+   * @return map of property names to their dependent schemas if specified
+   */
+  public Optional<Map<String, HasType>> dependentSchemas() {
+    return Optional.ofNullable(node.get("dependentSchemas"))
+            .filter(JsonNode::isObject)
+            .map(schemasNode -> {
+              Map<String, HasType> schemas = new TreeMap<>(String::compareTo);
+              schemasNode.fields().forEachRemaining(entry ->
+                      schemas.put(entry.getKey(), NodeFactory.resolveType(schema, entry.getValue())));
+              return schemas;
+            });
+  }
+
+  /**
    * Returns the minimum number of properties constraint.
    *
    * @return the minimum number of properties if specified

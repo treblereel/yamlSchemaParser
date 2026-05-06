@@ -1,0 +1,17 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+properties:
+  name:
+    type: string
+  creditCard:
+    type: string
+dependentSchemas:
+  creditCard:
+    properties:
+      billingAddress:
+        type: string
+      cvv:
+        type: string
+        pattern: "^[0-9]{3,4}$"
+    required: [billingAddress, cvv]
+description: If creditCard is present, additional schema with billingAddress and cvv applies

@@ -343,6 +343,63 @@ dependentRequired:
   securityQuestion: [securityAnswer]
 ```
 
+### Dependent Schemas
+
+Dependent schemas apply additional schema validation when a property is present. More flexible than dependentRequired as it allows defining complete schemas, not just required properties.
+
+```java
+ObjectType objectType = (ObjectType) definition.model();
+
+// Check if dependent schemas are defined
+if (objectType.dependentSchemas().isPresent()) {
+    Map<String, HasType> deps = objectType.dependentSchemas().get();
+    
+    // Get schema that applies when creditCard is present
+    if (deps.containsKey("creditCard")) {
+        HasType schema = deps.get("creditCard");
+        
+        // Usually an ObjectType with additional properties and constraints
+        if (schema instanceof ObjectType) {
+            ObjectType additionalSchema = (ObjectType) schema;
+            // Check what properties are required
+            // Check what validations apply
+        }
+    }
+}
+```
+
+Example schema:
+```yaml
+type: object
+properties:
+  name: { type: string }
+  creditCard: { type: string }
+dependentSchemas:
+  creditCard:
+    properties:
+      billingAddress:
+        type: string
+      cvv:
+        type: string
+        pattern: "^[0-9]{3,4}$"
+    required: [billingAddress, cvv]
+```
+
+Multiple dependent schemas:
+```yaml
+type: object
+dependentSchemas:
+  email:
+    properties:
+      emailVerified: { type: boolean }
+    required: [emailVerified]
+  isPremium:
+    properties:
+      subscriptionId: { type: string }
+      expiryDate: { type: string, format: date }
+    required: [subscriptionId, expiryDate]
+```
+
 ### Schema Combinators
 
 #### allOf
@@ -496,6 +553,7 @@ Represents object schemas.
 - `propertyNames()` - Property name validation schema (Optional<HasType>)
 - `required()` - Required fields (Optional<List<String>>)
 - `dependentRequired()` - Conditional required fields (Optional<Map<String, List<String>>>)
+- `dependentSchemas()` - Conditional schema application (Optional<Map<String, HasType>>)
 - `additionalProperties()` - Additional properties config (Optional<AdditionalProperties>)
 - `minProperties()` - Minimum properties (Optional<Integer>)
 - `maxProperties()` - Maximum properties (Optional<Integer>)
