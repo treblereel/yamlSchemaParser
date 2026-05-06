@@ -206,6 +206,28 @@ public class ObjectType implements HasType {
   }
 
   /**
+   * Returns a PropertyNavigator for fluent navigation to a property.
+   * Entry point for fluent schema navigation.
+   *
+   * Example:
+   * <pre>
+   * Optional<String> pattern = root.property("address")
+   *     .property("city")
+   *     .asString()
+   *     .flatMap(StringType::pattern);
+   * </pre>
+   *
+   * @param name property name
+   * @return PropertyNavigator for the property, or empty navigator if property doesn't exist
+   */
+  public PropertyNavigator property(String name) {
+    return new PropertyNavigatorImpl(
+        Optional.ofNullable(properties().get(name)),
+        false
+    );
+  }
+
+  /**
    * Returns property stream for iteration.
    *
    * @return Stream of map entries (property name -> type)
