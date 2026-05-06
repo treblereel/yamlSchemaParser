@@ -1,0 +1,5 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+propertyNames:
+  pattern: "^[a-zA-Z_][a-zA-Z0-9_]*$"
+description: Property names must be valid identifiers

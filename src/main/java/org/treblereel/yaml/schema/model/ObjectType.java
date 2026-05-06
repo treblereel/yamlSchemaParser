@@ -141,6 +141,31 @@ public class ObjectType implements HasType {
   }
 
   /**
+   * Returns the property names schema.
+   * <p>
+   * Defines a schema that ALL property names must validate against.
+   * This applies to all properties: explicitly defined properties, pattern properties,
+   * and additional properties.
+   * </p>
+   * <p>
+   * Example:
+   * <pre>{@code
+   * ObjectType objectType = (ObjectType) schema.model();
+   * if (objectType.propertyNames().isPresent()) {
+   *     HasType nameSchema = objectType.propertyNames().get();
+   *     // All property names must validate against this schema
+   * }
+   * }</pre>
+   * </p>
+   *
+   * @return the property names validation schema if specified
+   */
+  public Optional<HasType> propertyNames() {
+    return Optional.ofNullable(node.get("propertyNames"))
+            .map(nameSchema -> NodeFactory.resolveType(schema, nameSchema));
+  }
+
+  /**
    * Returns the additional properties configuration.
    * <p>
    * Determines whether properties not explicitly defined in the schema are allowed,

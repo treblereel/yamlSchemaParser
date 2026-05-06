@@ -1,0 +1,7 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+propertyNames:
+  type: string
+  minLength: 3
+  maxLength: 20
+description: Property names must be 3-20 characters long

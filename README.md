@@ -257,6 +257,44 @@ patternProperties:
       enabled: { type: boolean }
 ```
 
+### Property Names Validation
+
+Property names validation ensures all property names in an object validate against a schema.
+
+```java
+ObjectType objectType = (ObjectType) definition.model();
+
+// Check if property name validation is defined
+if (objectType.propertyNames().isPresent()) {
+    HasType nameSchema = objectType.propertyNames().get();
+    
+    // Example: names must be valid identifiers
+    if (nameSchema instanceof ObjectType) {
+        ObjectType nameRules = (ObjectType) nameSchema;
+        // Check pattern, length constraints, etc.
+    }
+}
+```
+
+Example schema:
+```yaml
+type: object
+propertyNames:
+  pattern: "^[a-zA-Z_][a-zA-Z0-9_]*$"  # Valid identifiers only
+properties:
+  user_id: { type: integer }
+  user_name: { type: string }
+```
+
+With length constraints:
+```yaml
+type: object
+propertyNames:
+  type: string
+  minLength: 3
+  maxLength: 20
+```
+
 ### Schema Combinators
 
 #### allOf
@@ -407,6 +445,7 @@ Represents object schemas.
 **Methods:**
 - `properties()` - Property map (Optional<Map<String, HasType>>)
 - `patternProperties()` - Pattern-based property map (Optional<Map<String, HasType>>)
+- `propertyNames()` - Property name validation schema (Optional<HasType>)
 - `required()` - Required fields (Optional<List<String>>)
 - `additionalProperties()` - Additional properties config (Optional<AdditionalProperties>)
 - `minProperties()` - Minimum properties (Optional<Integer>)

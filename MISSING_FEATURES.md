@@ -4,9 +4,9 @@
 
 ## 📊 Сводка
 
-**Всего нереализовано:** 10 фич  
-**Реализовано:** 3 фичи (if/then/else, not combinator, patternProperties)  
-**Приоритет:** High (3), Medium (5), Low (2)
+**Всего нереализовано:** 9 фич  
+**Реализовано:** 4 фичи (if/then/else, not combinator, patternProperties, propertyNames)  
+**Приоритет:** High (3), Medium (4), Low (2)
 
 ---
 
@@ -97,7 +97,7 @@ public Optional<Map<String, HasType>> patternProperties(); // ✅ Реализо
 ---
 
 ### 4. 📋 propertyNames
-**Статус:** ❌ Не реализовано  
+**Статус:** ✅ Реализовано  
 **Использование в workflow.yaml:** Нет  
 **JSON Schema Spec:** Draft 6+
 
@@ -113,7 +113,7 @@ propertyNames:
 **API:**
 ```java
 // ObjectType.java
-public Optional<HasType> propertyNames();
+public Optional<HasType> propertyNames(); // ✅ Реализовано
 ```
 
 **Сложность:** Low  
