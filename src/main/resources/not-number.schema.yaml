@@ -1,0 +1,5 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: number
+not:
+  multipleOf: 0.5
+description: Any number that is not a multiple of 0.5

@@ -141,4 +141,17 @@ public record ArrayType(SchemaDefinition schemaDefinition, JsonNode node) implem
     return Optional.ofNullable(node.get("default"));
   }
 
+  /**
+   * Returns the not combinator schema.
+   * <p>
+   * The array must NOT validate against this schema.
+   * </p>
+   *
+   * @return the not schema if present
+   */
+  public Optional<HasType> not() {
+    return Optional.ofNullable(node.get("not"))
+            .map(n -> NodeFactory.resolveType(schemaDefinition, n));
+  }
+
 }

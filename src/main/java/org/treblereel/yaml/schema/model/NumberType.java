@@ -22,10 +22,11 @@ import java.util.Optional;
  * }</pre>
  * </p>
  *
+ * @param schema the parent schema definition
  * @param node the JSON node representing this number type
  * @author Dmitrii Tikhomirov
  */
-public record NumberType(JsonNode node) implements HasType {
+public record NumberType(SchemaDefinition schema, JsonNode node) implements HasType {
 
   /**
    * Returns the minimum value constraint (inclusive).
@@ -151,5 +152,18 @@ public record NumberType(JsonNode node) implements HasType {
    */
   public Optional<String> description() {
     return Optional.ofNullable(node.get("description")).map(JsonNode::asText);
+  }
+
+  /**
+   * Returns the not combinator schema.
+   * <p>
+   * The number value must NOT validate against this schema.
+   * </p>
+   *
+   * @return the not schema if present
+   */
+  public Optional<HasType> not() {
+    return Optional.ofNullable(node.get("not"))
+            .map(n -> NodeFactory.resolveType(schema, n));
   }
 }

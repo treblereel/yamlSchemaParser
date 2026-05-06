@@ -388,6 +388,56 @@ Represents array schemas.
 - `maxItems()` - Maximum items (Optional<Integer>)
 - `uniqueItems()` - Unique constraint (Optional<Boolean>)
 - `additionalItems()` - Additional items allowed (Optional<Boolean>)
+- `not()` - not combinator (Optional<HasType>)
+
+### StringType
+
+Represents string schemas.
+
+**Methods:**
+- `pattern()` - Regex pattern (Optional<String>)
+- `format()` - Format constraint (Optional<String>)
+- `minLength()` - Minimum length (Optional<Integer>)
+- `maxLength()` - Maximum length (Optional<Integer>)
+- `enumValues()` - Allowed values (Optional<List<String>>)
+- `constValue()` - Constant value (Optional<String>)
+- `not()` - not combinator (Optional<HasType>)
+
+### IntegerType
+
+Represents integer schemas.
+
+**Methods:**
+- `minimum()` - Minimum value (Optional<Integer>)
+- `maximum()` - Maximum value (Optional<Integer>)
+- `exclusiveMinimum()` - Exclusive minimum (Optional<Integer>)
+- `exclusiveMaximum()` - Exclusive maximum (Optional<Integer>)
+- `enumValues()` - Allowed values (Optional<List<Integer>>)
+- `constValue()` - Constant value (Optional<Integer>)
+- `not()` - not combinator (Optional<HasType>)
+
+### NumberType
+
+Represents number (floating-point) schemas.
+
+**Methods:**
+- `minimum()` - Minimum value (Optional<Double>)
+- `maximum()` - Maximum value (Optional<Double>)
+- `exclusiveMinimum()` - Exclusive minimum (Optional<Double>)
+- `exclusiveMaximum()` - Exclusive maximum (Optional<Double>)
+- `multipleOf()` - Multiple constraint (Optional<Double>)
+- `enumValues()` - Allowed values (Optional<List<Double>>)
+- `constValue()` - Constant value (Optional<Double>)
+- `not()` - not combinator (Optional<HasType>)
+
+### BooleanType
+
+Represents boolean schemas.
+
+**Methods:**
+- `constValue()` - Constant value (Optional<Boolean>)
+- `defaultValue()` - Default value (Optional<Boolean>)
+- `not()` - not combinator (Optional<HasType>)
 
 ### RefType
 

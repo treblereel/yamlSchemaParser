@@ -4,9 +4,9 @@
 
 ## 📊 Сводка
 
-**Всего нереализовано:** 12 фич  
-**Реализовано:** 1 фича (if/then/else)  
-**Приоритет:** High (5), Medium (5), Low (2)
+**Всего нереализовано:** 11 фич  
+**Реализовано:** 2 фичи (if/then/else, not combinator)  
+**Приоритет:** High (4), Medium (5), Low (2)
 
 ---
 
@@ -46,27 +46,21 @@ public Optional<HasType> elseSchema();
 ---
 
 ### 2. 🚫 not Combinator (полная реализация)
-**Статус:** ⚠️ Частично реализовано (только getNot())  
+**Статус:** ✅ Реализовано  
 **Использование в workflow.yaml:** 2 раза  
 **JSON Schema Spec:** Draft 4+
 
 **Описание:**
 Схема not требует, чтобы данные НЕ соответствовали указанной схеме.
 
-**Текущая реализация:**
+**Реализация:**
 ```java
 // Applicators.java
 Optional<HasType> getNot(); // ✅ Есть
 
-// ObjectType.java
-public Optional<HasType> not(); // ✅ Есть
-```
-
-**Что добавить:**
-```java
-// Добавить в другие типы для полноты
-// StringType, ArrayType, IntegerType, NumberType, BooleanType
-public Optional<HasType> not();
+// Все типы теперь поддерживают not():
+// ObjectType, StringType, ArrayType, IntegerType, NumberType, BooleanType
+public Optional<HasType> not(); // ✅ Реализовано
 ```
 
 **Сложность:** Low  

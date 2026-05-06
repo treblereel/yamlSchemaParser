@@ -20,10 +20,10 @@ class NodeFactory {
     if (value.get("type") != null) {
       String type = value.get("type").asText();
       return switch (type) {
-        case "string" -> new StringType(value);
-        case "integer" -> new IntegerType(value);
-        case "number" -> new NumberType(value);
-        case "boolean" -> new BooleanType(value);
+        case "string" -> new StringType(schema, value);
+        case "integer" -> new IntegerType(schema, value);
+        case "number" -> new NumberType(schema, value);
+        case "boolean" -> new BooleanType(schema, value);
         case "object" -> new ObjectType(schema, value);
         case "array" -> new ArrayType(schema, value);
         case "null" -> new NullType(value);

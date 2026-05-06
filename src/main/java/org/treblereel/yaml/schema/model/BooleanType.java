@@ -18,10 +18,11 @@ import java.util.Optional;
  * }</pre>
  * </p>
  *
+ * @param schema the parent schema definition
  * @param node the JSON node representing this boolean type
  * @author Dmitrii Tikhomirov
  */
-public record BooleanType(JsonNode node) implements HasType {
+public record BooleanType(SchemaDefinition schema, JsonNode node) implements HasType {
 
   /**
    * Returns the const value constraint.
@@ -64,5 +65,18 @@ public record BooleanType(JsonNode node) implements HasType {
    */
   public Optional<String> description() {
     return Optional.ofNullable(node.get("description")).map(JsonNode::asText);
+  }
+
+  /**
+   * Returns the not combinator schema.
+   * <p>
+   * The boolean value must NOT validate against this schema.
+   * </p>
+   *
+   * @return the not schema if present
+   */
+  public Optional<HasType> not() {
+    return Optional.ofNullable(node.get("not"))
+            .map(n -> NodeFactory.resolveType(schema, n));
   }
 }

@@ -1,0 +1,6 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: integer
+not:
+  minimum: 0
+  maximum: 10
+description: Any integer except 0-10 range
