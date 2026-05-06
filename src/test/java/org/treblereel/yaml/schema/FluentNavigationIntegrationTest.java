@@ -89,4 +89,16 @@ class FluentNavigationIntegrationTest {
         assertThat(nav.exists()).isFalse();
         assertThat(nav.get()).isEmpty();
     }
+
+    @Test
+    void shouldNavigateThroughRefTypeWithoutExplicitResolve() {
+        SchemaDefinition schema = parser.parse("src/test/resources/simple-ref.schema.yaml");
+        ObjectType root = schema.requireObject();
+
+        // Navigate through RefType - no explicit .resolve() needed
+        PropertyNavigator cityNav = root.property("address")
+            .property("city");
+
+        assertThat(cityNav.exists()).isTrue();
+    }
 }

@@ -45,8 +45,12 @@ class PropertyNavigatorImpl implements PropertyNavigator {
     public PropertyNavigator property(String name) {
         return current
             .map(type -> {
+                // RefType now has property() method that auto-delegates
                 if (type instanceof ObjectType obj) {
                     return obj.property(name);
+                }
+                if (type instanceof RefType ref) {
+                    return ref.property(name); // Auto-delegation!
                 }
                 return PropertyNavigator.empty();
             })
