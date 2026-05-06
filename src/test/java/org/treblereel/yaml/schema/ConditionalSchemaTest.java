@@ -20,7 +20,7 @@ public class ConditionalSchemaTest {
 
     @Test
     void testIfThenElsePresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/if-then-else.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/if-then-else.schema.yaml");
         HasType type = schema.model();
 
         assertInstanceOf(ObjectType.class, type, "Root should be ObjectType");
@@ -38,7 +38,7 @@ public class ConditionalSchemaTest {
 
     @Test
     void testIfConditionStructure() {
-        SchemaDefinition schema = parser.parse("src/main/resources/if-then-else.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/if-then-else.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         HasType ifCondition = objectType.ifCondition().get();
@@ -57,7 +57,7 @@ public class ConditionalSchemaTest {
 
     @Test
     void testThenSchemaStructure() {
-        SchemaDefinition schema = parser.parse("src/main/resources/if-then-else.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/if-then-else.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         HasType thenSchema = objectType.thenSchema().get();
@@ -76,7 +76,7 @@ public class ConditionalSchemaTest {
 
     @Test
     void testElseSchemaStructure() {
-        SchemaDefinition schema = parser.parse("src/main/resources/if-then-else.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/if-then-else.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         HasType elseSchema = objectType.elseSchema().get();
@@ -98,7 +98,7 @@ public class ConditionalSchemaTest {
 
     @Test
     void testIfThenWithoutElse() {
-        SchemaDefinition schema = parser.parse("src/main/resources/if-then-only.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/if-then-only.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertTrue(objectType.ifCondition().isPresent(), "if condition should be present");
@@ -108,7 +108,7 @@ public class ConditionalSchemaTest {
 
     @Test
     void testIfThenRequiredField() {
-        SchemaDefinition schema = parser.parse("src/main/resources/if-then-only.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/if-then-only.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         HasType thenSchema = objectType.thenSchema().get();
@@ -125,7 +125,7 @@ public class ConditionalSchemaTest {
 
     @Test
     void testNestedIfThenElse() {
-        SchemaDefinition schema = parser.parse("src/main/resources/nested-if-then.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/nested-if-then.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertTrue(objectType.ifCondition().isPresent(), "Outer if should be present");
@@ -143,7 +143,7 @@ public class ConditionalSchemaTest {
 
     @Test
     void testNestedIfThenPatterns() {
-        SchemaDefinition schema = parser.parse("src/main/resources/nested-if-then.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/nested-if-then.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         ObjectType outerThen = (ObjectType) objectType.thenSchema().get();
@@ -165,7 +165,7 @@ public class ConditionalSchemaTest {
 
     @Test
     void testSchemaWithoutConditionals() {
-        SchemaDefinition schema = parser.parse("src/main/resources/simple-string-props.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/simple-string-props.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertFalse(objectType.ifCondition().isPresent(), "if should not be present in simple schema");
@@ -183,7 +183,7 @@ public class ConditionalSchemaTest {
 
     @Test
     void testWorkflowSchemaConditionals() {
-        SchemaDefinition schema = parser.parse("src/main/resources/workflow.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/workflow.yaml");
         assertNotNull(schema, "workflow.yaml should parse successfully");
 
         // workflow.yaml uses if/then/else in several places

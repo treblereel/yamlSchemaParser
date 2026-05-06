@@ -17,7 +17,7 @@ public class TypeResolutionTest {
 
     @Test
     void testNullableItemsArray() {
-        SchemaDefinition schema = parser.parse("src/main/resources/nullable-items-array.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/nullable-items-array.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] items = arrayType.getItems();
@@ -33,7 +33,7 @@ public class TypeResolutionTest {
 
     @Test
     void testEmptyObject() {
-        SchemaDefinition schema = parser.parse("src/main/resources/empty-object.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/empty-object.schema.yaml");
         HasType type = schema.model();
 
         assertInstanceOf(ObjectType.class, type, "Empty schema should resolve to ObjectType");
@@ -43,7 +43,7 @@ public class TypeResolutionTest {
 
     @Test
     void testEmptyArrayConstraint() {
-        SchemaDefinition schema = parser.parse("src/main/resources/empty-array-constraint.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/empty-array-constraint.schema.yaml");
         HasType type = schema.model();
 
         assertInstanceOf(ArrayType.class, type, "Should resolve to ArrayType");
@@ -58,7 +58,7 @@ public class TypeResolutionTest {
 
     @Test
     void testImplicitObjectType() {
-        SchemaDefinition schema = parser.parse("src/main/resources/implicit-object.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/implicit-object.schema.yaml");
         HasType type = schema.model();
 
         assertInstanceOf(ObjectType.class, type, "Schema with properties but no explicit 'type' should resolve to ObjectType");
@@ -71,7 +71,7 @@ public class TypeResolutionTest {
 
     @Test
     void testRootAnyOf() {
-        SchemaDefinition schema = parser.parse("src/main/resources/root-anyof.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/root-anyof.schema.yaml");
         HasType type = schema.model();
 
         assertInstanceOf(ObjectType.class, type, "Should resolve to ObjectType");
@@ -82,7 +82,7 @@ public class TypeResolutionTest {
 
     @Test
     void testRootOneOf() {
-        SchemaDefinition schema = parser.parse("src/main/resources/root-oneof.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/root-oneof.schema.yaml");
         HasType type = schema.model();
 
         assertInstanceOf(ObjectType.class, type, "Should resolve to ObjectType");
@@ -95,7 +95,7 @@ public class TypeResolutionTest {
 
     @Test
     void testAllOfAsRootType() {
-        SchemaDefinition schema = parser.parse("src/main/resources/with-allof.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/with-allof.schema.yaml");
         HasType type = schema.model();
 
         assertInstanceOf(AllOfType.class, type, "Schema with allOf at root should resolve to AllOfType");
@@ -105,7 +105,7 @@ public class TypeResolutionTest {
 
     @Test
     void testAllOfWithRef() {
-        SchemaDefinition schema = parser.parse("src/main/resources/allof-with-ref.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/allof-with-ref.schema.yaml");
         HasType type = schema.model();
 
         assertInstanceOf(AllOfType.class, type, "Should resolve to AllOfType");
@@ -120,7 +120,7 @@ public class TypeResolutionTest {
 
     @Test
     void testRefOnlySchema() {
-        SchemaDefinition schema = parser.parse("src/main/resources/ref-only.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/ref-only.schema.yaml");
         HasType type = schema.model();
 
         assertInstanceOf(RefType.class, type, "Schema that is only a $ref should resolve to RefType");
@@ -135,7 +135,7 @@ public class TypeResolutionTest {
 
     @Test
     void testCombinedConstraints() {
-        SchemaDefinition schema = parser.parse("src/main/resources/combined-constraints.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/combined-constraints.schema.yaml");
         HasType type = schema.model();
 
         assertInstanceOf(ObjectType.class, type);
@@ -156,7 +156,7 @@ public class TypeResolutionTest {
 
     @Test
     void testPatternProperties() {
-        SchemaDefinition schema = parser.parse("src/main/resources/pattern-properties.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties.schema.yaml");
         HasType type = schema.model();
 
         assertInstanceOf(ObjectType.class, type);
@@ -170,7 +170,7 @@ public class TypeResolutionTest {
 
     @Test
     void testAllPrimitiveTypes() {
-        SchemaDefinition schema = parser.parse("src/main/resources/all-primitive-types.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/all-primitive-types.schema.yaml");
         HasType type = schema.model();
 
         assertInstanceOf(ObjectType.class, type);
@@ -192,7 +192,7 @@ public class TypeResolutionTest {
 
     @Test
     void testDiscriminator() {
-        SchemaDefinition schema = parser.parse("src/main/resources/discriminator.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/discriminator.schema.yaml");
         HasType type = schema.model();
 
         assertInstanceOf(ObjectType.class, type);

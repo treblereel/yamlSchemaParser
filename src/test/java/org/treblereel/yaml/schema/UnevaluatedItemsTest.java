@@ -17,7 +17,7 @@ public class UnevaluatedItemsTest {
 
     @Test
     void testUnevaluatedItemsFalsePresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/unevaluated-items-false.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/unevaluated-items-false.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertTrue(arrayType.unevaluatedItems().isPresent(),
@@ -28,7 +28,7 @@ public class UnevaluatedItemsTest {
 
     @Test
     void testUnevaluatedItemsTruePresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/unevaluated-items-true.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/unevaluated-items-true.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertTrue(arrayType.unevaluatedItems().isPresent(),
@@ -39,7 +39,7 @@ public class UnevaluatedItemsTest {
 
     @Test
     void testUnevaluatedItemsWithPrefixItems() {
-        SchemaDefinition schema = parser.parse("src/main/resources/unevaluated-items-false.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/unevaluated-items-false.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertTrue(arrayType.prefixItems().isPresent(),
@@ -57,7 +57,7 @@ public class UnevaluatedItemsTest {
 
     @Test
     void testUnevaluatedItemsWithBothPrefixAndItems() {
-        SchemaDefinition schema = parser.parse("src/main/resources/unevaluated-items-with-items.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/unevaluated-items-with-items.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertTrue(arrayType.prefixItems().isPresent(),
@@ -77,7 +77,7 @@ public class UnevaluatedItemsTest {
 
     @Test
     void testUnevaluatedItemsPrefixItemsTypes() {
-        SchemaDefinition schema = parser.parse("src/main/resources/unevaluated-items-with-items.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/unevaluated-items-with-items.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] prefixItems = arrayType.prefixItems().get();
@@ -97,7 +97,7 @@ public class UnevaluatedItemsTest {
 
     @Test
     void testUnevaluatedItemsItemsType() {
-        SchemaDefinition schema = parser.parse("src/main/resources/unevaluated-items-with-items.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/unevaluated-items-with-items.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] items = arrayType.getItems();
@@ -109,7 +109,7 @@ public class UnevaluatedItemsTest {
 
     @Test
     void testSchemaWithoutUnevaluatedItems() {
-        SchemaDefinition schema = parser.parse("src/main/resources/array-only-minItems.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/array-only-minItems.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertFalse(arrayType.unevaluatedItems().isPresent(),
@@ -120,7 +120,7 @@ public class UnevaluatedItemsTest {
     void testUnevaluatedItemsWithoutPrefixItems() {
         // Create a schema with unevaluatedItems but no prefixItems/items
         // (edge case - unevaluatedItems without prefix/items context)
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-simple.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         // This schema has prefixItems but no unevaluatedItems
@@ -130,7 +130,7 @@ public class UnevaluatedItemsTest {
 
     @Test
     void testUnevaluatedItemsFalseSemantics() {
-        SchemaDefinition schema = parser.parse("src/main/resources/unevaluated-items-false.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/unevaluated-items-false.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         // Verify semantic meaning: false means no additional items beyond prefixItems
@@ -147,7 +147,7 @@ public class UnevaluatedItemsTest {
 
     @Test
     void testUnevaluatedItemsTrueSemantics() {
-        SchemaDefinition schema = parser.parse("src/main/resources/unevaluated-items-true.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/unevaluated-items-true.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         // Verify semantic meaning: true means additional items are allowed
@@ -166,7 +166,7 @@ public class UnevaluatedItemsTest {
 
     @Test
     void testWorkflowSchemaUnevaluatedItems() {
-        SchemaDefinition schema = parser.parse("src/main/resources/workflow.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/workflow.yaml");
         assertNotNull(schema, "workflow.yaml should parse successfully");
 
         // workflow.yaml may or may not use unevaluatedItems

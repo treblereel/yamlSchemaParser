@@ -19,7 +19,7 @@ public class PropertyNamesTest {
 
     @Test
     void testPropertyNamesPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/property-names-pattern.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/property-names-pattern.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertTrue(objectType.propertyNames().isPresent(),
@@ -28,7 +28,7 @@ public class PropertyNamesTest {
 
     @Test
     void testPropertyNamesReturnsSchema() {
-        SchemaDefinition schema = parser.parse("src/main/resources/property-names-pattern.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/property-names-pattern.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         HasType propertyNamesSchema = objectType.propertyNames().get();
@@ -37,7 +37,7 @@ public class PropertyNamesTest {
 
     @Test
     void testPropertyNamesPatternSchema() {
-        SchemaDefinition schema = parser.parse("src/main/resources/property-names-pattern.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/property-names-pattern.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         HasType propertyNamesSchema = objectType.propertyNames().get();
@@ -51,7 +51,7 @@ public class PropertyNamesTest {
 
     @Test
     void testPropertyNamesLengthPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/property-names-length.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/property-names-length.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertTrue(objectType.propertyNames().isPresent(),
@@ -60,7 +60,7 @@ public class PropertyNamesTest {
 
     @Test
     void testPropertyNamesLengthSchema() {
-        SchemaDefinition schema = parser.parse("src/main/resources/property-names-length.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/property-names-length.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         HasType propertyNamesSchema = objectType.propertyNames().get();
@@ -70,7 +70,7 @@ public class PropertyNamesTest {
 
     @Test
     void testPropertyNamesLengthConstraints() {
-        SchemaDefinition schema = parser.parse("src/main/resources/property-names-length.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/property-names-length.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         HasType propertyNamesSchema = objectType.propertyNames().get();
@@ -91,7 +91,7 @@ public class PropertyNamesTest {
 
     @Test
     void testMixedPropertiesAndPropertyNames() {
-        SchemaDefinition schema = parser.parse("src/main/resources/property-names-mixed.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/property-names-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertTrue(objectType.properties().isPresent(),
@@ -102,7 +102,7 @@ public class PropertyNamesTest {
 
     @Test
     void testMixedPropertiesStructure() {
-        SchemaDefinition schema = parser.parse("src/main/resources/property-names-mixed.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/property-names-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         var props = objectType.properties().get();
@@ -113,7 +113,7 @@ public class PropertyNamesTest {
 
     @Test
     void testMixedPropertyNamesPattern() {
-        SchemaDefinition schema = parser.parse("src/main/resources/property-names-mixed.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/property-names-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         HasType propertyNamesSchema = objectType.propertyNames().get();
@@ -125,7 +125,7 @@ public class PropertyNamesTest {
 
     @Test
     void testSchemaWithoutPropertyNames() {
-        SchemaDefinition schema = parser.parse("src/main/resources/simple-string-props.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/simple-string-props.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertFalse(objectType.propertyNames().isPresent(),
@@ -135,7 +135,7 @@ public class PropertyNamesTest {
     @Test
     void testPropertyNamesWithPatternProperties() {
         // propertyNames applies to ALL properties, including those matched by patternProperties
-        SchemaDefinition schema = parser.parse("src/main/resources/property-names-pattern.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/property-names-pattern.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertTrue(objectType.propertyNames().isPresent(),
@@ -150,7 +150,7 @@ public class PropertyNamesTest {
 
     @Test
     void testWorkflowSchemaPropertyNames() {
-        SchemaDefinition schema = parser.parse("src/main/resources/workflow.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/workflow.yaml");
         assertNotNull(schema, "workflow.yaml should parse successfully");
 
         // workflow.yaml may or may not use propertyNames

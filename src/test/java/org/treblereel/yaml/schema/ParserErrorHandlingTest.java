@@ -59,7 +59,7 @@ public class ParserErrorHandlingTest {
 
     @Test
     void testParseEmptySchema() {
-        SchemaDefinition schema = parser.parse("src/main/resources/empty-schema.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/empty-schema.schema.yaml");
         assertNotNull(schema, "Should successfully parse empty schema");
         assertNotNull(schema.model(), "Empty schema should have a model");
     }
@@ -68,7 +68,7 @@ public class ParserErrorHandlingTest {
 
     @Test
     void testResolveNonExistentRef() {
-        SchemaDefinition schema = parser.parse("src/main/resources/simple-ref.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/simple-ref.schema.yaml");
 
         // Create a RefType pointing to non-existent definition
         RefType invalidRef = new RefType(schema, "#/$defs/NonExistentType");
@@ -81,7 +81,7 @@ public class ParserErrorHandlingTest {
 
     @Test
     void testResolveUnsupportedRefFormat() {
-        SchemaDefinition schema = parser.parse("src/main/resources/simple-string-props.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/simple-string-props.schema.yaml");
 
         // Create a RefType with unsupported format (external reference)
         RefType externalRef = new RefType(schema, "http://example.com/external-schema.json#/definitions/Address");
@@ -93,7 +93,7 @@ public class ParserErrorHandlingTest {
 
     @Test
     void testResolveRelativeRef() {
-        SchemaDefinition schema = parser.parse("src/main/resources/simple-string-props.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/simple-string-props.schema.yaml");
 
         // Relative reference (not supported)
         RefType relativeRef = new RefType(schema, "../other-schema.yaml#/$defs/Type");
@@ -107,7 +107,7 @@ public class ParserErrorHandlingTest {
 
     @Test
     void testOptionalFieldsReturnEmpty() {
-        SchemaDefinition schema = parser.parse("src/main/resources/simple-string-props.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/simple-string-props.schema.yaml");
 
         // Schema without $id should return empty Optional
         assertNotNull(schema.id(), "id() should not return null");
@@ -124,14 +124,14 @@ public class ParserErrorHandlingTest {
     @Test
     void testParseVeryDeepNesting() {
         // Test that parser handles deeply nested objects without stack overflow
-        SchemaDefinition schema = parser.parse("src/main/resources/deep-nested-object.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/deep-nested-object.schema.yaml");
         assertNotNull(schema.model(), "Should handle deeply nested schemas");
     }
 
     @Test
     void testParseCircularReferences() {
         // Test that circular references don't cause infinite loops during parsing
-        SchemaDefinition schema = parser.parse("src/main/resources/circular-refs.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/circular-refs.schema.yaml");
         assertNotNull(schema.model(), "Should handle circular references");
 
         // Note: Resolution of circular refs is lazy, so no infinite loop during parse
@@ -139,7 +139,7 @@ public class ParserErrorHandlingTest {
 
     @Test
     void testParseSelfReferencingSchema() {
-        SchemaDefinition schema = parser.parse("src/main/resources/self-ref.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/self-ref.schema.yaml");
         assertNotNull(schema.model(), "Should handle self-referencing schemas");
     }
 }

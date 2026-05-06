@@ -17,7 +17,7 @@ public class NotCombinatorTest {
 
     @Test
     void testObjectTypeNotPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/not-object.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/not-object.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertTrue(objectType.not().isPresent(), "ObjectType should support not combinator");
@@ -25,7 +25,7 @@ public class NotCombinatorTest {
 
     @Test
     void testObjectTypeNotStructure() {
-        SchemaDefinition schema = parser.parse("src/main/resources/not-object.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/not-object.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         HasType notSchema = objectType.not().get();
@@ -36,7 +36,7 @@ public class NotCombinatorTest {
 
     @Test
     void testStringTypeNotPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/not-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/not-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         assertTrue(stringType.not().isPresent(), "StringType should support not combinator");
@@ -44,7 +44,7 @@ public class NotCombinatorTest {
 
     @Test
     void testStringTypeNotStructure() {
-        SchemaDefinition schema = parser.parse("src/main/resources/not-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/not-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         HasType notSchema = stringType.not().get();
@@ -58,7 +58,7 @@ public class NotCombinatorTest {
 
     @Test
     void testStringTypeNotPattern() {
-        SchemaDefinition schema = parser.parse("src/main/resources/not-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/not-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         HasType notSchema = stringType.not().get();
@@ -73,7 +73,7 @@ public class NotCombinatorTest {
 
     @Test
     void testIntegerTypeNotPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/not-integer.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/not-integer.schema.yaml");
         IntegerType integerType = (IntegerType) schema.model();
 
         assertTrue(integerType.not().isPresent(), "IntegerType should support not combinator");
@@ -81,7 +81,7 @@ public class NotCombinatorTest {
 
     @Test
     void testIntegerTypeNotConstraints() {
-        SchemaDefinition schema = parser.parse("src/main/resources/not-integer.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/not-integer.schema.yaml");
         IntegerType integerType = (IntegerType) schema.model();
 
         HasType notSchema = integerType.not().get();
@@ -92,7 +92,7 @@ public class NotCombinatorTest {
 
     @Test
     void testNumberTypeNotPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/not-number.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/not-number.schema.yaml");
         NumberType numberType = (NumberType) schema.model();
 
         assertTrue(numberType.not().isPresent(), "NumberType should support not combinator");
@@ -100,7 +100,7 @@ public class NotCombinatorTest {
 
     @Test
     void testNumberTypeNotMultipleOf() {
-        SchemaDefinition schema = parser.parse("src/main/resources/not-number.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/not-number.schema.yaml");
         NumberType numberType = (NumberType) schema.model();
 
         HasType notSchema = numberType.not().get();
@@ -111,7 +111,7 @@ public class NotCombinatorTest {
 
     @Test
     void testArrayTypeNotPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/not-array.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/not-array.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertTrue(arrayType.not().isPresent(), "ArrayType should support not combinator");
@@ -119,7 +119,7 @@ public class NotCombinatorTest {
 
     @Test
     void testArrayTypeNotMinItems() {
-        SchemaDefinition schema = parser.parse("src/main/resources/not-array.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/not-array.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         HasType notSchema = arrayType.not().get();
@@ -130,7 +130,7 @@ public class NotCombinatorTest {
 
     @Test
     void testBooleanTypeNotPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/not-boolean.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/not-boolean.schema.yaml");
         BooleanType booleanType = (BooleanType) schema.model();
 
         assertTrue(booleanType.not().isPresent(), "BooleanType should support not combinator");
@@ -138,7 +138,7 @@ public class NotCombinatorTest {
 
     @Test
     void testBooleanTypeNotConst() {
-        SchemaDefinition schema = parser.parse("src/main/resources/not-boolean.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/not-boolean.schema.yaml");
         BooleanType booleanType = (BooleanType) schema.model();
 
         HasType notSchema = booleanType.not().get();
@@ -149,7 +149,7 @@ public class NotCombinatorTest {
 
     @Test
     void testTypeWithoutNot() {
-        SchemaDefinition schema = parser.parse("src/main/resources/simple-string-props.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/simple-string-props.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         var props = objectType.properties().get();

@@ -20,7 +20,7 @@ public class DependentSchemasTest {
 
     @Test
     void testDependentSchemasPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertTrue(objectType.dependentSchemas().isPresent(),
@@ -29,7 +29,7 @@ public class DependentSchemasTest {
 
     @Test
     void testDependentSchemasMapSize() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         Map<String, HasType> deps = objectType.dependentSchemas().get();
@@ -38,7 +38,7 @@ public class DependentSchemasTest {
 
     @Test
     void testDependentSchemasKeys() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         Map<String, HasType> deps = objectType.dependentSchemas().get();
@@ -48,7 +48,7 @@ public class DependentSchemasTest {
 
     @Test
     void testDependentSchemasCreditCardSchema() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         Map<String, HasType> deps = objectType.dependentSchemas().get();
@@ -61,7 +61,7 @@ public class DependentSchemasTest {
 
     @Test
     void testDependentSchemasCreditCardProperties() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         Map<String, HasType> deps = objectType.dependentSchemas().get();
@@ -79,7 +79,7 @@ public class DependentSchemasTest {
 
     @Test
     void testDependentSchemasCreditCardRequired() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         Map<String, HasType> deps = objectType.dependentSchemas().get();
@@ -98,7 +98,7 @@ public class DependentSchemasTest {
 
     @Test
     void testDependentSchemasCvvPattern() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         Map<String, HasType> deps = objectType.dependentSchemas().get();
@@ -117,7 +117,7 @@ public class DependentSchemasTest {
 
     @Test
     void testMultipleDependentSchemas() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-multiple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-multiple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         Map<String, HasType> deps = objectType.dependentSchemas().get();
@@ -126,7 +126,7 @@ public class DependentSchemasTest {
 
     @Test
     void testMultipleDependentSchemasKeys() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-multiple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-multiple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         Map<String, HasType> deps = objectType.dependentSchemas().get();
@@ -137,7 +137,7 @@ public class DependentSchemasTest {
 
     @Test
     void testMultipleDependentSchemasEmailSchema() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-multiple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-multiple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         Map<String, HasType> deps = objectType.dependentSchemas().get();
@@ -157,7 +157,7 @@ public class DependentSchemasTest {
 
     @Test
     void testMultipleDependentSchemasIsPremiumSchema() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-multiple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-multiple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         Map<String, HasType> deps = objectType.dependentSchemas().get();
@@ -184,7 +184,7 @@ public class DependentSchemasTest {
 
     @Test
     void testMixedRequiredAndDependentSchemas() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-mixed.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertTrue(objectType.required().isPresent(),
@@ -195,7 +195,7 @@ public class DependentSchemasTest {
 
     @Test
     void testMixedRegularRequired() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-mixed.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         List<String> required = objectType.required().get();
@@ -206,7 +206,7 @@ public class DependentSchemasTest {
 
     @Test
     void testMixedDependentSchemasWithOneOf() {
-        SchemaDefinition schema = parser.parse("src/main/resources/dependent-schemas-mixed.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         Map<String, HasType> deps = objectType.dependentSchemas().get();
@@ -230,7 +230,7 @@ public class DependentSchemasTest {
 
     @Test
     void testSchemaWithoutDependentSchemas() {
-        SchemaDefinition schema = parser.parse("src/main/resources/simple-string-props.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/simple-string-props.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertFalse(objectType.dependentSchemas().isPresent(),
@@ -241,7 +241,7 @@ public class DependentSchemasTest {
 
     @Test
     void testWorkflowSchemaDependentSchemas() {
-        SchemaDefinition schema = parser.parse("src/main/resources/workflow.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/workflow.yaml");
         assertNotNull(schema, "workflow.yaml should parse successfully");
 
         // workflow.yaml may or may not use dependentSchemas

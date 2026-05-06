@@ -20,7 +20,7 @@ public class ReadOnlyWriteOnlyTest {
 
     @Test
     void testStringReadOnlyTrue() {
-        SchemaDefinition schema = parser.parse("src/main/resources/readonly-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/readonly-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         assertTrue(stringType.readOnly().isPresent(),
@@ -31,7 +31,7 @@ public class ReadOnlyWriteOnlyTest {
 
     @Test
     void testStringReadOnlyWithDescription() {
-        SchemaDefinition schema = parser.parse("src/main/resources/readonly-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/readonly-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         assertTrue(stringType.description().isPresent(),
@@ -42,7 +42,7 @@ public class ReadOnlyWriteOnlyTest {
 
     @Test
     void testObjectWithReadOnlyProperties() {
-        SchemaDefinition schema = parser.parse("src/main/resources/readonly-object.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/readonly-object.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertTrue(objectType.properties().isPresent(),
@@ -73,7 +73,7 @@ public class ReadOnlyWriteOnlyTest {
 
     @Test
     void testStringWriteOnlyTrue() {
-        SchemaDefinition schema = parser.parse("src/main/resources/writeonly-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/writeonly-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         assertTrue(stringType.writeOnly().isPresent(),
@@ -84,7 +84,7 @@ public class ReadOnlyWriteOnlyTest {
 
     @Test
     void testStringWriteOnlyWithDescription() {
-        SchemaDefinition schema = parser.parse("src/main/resources/writeonly-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/writeonly-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         assertTrue(stringType.description().isPresent(),
@@ -97,7 +97,7 @@ public class ReadOnlyWriteOnlyTest {
 
     @Test
     void testSchemaWithoutReadOnlyOrWriteOnly() {
-        SchemaDefinition schema = parser.parse("src/main/resources/array-only-minItems.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/array-only-minItems.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertFalse(arrayType.readOnly().isPresent(),
@@ -109,7 +109,7 @@ public class ReadOnlyWriteOnlyTest {
     @Test
     void testReadOnlyOnAllTypes() {
         // Test that readOnly works on string type
-        SchemaDefinition stringSchema = parser.parse("src/main/resources/readonly-string.schema.yaml");
+        SchemaDefinition stringSchema = parser.parse("src/test/resources/readonly-string.schema.yaml");
         StringType stringType = (StringType) stringSchema.model();
         assertTrue(stringType.readOnly().isPresent(),
                    "StringType should support readOnly");
@@ -118,7 +118,7 @@ public class ReadOnlyWriteOnlyTest {
     @Test
     void testWriteOnlyOnAllTypes() {
         // Test that writeOnly works on string type
-        SchemaDefinition stringSchema = parser.parse("src/main/resources/writeonly-string.schema.yaml");
+        SchemaDefinition stringSchema = parser.parse("src/test/resources/writeonly-string.schema.yaml");
         StringType stringType = (StringType) stringSchema.model();
         assertTrue(stringType.writeOnly().isPresent(),
                    "StringType should support writeOnly");
@@ -126,7 +126,7 @@ public class ReadOnlyWriteOnlyTest {
 
     @Test
     void testReadOnlySemantics() {
-        SchemaDefinition schema = parser.parse("src/main/resources/readonly-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/readonly-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         // Verify semantic meaning: true means read-only (response only)
@@ -138,7 +138,7 @@ public class ReadOnlyWriteOnlyTest {
 
     @Test
     void testWriteOnlySemantics() {
-        SchemaDefinition schema = parser.parse("src/main/resources/writeonly-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/writeonly-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         // Verify semantic meaning: true means write-only (request only)
@@ -152,7 +152,7 @@ public class ReadOnlyWriteOnlyTest {
 
     @Test
     void testWorkflowSchemaReadOnlyWriteOnly() {
-        SchemaDefinition schema = parser.parse("src/main/resources/workflow.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/workflow.yaml");
         assertNotNull(schema, "workflow.yaml should parse successfully");
 
         // workflow.yaml may or may not use readOnly/writeOnly

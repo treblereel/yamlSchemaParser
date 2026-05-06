@@ -19,7 +19,7 @@ public class ContainsTest {
 
     @Test
     void testContainsPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/contains-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/contains-simple.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertTrue(arrayType.contains().isPresent(),
@@ -28,7 +28,7 @@ public class ContainsTest {
 
     @Test
     void testContainsSchemaType() {
-        SchemaDefinition schema = parser.parse("src/main/resources/contains-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/contains-simple.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         HasType containsSchema = arrayType.contains().get();
@@ -38,7 +38,7 @@ public class ContainsTest {
 
     @Test
     void testContainsSchemaConstraints() {
-        SchemaDefinition schema = parser.parse("src/main/resources/contains-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/contains-simple.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         NumberType numberType = (NumberType) arrayType.contains().get();
@@ -53,7 +53,7 @@ public class ContainsTest {
 
     @Test
     void testMinContainsPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/contains-with-min-max.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/contains-with-min-max.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertTrue(arrayType.minContains().isPresent(),
@@ -64,7 +64,7 @@ public class ContainsTest {
 
     @Test
     void testMaxContainsPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/contains-with-min-max.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/contains-with-min-max.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertTrue(arrayType.maxContains().isPresent(),
@@ -75,7 +75,7 @@ public class ContainsTest {
 
     @Test
     void testContainsWithMinMaxSchema() {
-        SchemaDefinition schema = parser.parse("src/main/resources/contains-with-min-max.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/contains-with-min-max.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertTrue(arrayType.contains().isPresent(),
@@ -96,7 +96,7 @@ public class ContainsTest {
 
     @Test
     void testComplexContainsObjectType() {
-        SchemaDefinition schema = parser.parse("src/main/resources/contains-complex.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/contains-complex.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         HasType containsSchema = arrayType.contains().get();
@@ -106,7 +106,7 @@ public class ContainsTest {
 
     @Test
     void testComplexContainsObjectProperties() {
-        SchemaDefinition schema = parser.parse("src/main/resources/contains-complex.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/contains-complex.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ObjectType objectType = (ObjectType) arrayType.contains().get();
@@ -121,7 +121,7 @@ public class ContainsTest {
 
     @Test
     void testComplexContainsObjectRequired() {
-        SchemaDefinition schema = parser.parse("src/main/resources/contains-complex.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/contains-complex.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ObjectType objectType = (ObjectType) arrayType.contains().get();
@@ -134,7 +134,7 @@ public class ContainsTest {
 
     @Test
     void testComplexContainsStatusEnum() {
-        SchemaDefinition schema = parser.parse("src/main/resources/contains-complex.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/contains-complex.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ObjectType objectType = (ObjectType) arrayType.contains().get();
@@ -153,7 +153,7 @@ public class ContainsTest {
 
     @Test
     void testComplexContainsMinContains() {
-        SchemaDefinition schema = parser.parse("src/main/resources/contains-complex.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/contains-complex.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertTrue(arrayType.minContains().isPresent(),
@@ -164,7 +164,7 @@ public class ContainsTest {
 
     @Test
     void testComplexContainsNoMaxContains() {
-        SchemaDefinition schema = parser.parse("src/main/resources/contains-complex.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/contains-complex.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertFalse(arrayType.maxContains().isPresent(),
@@ -175,7 +175,7 @@ public class ContainsTest {
 
     @Test
     void testSchemaWithoutContains() {
-        SchemaDefinition schema = parser.parse("src/main/resources/array-only-minItems.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/array-only-minItems.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertFalse(arrayType.contains().isPresent(),
@@ -188,7 +188,7 @@ public class ContainsTest {
 
     @Test
     void testContainsWithoutMinMax() {
-        SchemaDefinition schema = parser.parse("src/main/resources/contains-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/contains-simple.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertTrue(arrayType.contains().isPresent(),
@@ -203,7 +203,7 @@ public class ContainsTest {
 
     @Test
     void testWorkflowSchemaContains() {
-        SchemaDefinition schema = parser.parse("src/main/resources/workflow.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/workflow.yaml");
         assertNotNull(schema, "workflow.yaml should parse successfully");
 
         // workflow.yaml may or may not use contains

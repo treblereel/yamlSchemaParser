@@ -23,7 +23,7 @@ public class ExclusiveBooleanTest {
 
     @Test
     void testIntegerExclusiveMinimumTrue() {
-        SchemaDefinition schema = parser.parse("src/main/resources/exclusive-boolean-integer.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/exclusive-boolean-integer.schema.yaml");
         IntegerType integerType = (IntegerType) schema.model();
 
         assertTrue(integerType.minimum().isPresent(),
@@ -39,7 +39,7 @@ public class ExclusiveBooleanTest {
 
     @Test
     void testIntegerExclusiveMaximumTrue() {
-        SchemaDefinition schema = parser.parse("src/main/resources/exclusive-boolean-integer.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/exclusive-boolean-integer.schema.yaml");
         IntegerType integerType = (IntegerType) schema.model();
 
         assertTrue(integerType.maximum().isPresent(),
@@ -55,7 +55,7 @@ public class ExclusiveBooleanTest {
 
     @Test
     void testIntegerExclusiveFalse() {
-        SchemaDefinition schema = parser.parse("src/main/resources/exclusive-boolean-false.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/exclusive-boolean-false.schema.yaml");
         IntegerType integerType = (IntegerType) schema.model();
 
         assertTrue(integerType.isMinimumExclusive().isPresent(),
@@ -73,7 +73,7 @@ public class ExclusiveBooleanTest {
 
     @Test
     void testNumberExclusiveMinimumTrue() {
-        SchemaDefinition schema = parser.parse("src/main/resources/exclusive-boolean-number.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/exclusive-boolean-number.schema.yaml");
         NumberType numberType = (NumberType) schema.model();
 
         assertTrue(numberType.minimum().isPresent(),
@@ -89,7 +89,7 @@ public class ExclusiveBooleanTest {
 
     @Test
     void testNumberExclusiveMaximumFalse() {
-        SchemaDefinition schema = parser.parse("src/main/resources/exclusive-boolean-number.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/exclusive-boolean-number.schema.yaml");
         NumberType numberType = (NumberType) schema.model();
 
         assertTrue(numberType.maximum().isPresent(),
@@ -107,7 +107,7 @@ public class ExclusiveBooleanTest {
 
     @Test
     void testSchemaWithoutBooleanExclusive() {
-        SchemaDefinition schema = parser.parse("src/main/resources/array-only-minItems.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/array-only-minItems.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         // ArrayType doesn't have exclusive bounds
@@ -116,7 +116,7 @@ public class ExclusiveBooleanTest {
 
     @Test
     void testBooleanExclusiveSemantics() {
-        SchemaDefinition schema = parser.parse("src/main/resources/exclusive-boolean-integer.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/exclusive-boolean-integer.schema.yaml");
         IntegerType integerType = (IntegerType) schema.model();
 
         // Verify Draft 4 semantics: exclusiveMinimum: true means > minimum (not >= minimum)
@@ -131,7 +131,7 @@ public class ExclusiveBooleanTest {
 
     @Test
     void testInclusiveSemantics() {
-        SchemaDefinition schema = parser.parse("src/main/resources/exclusive-boolean-false.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/exclusive-boolean-false.schema.yaml");
         IntegerType integerType = (IntegerType) schema.model();
 
         // Verify Draft 4 semantics: exclusiveMinimum: false means >= minimum (inclusive)
@@ -149,7 +149,7 @@ public class ExclusiveBooleanTest {
         // This test verifies that both Draft 4 (boolean) and Draft 6+ (numeric) syntaxes
         // can be supported simultaneously without conflict
 
-        SchemaDefinition booleanSchema = parser.parse("src/main/resources/exclusive-boolean-integer.schema.yaml");
+        SchemaDefinition booleanSchema = parser.parse("src/test/resources/exclusive-boolean-integer.schema.yaml");
         IntegerType booleanType = (IntegerType) booleanSchema.model();
 
         // Draft 4 boolean syntax
@@ -165,7 +165,7 @@ public class ExclusiveBooleanTest {
 
     @Test
     void testWorkflowSchemaExclusiveBoolean() {
-        SchemaDefinition schema = parser.parse("src/main/resources/workflow.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/workflow.yaml");
         assertNotNull(schema, "workflow.yaml should parse successfully");
 
         // workflow.yaml may or may not use Draft 4 boolean syntax

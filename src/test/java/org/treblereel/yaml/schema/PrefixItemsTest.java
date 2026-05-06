@@ -19,7 +19,7 @@ public class PrefixItemsTest {
 
     @Test
     void testPrefixItemsPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-simple.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertTrue(arrayType.prefixItems().isPresent(),
@@ -28,7 +28,7 @@ public class PrefixItemsTest {
 
     @Test
     void testPrefixItemsArrayLength() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-simple.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] items = arrayType.prefixItems().get();
@@ -37,7 +37,7 @@ public class PrefixItemsTest {
 
     @Test
     void testPrefixItemsFirstItemType() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-simple.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] items = arrayType.prefixItems().get();
@@ -49,7 +49,7 @@ public class PrefixItemsTest {
 
     @Test
     void testPrefixItemsSecondItemType() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-simple.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] items = arrayType.prefixItems().get();
@@ -61,7 +61,7 @@ public class PrefixItemsTest {
 
     @Test
     void testPrefixItemsThirdItemType() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-simple.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-simple.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] items = arrayType.prefixItems().get();
@@ -75,7 +75,7 @@ public class PrefixItemsTest {
 
     @Test
     void testComplexPrefixItemsLength() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-complex.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-complex.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] items = arrayType.prefixItems().get();
@@ -84,7 +84,7 @@ public class PrefixItemsTest {
 
     @Test
     void testComplexPrefixItemsStringConstraints() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-complex.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-complex.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] items = arrayType.prefixItems().get();
@@ -98,7 +98,7 @@ public class PrefixItemsTest {
 
     @Test
     void testComplexPrefixItemsIntegerConstraints() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-complex.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-complex.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] items = arrayType.prefixItems().get();
@@ -112,7 +112,7 @@ public class PrefixItemsTest {
 
     @Test
     void testComplexPrefixItemsObjectProperties() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-complex.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-complex.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] items = arrayType.prefixItems().get();
@@ -126,7 +126,7 @@ public class PrefixItemsTest {
 
     @Test
     void testComplexPrefixItemsObjectRequired() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-complex.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-complex.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] items = arrayType.prefixItems().get();
@@ -140,7 +140,7 @@ public class PrefixItemsTest {
 
     @Test
     void testComplexArrayConstraints() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-complex.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-complex.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertEquals(3, arrayType.minItems().get(),
@@ -153,7 +153,7 @@ public class PrefixItemsTest {
 
     @Test
     void testMixedPrefixItemsPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-mixed.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-mixed.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertTrue(arrayType.prefixItems().isPresent(),
@@ -162,7 +162,7 @@ public class PrefixItemsTest {
 
     @Test
     void testMixedPrefixItemsLength() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-mixed.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-mixed.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] items = arrayType.prefixItems().get();
@@ -171,7 +171,7 @@ public class PrefixItemsTest {
 
     @Test
     void testMixedPrefixItemsTypes() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-mixed.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-mixed.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         ArrayItemType[] items = arrayType.prefixItems().get();
@@ -184,7 +184,7 @@ public class PrefixItemsTest {
 
     @Test
     void testMixedItemsDefinition() {
-        SchemaDefinition schema = parser.parse("src/main/resources/prefix-items-mixed.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/prefix-items-mixed.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         // getItems() should still work for additional items
@@ -196,7 +196,7 @@ public class PrefixItemsTest {
 
     @Test
     void testSchemaWithoutPrefixItems() {
-        SchemaDefinition schema = parser.parse("src/main/resources/array-only-minItems.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/array-only-minItems.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertFalse(arrayType.prefixItems().isPresent(),
@@ -206,7 +206,7 @@ public class PrefixItemsTest {
     @Test
     void testPrefixItemsVsOldStyleItems() {
         // Test that prefixItems is distinct from old-style array items
-        SchemaDefinition prefixSchema = parser.parse("src/main/resources/prefix-items-simple.schema.yaml");
+        SchemaDefinition prefixSchema = parser.parse("src/test/resources/prefix-items-simple.schema.yaml");
         ArrayType prefixArray = (ArrayType) prefixSchema.model();
 
         // Schema uses prefixItems, not items array
@@ -218,7 +218,7 @@ public class PrefixItemsTest {
 
     @Test
     void testWorkflowSchemaPrefixItems() {
-        SchemaDefinition schema = parser.parse("src/main/resources/workflow.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/workflow.yaml");
         assertNotNull(schema, "workflow.yaml should parse successfully");
 
         // workflow.yaml may or may not use prefixItems

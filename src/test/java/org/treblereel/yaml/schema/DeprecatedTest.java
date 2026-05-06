@@ -17,7 +17,7 @@ public class DeprecatedTest {
 
     @Test
     void testStringDeprecatedTrue() {
-        SchemaDefinition schema = parser.parse("src/main/resources/deprecated-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/deprecated-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         assertTrue(stringType.deprecated().isPresent(),
@@ -28,7 +28,7 @@ public class DeprecatedTest {
 
     @Test
     void testStringDeprecatedWithDescription() {
-        SchemaDefinition schema = parser.parse("src/main/resources/deprecated-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/deprecated-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         assertTrue(stringType.description().isPresent(),
@@ -41,7 +41,7 @@ public class DeprecatedTest {
 
     @Test
     void testObjectDeprecatedTrue() {
-        SchemaDefinition schema = parser.parse("src/main/resources/deprecated-object.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/deprecated-object.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertTrue(objectType.deprecated().isPresent(),
@@ -52,7 +52,7 @@ public class DeprecatedTest {
 
     @Test
     void testObjectDeprecatedWithProperties() {
-        SchemaDefinition schema = parser.parse("src/main/resources/deprecated-object.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/deprecated-object.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertTrue(objectType.properties().isPresent(),
@@ -65,7 +65,7 @@ public class DeprecatedTest {
 
     @Test
     void testIntegerDeprecatedFalse() {
-        SchemaDefinition schema = parser.parse("src/main/resources/deprecated-false.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/deprecated-false.schema.yaml");
         IntegerType integerType = (IntegerType) schema.model();
 
         assertTrue(integerType.deprecated().isPresent(),
@@ -76,7 +76,7 @@ public class DeprecatedTest {
 
     @Test
     void testIntegerDeprecatedFalseWithConstraints() {
-        SchemaDefinition schema = parser.parse("src/main/resources/deprecated-false.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/deprecated-false.schema.yaml");
         IntegerType integerType = (IntegerType) schema.model();
 
         assertTrue(integerType.minimum().isPresent(),
@@ -89,7 +89,7 @@ public class DeprecatedTest {
 
     @Test
     void testSchemaWithoutDeprecated() {
-        SchemaDefinition schema = parser.parse("src/main/resources/array-only-minItems.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/array-only-minItems.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertFalse(arrayType.deprecated().isPresent(),
@@ -99,17 +99,17 @@ public class DeprecatedTest {
     @Test
     void testDeprecatedOnAllTypes() {
         // Test that deprecated works on various types
-        SchemaDefinition stringSchema = parser.parse("src/main/resources/deprecated-string.schema.yaml");
+        SchemaDefinition stringSchema = parser.parse("src/test/resources/deprecated-string.schema.yaml");
         StringType stringType = (StringType) stringSchema.model();
         assertTrue(stringType.deprecated().isPresent(),
                    "StringType should support deprecated");
 
-        SchemaDefinition objectSchema = parser.parse("src/main/resources/deprecated-object.schema.yaml");
+        SchemaDefinition objectSchema = parser.parse("src/test/resources/deprecated-object.schema.yaml");
         ObjectType objectType = (ObjectType) objectSchema.model();
         assertTrue(objectType.deprecated().isPresent(),
                    "ObjectType should support deprecated");
 
-        SchemaDefinition integerSchema = parser.parse("src/main/resources/deprecated-false.schema.yaml");
+        SchemaDefinition integerSchema = parser.parse("src/test/resources/deprecated-false.schema.yaml");
         IntegerType integerType = (IntegerType) integerSchema.model();
         assertTrue(integerType.deprecated().isPresent(),
                    "IntegerType should support deprecated");
@@ -117,7 +117,7 @@ public class DeprecatedTest {
 
     @Test
     void testDeprecatedSemantics() {
-        SchemaDefinition schema = parser.parse("src/main/resources/deprecated-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/deprecated-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         // Verify semantic meaning: true means deprecated
@@ -129,7 +129,7 @@ public class DeprecatedTest {
 
     @Test
     void testNotDeprecatedSemantics() {
-        SchemaDefinition schema = parser.parse("src/main/resources/deprecated-false.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/deprecated-false.schema.yaml");
         IntegerType integerType = (IntegerType) schema.model();
 
         // Verify semantic meaning: false means not deprecated
@@ -143,7 +143,7 @@ public class DeprecatedTest {
 
     @Test
     void testWorkflowSchemaDeprecated() {
-        SchemaDefinition schema = parser.parse("src/main/resources/workflow.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/workflow.yaml");
         assertNotNull(schema, "workflow.yaml should parse successfully");
 
         // workflow.yaml may or may not use deprecated

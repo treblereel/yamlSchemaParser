@@ -20,7 +20,7 @@ public class ExamplesTest {
 
     @Test
     void testStringExamplesPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/examples-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/examples-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         assertTrue(stringType.examples().isPresent(),
@@ -29,7 +29,7 @@ public class ExamplesTest {
 
     @Test
     void testStringExamplesCount() {
-        SchemaDefinition schema = parser.parse("src/main/resources/examples-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/examples-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         List<JsonNode> examples = stringType.examples().get();
@@ -39,7 +39,7 @@ public class ExamplesTest {
 
     @Test
     void testStringExamplesValues() {
-        SchemaDefinition schema = parser.parse("src/main/resources/examples-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/examples-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         List<JsonNode> examples = stringType.examples().get();
@@ -55,7 +55,7 @@ public class ExamplesTest {
 
     @Test
     void testIntegerExamplesPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/examples-integer.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/examples-integer.schema.yaml");
         IntegerType integerType = (IntegerType) schema.model();
 
         assertTrue(integerType.examples().isPresent(),
@@ -64,7 +64,7 @@ public class ExamplesTest {
 
     @Test
     void testIntegerExamplesCount() {
-        SchemaDefinition schema = parser.parse("src/main/resources/examples-integer.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/examples-integer.schema.yaml");
         IntegerType integerType = (IntegerType) schema.model();
 
         List<JsonNode> examples = integerType.examples().get();
@@ -74,7 +74,7 @@ public class ExamplesTest {
 
     @Test
     void testIntegerExamplesValues() {
-        SchemaDefinition schema = parser.parse("src/main/resources/examples-integer.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/examples-integer.schema.yaml");
         IntegerType integerType = (IntegerType) schema.model();
 
         List<JsonNode> examples = integerType.examples().get();
@@ -90,7 +90,7 @@ public class ExamplesTest {
 
     @Test
     void testObjectExamplesPresent() {
-        SchemaDefinition schema = parser.parse("src/main/resources/examples-object.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/examples-object.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         assertTrue(objectType.examples().isPresent(),
@@ -99,7 +99,7 @@ public class ExamplesTest {
 
     @Test
     void testObjectExamplesCount() {
-        SchemaDefinition schema = parser.parse("src/main/resources/examples-object.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/examples-object.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         List<JsonNode> examples = objectType.examples().get();
@@ -109,7 +109,7 @@ public class ExamplesTest {
 
     @Test
     void testObjectExamplesStructure() {
-        SchemaDefinition schema = parser.parse("src/main/resources/examples-object.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/examples-object.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
         List<JsonNode> examples = objectType.examples().get();
@@ -135,7 +135,7 @@ public class ExamplesTest {
 
     @Test
     void testSchemaWithoutExamples() {
-        SchemaDefinition schema = parser.parse("src/main/resources/array-only-minItems.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/array-only-minItems.schema.yaml");
         ArrayType arrayType = (ArrayType) schema.model();
 
         assertFalse(arrayType.examples().isPresent(),
@@ -145,7 +145,7 @@ public class ExamplesTest {
     @Test
     void testEmptyExamplesArray() {
         // Parser should handle empty examples array gracefully
-        SchemaDefinition schema = parser.parse("src/main/resources/examples-string.schema.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/examples-string.schema.yaml");
         StringType stringType = (StringType) schema.model();
 
         // If examples is present, it should be a list
@@ -159,7 +159,7 @@ public class ExamplesTest {
 
     @Test
     void testWorkflowSchemaExamples() {
-        SchemaDefinition schema = parser.parse("src/main/resources/workflow.yaml");
+        SchemaDefinition schema = parser.parse("src/test/resources/workflow.yaml");
         assertNotNull(schema, "workflow.yaml should parse successfully");
 
         // workflow.yaml may or may not use examples

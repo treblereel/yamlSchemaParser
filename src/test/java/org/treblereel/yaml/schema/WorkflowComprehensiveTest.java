@@ -42,7 +42,7 @@ public class WorkflowComprehensiveTest {
     @BeforeAll
     static void setUp() {
         Parser parser = new Parser();
-        schema = parser.parse("src/main/resources/workflow.yaml");
+        schema = parser.parse("src/test/resources/workflow.yaml");
         root = (ObjectType) schema.model();
     }
 

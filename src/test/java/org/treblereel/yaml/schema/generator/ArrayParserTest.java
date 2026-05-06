@@ -24,7 +24,7 @@ public class ArrayParserTest {
 
   @Test
   public void testSimpleStringArray() {
-    String schema = "src/main/resources/simple-string-array.schema.yaml";
+    String schema = "src/test/resources/simple-string-array.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -37,7 +37,7 @@ public class ArrayParserTest {
 
   @Test
   public void testBoundedIntegerArray() {
-    String schema = "src/main/resources/bounded-integer-array.schema.yaml";
+    String schema = "src/test/resources/bounded-integer-array.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -53,7 +53,7 @@ public class ArrayParserTest {
 
   @Test
   public void testObjectArrayWithRequiredFields() {
-    String schema = "src/main/resources/object-array-required-fields.schema.yaml";
+    String schema = "src/test/resources/object-array-required-fields.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -78,7 +78,7 @@ public class ArrayParserTest {
 
   @Test
   public void testNestedNumberArray() {
-    String schema = "src/main/resources/nested-number-array.schema.yaml";
+    String schema = "src/test/resources/nested-number-array.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -94,7 +94,7 @@ public class ArrayParserTest {
 
   @Test
   public void testTupleArrayValidation() {
-    String schema = "src/main/resources/tuple-array-validation.schema.yaml";
+    String schema = "src/test/resources/tuple-array-validation.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -109,7 +109,7 @@ public class ArrayParserTest {
 
   @Test
   public void testObjectArrayWithNestedArrays() {
-    String schema = "src/main/resources/object-array-with-nested-arrays.schema.yaml";
+    String schema = "src/test/resources/object-array-with-nested-arrays.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -135,7 +135,7 @@ public class ArrayParserTest {
 
   @Test
   public void testArrayWithOneOfItems() {
-    String schema = "src/main/resources/array-with-oneof-items.schema.yaml";
+    String schema = "src/test/resources/array-with-oneof-items.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -148,7 +148,7 @@ public class ArrayParserTest {
 
   @Test
   public void testUniqueItemsArray() {
-    String schema = "src/main/resources/unique-items-array.schema.yaml";
+    String schema = "src/test/resources/unique-items-array.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -162,7 +162,7 @@ public class ArrayParserTest {
 
   @Test
   public void testDeepNestedArrayStructure() {
-    String schema = "src/main/resources/deep-nested-array-structure.schema.yaml";
+    String schema = "src/test/resources/deep-nested-array-structure.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -190,7 +190,7 @@ public class ArrayParserTest {
 
   @Test
   public void testNullableItemsArray() {
-    String schema = "src/main/resources/nullable-items-array.schema.yaml";
+    String schema = "src/test/resources/nullable-items-array.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -202,7 +202,7 @@ public class ArrayParserTest {
 
   @Test
   public void testBooleanArray() {
-    String schema = "src/main/resources/boolean-array.schema.yaml";
+    String schema = "src/test/resources/boolean-array.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -214,7 +214,7 @@ public class ArrayParserTest {
 
   @Test
   public void testEmptyArrayConstraint() {
-    String schema = "src/main/resources/empty-array-constraint.schema.yaml";
+    String schema = "src/test/resources/empty-array-constraint.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -229,7 +229,7 @@ public class ArrayParserTest {
 
   @Test
   public void testArrayWithAnyOfItems() {
-    String schema = "src/main/resources/array-with-anyof-items.schema.yaml";
+    String schema = "src/test/resources/array-with-anyof-items.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -245,7 +245,7 @@ public class ArrayParserTest {
 
   @Test
   public void testMixedTupleTypes() {
-    String schema = "src/main/resources/mixed-tuple-types.schema.yaml";
+    String schema = "src/test/resources/mixed-tuple-types.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -263,7 +263,7 @@ public class ArrayParserTest {
 
   @Test
   public void testArrayMinMaxConstraints() {
-    String schema = "src/main/resources/array-minmax-constraints.schema.yaml";
+    String schema = "src/test/resources/array-minmax-constraints.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -280,7 +280,7 @@ public class ArrayParserTest {
 
   @Test
   public void testNestedObjectArray() {
-    String schema = "src/main/resources/nested-object-array.schema.yaml";
+    String schema = "src/test/resources/nested-object-array.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -305,7 +305,7 @@ public class ArrayParserTest {
 
   @Test
   public void testArrayWithAllOfItems() {
-    String schema = "src/main/resources/array-with-allof-items.schema.yaml";
+    String schema = "src/test/resources/array-with-allof-items.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -320,7 +320,7 @@ public class ArrayParserTest {
 
   @Test
   public void testArrayOnlyMinItems() {
-    String schema = "src/main/resources/array-only-minItems.schema.yaml";
+    String schema = "src/test/resources/array-only-minItems.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -334,7 +334,7 @@ public class ArrayParserTest {
 
   @Test
   public void testArrayOnlyMaxItems() {
-    String schema = "src/main/resources/array-only-maxItems.schema.yaml";
+    String schema = "src/test/resources/array-only-maxItems.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);
@@ -348,7 +348,7 @@ public class ArrayParserTest {
 
   @Test
   public void testTripleNestedArray() {
-    String schema = "src/main/resources/triple-nested-array.schema.yaml";
+    String schema = "src/test/resources/triple-nested-array.schema.yaml";
     SchemaDefinition definition = new Parser().parse(schema);
     HasType type = definition.model();
     assertInstanceOf(ArrayType.class, type);

@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ObjectParserTest {
 
-  private static final String BASE_PATH = "src/main/resources/";
+  private static final String BASE_PATH = "src/test/resources/";
 
   @Test
   public void testSimpleStringProps() {

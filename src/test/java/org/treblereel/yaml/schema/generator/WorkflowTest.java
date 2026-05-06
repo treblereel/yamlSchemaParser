@@ -21,7 +21,7 @@ public class WorkflowTest {
 
   @BeforeAll
   static void setUp() {
-    definition = new Parser().parse("src/main/resources/workflow.yaml");
+    definition = new Parser().parse("src/test/resources/workflow.yaml");
     rootType = (ObjectType) definition.model();
   }
 
