@@ -208,11 +208,12 @@ This is a library with no runtime configuration. All behavior is controlled via:
 | **ExamplesTest** | 12 tests covering examples metadata across all types |
 | **DeprecatedTest** | 11 tests covering deprecated metadata flag across all types |
 | **ReadOnlyWriteOnlyTest** | 11 tests covering readOnly/writeOnly OpenAPI metadata across all types |
+| **ExclusiveBooleanTest** | 10 tests covering Draft 4 boolean syntax for exclusive bounds on integer/number types |
 | **WorkflowTest** | 71 tests validating real-world Serverless Workflow DSL schema |
 | **ParserErrorHandlingTest** | 12 tests covering error cases |
 | **TypeResolutionTest** | 13 tests covering type resolution edge cases |
 
-**Total test count:** 353 tests (as of 2026-05-06)
+**Total test count:** 363 tests (as of 2026-05-06)
 
 ## Design Decisions
 
@@ -248,12 +249,7 @@ This is a library with no runtime configuration. All behavior is controlled via:
 
 See `MISSING_FEATURES.md` for tracking. Summary:
 
-**Remaining features (3 total):**
-- deprecated (metadata)
-- readOnly / writeOnly (OpenAPI metadata)
-- exclusiveMinimum/exclusiveMaximum boolean syntax (Draft 4 compatibility)
-
-**Recently implemented (10 total):**
+**All features implemented! (13 total):**
 - ✅ if/then/else conditional schemas
 - ✅ not combinator
 - ✅ patternProperties
@@ -264,6 +260,9 @@ See `MISSING_FEATURES.md` for tracking. Summary:
 - ✅ contains / minContains / maxContains
 - ✅ unevaluatedItems
 - ✅ examples
+- ✅ deprecated (metadata)
+- ✅ readOnly / writeOnly (OpenAPI metadata)
+- ✅ exclusiveMinimum/exclusiveMaximum boolean syntax (Draft 4 compatibility)
 
 ### Future Enhancements
 

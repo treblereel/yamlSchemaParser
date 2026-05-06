@@ -478,6 +478,96 @@ priceType.writeOnly();   // Optional<Boolean>
 priceType.examples();    // Optional<List<JsonNode>>
 ```
 
+### Exclusive Bounds (Draft 4 vs Draft 6+ Syntax)
+
+yamlSchemaParser supports both JSON Schema Draft 4 boolean syntax and Draft 6+ numeric syntax for exclusive bounds.
+
+#### Draft 6+ Numeric Syntax (Recommended)
+
+In Draft 6 and later, `exclusiveMinimum` and `exclusiveMaximum` are numeric values that replace `minimum`/`maximum`:
+
+```java
+IntegerType ageType = (IntegerType) schema.model();
+
+// Draft 6+ numeric syntax
+ageType.exclusiveMinimum();  // Optional<Integer> - value must be > this
+ageType.exclusiveMaximum();  // Optional<Integer> - value must be < this
+```
+
+Example schema (Draft 6+):
+```yaml
+type: integer
+exclusiveMinimum: 0    # value > 0 (not >= 0)
+exclusiveMaximum: 100  # value < 100 (not <= 100)
+```
+
+#### Draft 4 Boolean Syntax (Legacy Support)
+
+In Draft 4, `exclusiveMinimum` and `exclusiveMaximum` were boolean flags that modified `minimum`/`maximum`:
+
+```java
+IntegerType portType = (IntegerType) schema.model();
+
+// Draft 4 boolean syntax
+portType.minimum();               // Optional<Integer> - the boundary value
+portType.isMinimumExclusive();    // Optional<Boolean> - true = exclusive, false = inclusive
+portType.maximum();               // Optional<Integer> - the boundary value
+portType.isMaximumExclusive();    // Optional<Boolean> - true = exclusive, false = inclusive
+```
+
+Example schema (Draft 4):
+```yaml
+type: integer
+minimum: 0
+exclusiveMinimum: true   # value > 0 (not >= 0)
+maximum: 100
+exclusiveMaximum: false  # value <= 100 (inclusive)
+```
+
+#### Determining Which Syntax Is Used
+
+The library automatically detects which syntax is used based on the JsonNode type:
+- **Boolean value** → Draft 4 syntax, use `isMinimumExclusive()` / `isMaximumExclusive()`
+- **Numeric value** → Draft 6+ syntax, use `exclusiveMinimum()` / `exclusiveMaximum()`
+
+```java
+IntegerType valueType = (IntegerType) schema.model();
+
+// Check for Draft 6+ numeric syntax
+if (valueType.exclusiveMinimum().isPresent()) {
+    Integer exclusiveMin = valueType.exclusiveMinimum().get();
+    // Value must be > exclusiveMin
+}
+
+// Check for Draft 4 boolean syntax
+if (valueType.isMinimumExclusive().isPresent()) {
+    Integer min = valueType.minimum().get();
+    boolean exclusive = valueType.isMinimumExclusive().get();
+    
+    if (exclusive) {
+        // Value must be > min
+    } else {
+        // Value must be >= min
+    }
+}
+```
+
+Both syntaxes work with `IntegerType` and `NumberType`:
+
+```java
+NumberType temperatureType = (NumberType) schema.model();
+
+// Draft 6+ numeric syntax
+temperatureType.exclusiveMinimum();  // Optional<Double>
+temperatureType.exclusiveMaximum();  // Optional<Double>
+
+// Draft 4 boolean syntax
+temperatureType.minimum();           // Optional<Double>
+temperatureType.isMinimumExclusive(); // Optional<Boolean>
+temperatureType.maximum();           // Optional<Double>
+temperatureType.isMaximumExclusive(); // Optional<Boolean>
+```
+
 ### Pattern Properties
 
 Pattern properties allow defining schemas for object properties whose names match regex patterns.
@@ -867,10 +957,15 @@ Represents integer schemas.
 **Methods:**
 - `minimum()` - Minimum value (Optional<Integer>)
 - `maximum()` - Maximum value (Optional<Integer>)
-- `exclusiveMinimum()` - Exclusive minimum (Optional<Integer>)
-- `exclusiveMaximum()` - Exclusive maximum (Optional<Integer>)
+- `exclusiveMinimum()` - Exclusive minimum (Draft 6+ numeric syntax) (Optional<Integer>)
+- `exclusiveMaximum()` - Exclusive maximum (Draft 6+ numeric syntax) (Optional<Integer>)
+- `isMinimumExclusive()` - Whether minimum is exclusive (Draft 4 boolean syntax) (Optional<Boolean>)
+- `isMaximumExclusive()` - Whether maximum is exclusive (Draft 4 boolean syntax) (Optional<Boolean>)
 - `enumValues()` - Allowed values (Optional<List<Integer>>)
 - `constValue()` - Constant value (Optional<Integer>)
+- `deprecated()` - Deprecated metadata (Optional<Boolean>)
+- `readOnly()` - ReadOnly metadata (Optional<Boolean>)
+- `writeOnly()` - WriteOnly metadata (Optional<Boolean>)
 - `examples()` - Example values (Optional<List<JsonNode>>)
 - `not()` - not combinator (Optional<HasType>)
 
@@ -881,11 +976,16 @@ Represents number (floating-point) schemas.
 **Methods:**
 - `minimum()` - Minimum value (Optional<Double>)
 - `maximum()` - Maximum value (Optional<Double>)
-- `exclusiveMinimum()` - Exclusive minimum (Optional<Double>)
-- `exclusiveMaximum()` - Exclusive maximum (Optional<Double>)
+- `exclusiveMinimum()` - Exclusive minimum (Draft 6+ numeric syntax) (Optional<Double>)
+- `exclusiveMaximum()` - Exclusive maximum (Draft 6+ numeric syntax) (Optional<Double>)
+- `isMinimumExclusive()` - Whether minimum is exclusive (Draft 4 boolean syntax) (Optional<Boolean>)
+- `isMaximumExclusive()` - Whether maximum is exclusive (Draft 4 boolean syntax) (Optional<Boolean>)
 - `multipleOf()` - Multiple constraint (Optional<Double>)
 - `enumValues()` - Allowed values (Optional<List<Double>>)
 - `constValue()` - Constant value (Optional<Double>)
+- `deprecated()` - Deprecated metadata (Optional<Boolean>)
+- `readOnly()` - ReadOnly metadata (Optional<Boolean>)
+- `writeOnly()` - WriteOnly metadata (Optional<Boolean>)
 - `examples()` - Example values (Optional<List<JsonNode>>)
 - `not()` - not combinator (Optional<HasType>)
 

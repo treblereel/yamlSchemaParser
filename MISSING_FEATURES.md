@@ -4,9 +4,11 @@
 
 ## 📊 Сводка
 
-**Всего нереализовано:** 1 фича  
-**Реализовано:** 12 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas, prefixItems, contains, unevaluatedItems, examples, deprecated, readOnly/writeOnly)  
-**Приоритет:** High (1), Medium (0), Low (0)
+**Всего нереализовано:** 0 фич  
+**Реализовано:** 13 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas, prefixItems, contains, unevaluatedItems, examples, deprecated, readOnly/writeOnly, exclusiveMinimum/exclusiveMaximum boolean syntax)  
+**Приоритет:** High (0), Medium (0), Low (0)
+
+🎉 **ВСЕ ФИЧИ РЕАЛИЗОВАНЫ!**
 
 ---
 
@@ -266,14 +268,14 @@ public Optional<Boolean> unevaluatedItems(); // ✅ Реализовано
 ---
 
 ### 10. 🔢 exclusiveMinimum/exclusiveMaximum (boolean syntax)
-**Статус:** ⚠️ Частично реализовано  
-**Текущая реализация:** Только numeric syntax (Draft 6+)  
-**JSON Schema Spec:** Draft 4 boolean syntax
+**Статус:** ✅ Реализовано  
+**Текущая реализация:** Оба синтаксиса (Draft 4 boolean + Draft 6+ numeric)  
+**JSON Schema Spec:** Draft 4 boolean syntax + Draft 6+ numeric syntax
 
 **Описание:**
-Draft 4 использовал boolean флаги, Draft 6+ использует numeric значения.
+Draft 4 использовал boolean флаги, Draft 6+ использует numeric значения. Теперь оба синтаксиса поддерживаются.
 
-**Draft 4 (не реализовано):**
+**Draft 4 (реализовано):**
 ```yaml
 minimum: 0
 exclusiveMinimum: true  # > 0, not >= 0
@@ -284,8 +286,20 @@ exclusiveMinimum: true  # > 0, not >= 0
 exclusiveMinimum: 0  # > 0
 ```
 
+**Реализация:**
+```java
+// IntegerType.java и NumberType.java
+// Draft 6+ numeric syntax
+public Optional<Integer> exclusiveMinimum(); // ✅ Реализовано
+public Optional<Integer> exclusiveMaximum(); // ✅ Реализовано
+
+// Draft 4 boolean syntax
+public Optional<Boolean> isMinimumExclusive(); // ✅ Реализовано
+public Optional<Boolean> isMaximumExclusive(); // ✅ Реализовано
+```
+
 **Сложность:** Low  
-**Приоритет:** Low (Draft 4 устарел)
+**Приоритет:** Low (Draft 4 устарел, но теперь поддерживается для совместимости)
 
 ---
 

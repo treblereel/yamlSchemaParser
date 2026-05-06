@@ -51,9 +51,10 @@ public record NumberType(SchemaDefinition schema, JsonNode node) implements HasT
   }
 
   /**
-   * Returns the exclusive minimum value constraint.
+   * Returns the exclusive minimum value constraint (JSON Schema Draft 6+).
    * <p>
    * The value must be greater than (not equal to) this value.
+   * This is the numeric syntax introduced in Draft 6+.
    * </p>
    *
    * @return the exclusive minimum number value if specified
@@ -65,9 +66,10 @@ public record NumberType(SchemaDefinition schema, JsonNode node) implements HasT
   }
 
   /**
-   * Returns the exclusive maximum value constraint.
+   * Returns the exclusive maximum value constraint (JSON Schema Draft 6+).
    * <p>
    * The value must be less than (not equal to) this value.
+   * This is the numeric syntax introduced in Draft 6+.
    * </p>
    *
    * @return the exclusive maximum number value if specified
@@ -76,6 +78,38 @@ public record NumberType(SchemaDefinition schema, JsonNode node) implements HasT
     return Optional.ofNullable(node.get("exclusiveMaximum"))
             .filter(JsonNode::isNumber)
             .map(JsonNode::doubleValue);
+  }
+
+  /**
+   * Returns the exclusive minimum flag (JSON Schema Draft 4).
+   * <p>
+   * Draft 4 boolean syntax: when true, the minimum value is exclusive (value > minimum).
+   * When false, the minimum value is inclusive (value >= minimum).
+   * Use with minimum() to get the bound value.
+   * </p>
+   *
+   * @return true if minimum is exclusive, false if inclusive, empty if not specified or numeric syntax
+   */
+  public Optional<Boolean> isMinimumExclusive() {
+    return Optional.ofNullable(node.get("exclusiveMinimum"))
+            .filter(JsonNode::isBoolean)
+            .map(JsonNode::booleanValue);
+  }
+
+  /**
+   * Returns the exclusive maximum flag (JSON Schema Draft 4).
+   * <p>
+   * Draft 4 boolean syntax: when true, the maximum value is exclusive (value < maximum).
+   * When false, the maximum value is inclusive (value <= maximum).
+   * Use with maximum() to get the bound value.
+   * </p>
+   *
+   * @return true if maximum is exclusive, false if inclusive, empty if not specified or numeric syntax
+   */
+  public Optional<Boolean> isMaximumExclusive() {
+    return Optional.ofNullable(node.get("exclusiveMaximum"))
+            .filter(JsonNode::isBoolean)
+            .map(JsonNode::booleanValue);
   }
 
   /**
