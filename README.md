@@ -337,6 +337,57 @@ properties:
 description: Use the new API instead
 ```
 
+### ReadOnly / WriteOnly Metadata
+
+The `readOnly` and `writeOnly` keywords indicate whether a property should appear in requests or responses (JSON Schema Draft 7+, OpenAPI). These are metadata only and do not affect validation.
+
+**readOnly**: Property should only appear in responses (server-generated fields like IDs, timestamps)
+
+**writeOnly**: Property should only appear in requests (sensitive fields like passwords)
+
+```java
+SchemaDefinition definition = parser.parse("schema.yaml");
+ObjectType objectType = (ObjectType) definition.model();
+
+// Check readOnly property
+StringType idField = (StringType) objectType.properties().get().get("id");
+if (idField.readOnly().isPresent() && idField.readOnly().get()) {
+    // This field is server-generated, should not be in requests
+}
+
+// Check writeOnly property  
+StringType passwordField = (StringType) objectType.properties().get().get("password");
+if (passwordField.writeOnly().isPresent() && passwordField.writeOnly().get()) {
+    // This field is sensitive, should not be in responses
+}
+```
+
+Example schema with readOnly fields:
+```yaml
+type: object
+properties:
+  id:
+    type: string
+    readOnly: true
+  createdAt:
+    type: string
+    format: date-time
+    readOnly: true
+  name:
+    type: string
+```
+
+Example schema with writeOnly field:
+```yaml
+type: object
+properties:
+  username:
+    type: string
+  password:
+    type: string
+    writeOnly: true
+```
+
 ### Nested Objects
 
 ```java
@@ -396,6 +447,8 @@ emailType.defaultValue(); // Optional<String>
 emailType.title();       // Optional<String>
 emailType.description(); // Optional<String>
 emailType.deprecated();  // Optional<Boolean>
+emailType.readOnly();    // Optional<Boolean>
+emailType.writeOnly();   // Optional<Boolean>
 emailType.examples();    // Optional<List<JsonNode>>
 ```
 
@@ -410,6 +463,8 @@ portType.maximum();      // Optional<Integer>
 
 // Metadata
 portType.deprecated();   // Optional<Boolean>
+portType.readOnly();     // Optional<Boolean>
+portType.writeOnly();    // Optional<Boolean>
 portType.examples();     // Optional<List<JsonNode>>
 
 NumberType priceType = (NumberType) objectType.properties().get().get("price");
@@ -418,6 +473,8 @@ priceType.maximum();     // Optional<Double>
 
 // Metadata
 priceType.deprecated();  // Optional<Boolean>
+priceType.readOnly();    // Optional<Boolean>
+priceType.writeOnly();   // Optional<Boolean>
 priceType.examples();    // Optional<List<JsonNode>>
 ```
 

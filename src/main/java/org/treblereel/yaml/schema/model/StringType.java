@@ -145,6 +145,37 @@ public record StringType(SchemaDefinition schema, JsonNode node) implements HasT
   }
 
   /**
+   * Returns the readOnly flag (JSON Schema Draft 7+, OpenAPI).
+   * <p>
+   * When true, indicates this property should only appear in responses,
+   * not in requests. Commonly used for server-generated fields like IDs
+   * and timestamps.
+   * </p>
+   *
+   * @return true if read-only, false if not, empty if not specified
+   */
+  public Optional<Boolean> readOnly() {
+    return Optional.ofNullable(node.get("readOnly"))
+            .filter(JsonNode::isBoolean)
+            .map(JsonNode::booleanValue);
+  }
+
+  /**
+   * Returns the writeOnly flag (JSON Schema Draft 7+, OpenAPI).
+   * <p>
+   * When true, indicates this property should only appear in requests,
+   * not in responses. Commonly used for sensitive fields like passwords.
+   * </p>
+   *
+   * @return true if write-only, false if not, empty if not specified
+   */
+  public Optional<Boolean> writeOnly() {
+    return Optional.ofNullable(node.get("writeOnly"))
+            .filter(JsonNode::isBoolean)
+            .map(JsonNode::booleanValue);
+  }
+
+  /**
    * Returns the examples array (JSON Schema Draft 6+).
    * <p>
    * Provides example values for documentation purposes. These are metadata

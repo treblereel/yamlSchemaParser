@@ -4,9 +4,9 @@
 
 ## 📊 Сводка
 
-**Всего нереализовано:** 2 фичи  
-**Реализовано:** 11 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas, prefixItems, contains, unevaluatedItems, examples, deprecated)  
-**Приоритет:** High (2), Medium (0), Low (0)
+**Всего нереализовано:** 1 фича  
+**Реализовано:** 12 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas, prefixItems, contains, unevaluatedItems, examples, deprecated, readOnly/writeOnly)  
+**Приоритет:** High (1), Medium (0), Low (0)
 
 ---
 
@@ -336,15 +336,20 @@ public Optional<Boolean> deprecated(); // ✅ Реализовано
 ---
 
 ### 14. 🔒 readOnly / writeOnly
-**Статус:** ❌ Не реализовано  
+**Статус:** ✅ Реализовано  
 **Использование в workflow.yaml:** Нет  
 **JSON Schema Spec:** Draft 7+
 
-**API:**
+**Описание:**
+readOnly и writeOnly указывают, должно ли свойство появляться в запросах или ответах.
+- readOnly: true - только в ответах (ID, timestamps)
+- writeOnly: true - только в запросах (passwords)
+
+**Реализация:**
 ```java
-// Все типы
-public Optional<Boolean> readOnly();
-public Optional<Boolean> writeOnly();
+// Все типы (ObjectType, ArrayType, StringType, IntegerType, NumberType, BooleanType)
+public Optional<Boolean> readOnly();  // ✅ Реализовано
+public Optional<Boolean> writeOnly(); // ✅ Реализовано
 ```
 
 **Сложность:** Low  

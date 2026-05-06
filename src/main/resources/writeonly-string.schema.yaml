@@ -1,0 +1,3 @@
+type: string
+writeOnly: true
+description: This field is only accepted in requests (e.g., password)

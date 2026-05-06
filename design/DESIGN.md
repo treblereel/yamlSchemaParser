@@ -58,12 +58,12 @@ ObjectType                       ArrayType, StringType,
 
 | Type | Purpose |
 |------|---------|
-| **ObjectType** | Represents object schemas with properties, required fields, pattern properties, property names validation, dependent required/schemas, deprecated metadata, examples metadata |
-| **ArrayType** | Represents array schemas with items, prefixItems (tuple validation), contains validation (minContains/maxContains), unevaluatedItems control, min/max items, unique items constraints, deprecated metadata, examples metadata |
-| **StringType** | String schemas with pattern, format, min/max length, enum, const, deprecated metadata, examples metadata |
-| **IntegerType** | Integer schemas with min/max, exclusive bounds, enum, const, deprecated metadata, examples metadata |
-| **NumberType** | Number (double) schemas with min/max, exclusive bounds, multipleOf, enum, const, deprecated metadata, examples metadata |
-| **BooleanType** | Boolean schemas with const, default values, deprecated metadata, examples metadata |
+| **ObjectType** | Represents object schemas with properties, required fields, pattern properties, property names validation, dependent required/schemas, deprecated/readOnly/writeOnly metadata, examples metadata |
+| **ArrayType** | Represents array schemas with items, prefixItems (tuple validation), contains validation (minContains/maxContains), unevaluatedItems control, min/max items, unique items constraints, deprecated/readOnly/writeOnly metadata, examples metadata |
+| **StringType** | String schemas with pattern, format, min/max length, enum, const, deprecated/readOnly/writeOnly metadata, examples metadata |
+| **IntegerType** | Integer schemas with min/max, exclusive bounds, enum, const, deprecated/readOnly/writeOnly metadata, examples metadata |
+| **NumberType** | Number (double) schemas with min/max, exclusive bounds, multipleOf, enum, const, deprecated/readOnly/writeOnly metadata, examples metadata |
+| **BooleanType** | Boolean schemas with const, default values, deprecated/readOnly/writeOnly metadata, examples metadata |
 | **NullType** | Null type schemas |
 | **RefType** | $ref references - resolves to target type via `resolve()` |
 | **AllOfType** | allOf combinator - must satisfy all schemas |
@@ -207,11 +207,12 @@ This is a library with no runtime configuration. All behavior is controlled via:
 | **UnevaluatedItemsTest** | 11 tests covering unevaluatedItems constraint for arrays |
 | **ExamplesTest** | 12 tests covering examples metadata across all types |
 | **DeprecatedTest** | 11 tests covering deprecated metadata flag across all types |
+| **ReadOnlyWriteOnlyTest** | 11 tests covering readOnly/writeOnly OpenAPI metadata across all types |
 | **WorkflowTest** | 71 tests validating real-world Serverless Workflow DSL schema |
 | **ParserErrorHandlingTest** | 12 tests covering error cases |
 | **TypeResolutionTest** | 13 tests covering type resolution edge cases |
 
-**Total test count:** 342 tests (as of 2026-05-06)
+**Total test count:** 353 tests (as of 2026-05-06)
 
 ## Design Decisions
 
