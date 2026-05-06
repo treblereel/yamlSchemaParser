@@ -251,6 +251,52 @@ if (objectType.oneOf().isPresent()) {
 }
 ```
 
+### Conditional Schemas (if/then/else)
+
+Conditional schemas allow applying different validation rules based on the instance data.
+
+```java
+ObjectType objectType = (ObjectType) definition.model();
+
+// Check if conditional validation is present
+if (objectType.ifCondition().isPresent()) {
+    HasType ifCondition = objectType.ifCondition().get();
+    
+    // Applied when if condition validates
+    if (objectType.thenSchema().isPresent()) {
+        HasType thenSchema = objectType.thenSchema().get();
+        // Process then branch
+    }
+    
+    // Applied when if condition does NOT validate
+    if (objectType.elseSchema().isPresent()) {
+        HasType elseSchema = objectType.elseSchema().get();
+        // Process else branch
+    }
+}
+```
+
+Example schema:
+```yaml
+type: object
+properties:
+  country: { type: string }
+  postalCode: { type: string }
+if:
+  properties:
+    country: { const: "USA" }
+then:
+  properties:
+    postalCode:
+      type: string
+      pattern: "^[0-9]{5}$"
+else:
+  properties:
+    postalCode:
+      type: string
+      pattern: "^[A-Z][0-9][A-Z] [0-9][A-Z][0-9]$"
+```
+
 ### Complex Example: Workflow Schema
 
 ```java
@@ -326,6 +372,10 @@ Represents object schemas.
 - `anyOf()` - anyOf alternatives (Optional<List<HasType>>)
 - `oneOf()` - oneOf alternatives (Optional<List<HasType>>)
 - `allOf()` - allOf items (Optional<List<HasType>>)
+- `not()` - not schema (Optional<HasType>)
+- `ifCondition()` - if condition schema (Optional<HasType>)
+- `thenSchema()` - then schema (Optional<HasType>)
+- `elseSchema()` - else schema (Optional<HasType>)
 - `getTitle()`, `getDescription()` - Metadata
 
 ### ArrayType

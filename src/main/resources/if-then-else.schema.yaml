@@ -11,8 +11,10 @@ if:
 then:
   properties:
     postalCode:
+      type: string
       pattern: "^[0-9]{5}$"
 else:
   properties:
     postalCode:
+      type: string
       pattern: "^[A-Z][0-9][A-Z] [0-9][A-Z][0-9]$"

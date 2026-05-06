@@ -1,0 +1,28 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+properties:
+  paymentType:
+    type: string
+  cardType:
+    type: string
+  cardNumber:
+    type: string
+if:
+  properties:
+    paymentType:
+      const: "card"
+then:
+  if:
+    properties:
+      cardType:
+        const: "amex"
+  then:
+    properties:
+      cardNumber:
+        type: string
+        pattern: "^[0-9]{15}$"
+  else:
+    properties:
+      cardNumber:
+        type: string
+        pattern: "^[0-9]{16}$"

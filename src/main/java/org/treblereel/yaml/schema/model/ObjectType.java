@@ -196,4 +196,41 @@ public class ObjectType implements HasType {
     return applicators.getNot();
   }
 
+  /**
+   * Returns the if condition schema.
+   * <p>
+   * If present, this schema is evaluated first. If the instance validates against
+   * the if schema, the then schema is applied; otherwise, the else schema is applied.
+   * </p>
+   *
+   * @return the if condition schema if present
+   */
+  public Optional<HasType> ifCondition() {
+    return applicators.getIf();
+  }
+
+  /**
+   * Returns the then schema.
+   * <p>
+   * Applied when the instance validates against the if schema.
+   * </p>
+   *
+   * @return the then schema if present
+   */
+  public Optional<HasType> thenSchema() {
+    return applicators.getThen();
+  }
+
+  /**
+   * Returns the else schema.
+   * <p>
+   * Applied when the instance does NOT validate against the if schema.
+   * </p>
+   *
+   * @return the else schema if present
+   */
+  public Optional<HasType> elseSchema() {
+    return applicators.getElse();
+  }
+
 }

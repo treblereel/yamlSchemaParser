@@ -68,4 +68,19 @@ record Applicators(SchemaDefinition schema, JsonNode node) {
     return Optional.ofNullable(node.get("not"))
             .map(n -> NodeFactory.resolveType(schema, n));
   }
+
+  Optional<HasType> getIf() {
+    return Optional.ofNullable(node.get("if"))
+            .map(ifNode -> NodeFactory.resolveType(schema, ifNode));
+  }
+
+  Optional<HasType> getThen() {
+    return Optional.ofNullable(node.get("then"))
+            .map(thenNode -> NodeFactory.resolveType(schema, thenNode));
+  }
+
+  Optional<HasType> getElse() {
+    return Optional.ofNullable(node.get("else"))
+            .map(elseNode -> NodeFactory.resolveType(schema, elseNode));
+  }
 }
