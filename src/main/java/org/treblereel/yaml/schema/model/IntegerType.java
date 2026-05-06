@@ -139,6 +139,21 @@ public record IntegerType(SchemaDefinition schema, JsonNode node) implements Has
   }
 
   /**
+   * Returns the deprecated flag (JSON Schema Draft 2019-09+).
+   * <p>
+   * When true, indicates this schema is deprecated and should not be used.
+   * This is metadata only and does not affect validation.
+   * </p>
+   *
+   * @return true if deprecated, false if not deprecated, empty if not specified
+   */
+  public Optional<Boolean> deprecated() {
+    return Optional.ofNullable(node.get("deprecated"))
+            .filter(JsonNode::isBoolean)
+            .map(JsonNode::booleanValue);
+  }
+
+  /**
    * Returns the examples array (JSON Schema Draft 6+).
    * <p>
    * Provides example values for documentation purposes. These are metadata

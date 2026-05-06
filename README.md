@@ -301,6 +301,42 @@ examples:
     age: 25
 ```
 
+### Deprecated Metadata
+
+The `deprecated` keyword indicates that a schema is deprecated and should not be used (JSON Schema Draft 2019-09+). This is metadata only and does not affect validation.
+
+```java
+SchemaDefinition definition = parser.parse("schema.yaml");
+StringType stringType = (StringType) definition.model();
+
+// Check if schema is deprecated
+if (stringType.deprecated().isPresent()) {
+    boolean isDeprecated = stringType.deprecated().get();
+    if (isDeprecated) {
+        // Warn users, generate migration guides, etc.
+    }
+}
+```
+
+Example schema marked as deprecated:
+```yaml
+type: string
+deprecated: true
+description: This field is deprecated and will be removed in v2.0
+```
+
+Works with all types - strings, integers, numbers, objects, arrays, booleans:
+```yaml
+type: object
+deprecated: true
+properties:
+  oldField:
+    type: string
+  newField:
+    type: string
+description: Use the new API instead
+```
+
 ### Nested Objects
 
 ```java
@@ -359,6 +395,8 @@ emailType.defaultValue(); // Optional<String>
 // Metadata
 emailType.title();       // Optional<String>
 emailType.description(); // Optional<String>
+emailType.deprecated();  // Optional<Boolean>
+emailType.examples();    // Optional<List<JsonNode>>
 ```
 
 ### Number and Integer Types
@@ -370,9 +408,17 @@ IntegerType portType = (IntegerType) objectType.properties().get().get("port");
 portType.minimum();      // Optional<Integer>
 portType.maximum();      // Optional<Integer>
 
+// Metadata
+portType.deprecated();   // Optional<Boolean>
+portType.examples();     // Optional<List<JsonNode>>
+
 NumberType priceType = (NumberType) objectType.properties().get().get("price");
 priceType.minimum();     // Optional<Double>
 priceType.maximum();     // Optional<Double>
+
+// Metadata
+priceType.deprecated();  // Optional<Boolean>
+priceType.examples();    // Optional<List<JsonNode>>
 ```
 
 ### Pattern Properties

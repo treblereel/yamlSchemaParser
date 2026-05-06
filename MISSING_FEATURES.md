@@ -4,9 +4,9 @@
 
 ## 📊 Сводка
 
-**Всего нереализовано:** 3 фичи  
-**Реализовано:** 10 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas, prefixItems, contains, unevaluatedItems, examples)  
-**Приоритет:** High (3), Medium (0), Low (0)
+**Всего нереализовано:** 2 фичи  
+**Реализовано:** 11 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas, prefixItems, contains, unevaluatedItems, examples, deprecated)  
+**Приоритет:** High (2), Medium (0), Low (0)
 
 ---
 
@@ -317,14 +317,17 @@ public Optional<List<JsonNode>> examples(); // ✅ Реализовано
 ---
 
 ### 13. ⚠️ deprecated
-**Статус:** ❌ Не реализовано  
+**Статус:** ✅ Реализовано  
 **Использование в workflow.yaml:** Нет  
 **JSON Schema Spec:** Draft 2019-09+
 
-**API:**
+**Описание:**
+Флаг deprecated указывает, что схема устарела и не должна использоваться.
+
+**Реализация:**
 ```java
-// Все типы
-public Optional<Boolean> deprecated();
+// Все типы (ObjectType, ArrayType, StringType, IntegerType, NumberType, BooleanType)
+public Optional<Boolean> deprecated(); // ✅ Реализовано
 ```
 
 **Сложность:** Low  

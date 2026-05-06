@@ -1,0 +1,8 @@
+type: object
+deprecated: true
+properties:
+  oldField:
+    type: string
+  newField:
+    type: string
+description: Use the new API instead
