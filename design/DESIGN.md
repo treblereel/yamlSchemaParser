@@ -210,10 +210,11 @@ This is a library with no runtime configuration. All behavior is controlled via:
 | **ReadOnlyWriteOnlyTest** | 11 tests covering readOnly/writeOnly OpenAPI metadata across all types |
 | **ExclusiveBooleanTest** | 10 tests covering Draft 4 boolean syntax for exclusive bounds on integer/number types |
 | **WorkflowTest** | 71 tests validating real-world Serverless Workflow DSL schema |
+| **WorkflowComprehensiveTest** | 52 tests systematically covering ALL JSON Schema features used in workflow.yaml |
 | **ParserErrorHandlingTest** | 12 tests covering error cases |
 | **TypeResolutionTest** | 13 tests covering type resolution edge cases |
 
-**Total test count:** 363 tests (as of 2026-05-06)
+**Total test count:** 415 tests (as of 2026-05-06)
 
 ## Design Decisions
 
