@@ -64,6 +64,40 @@ public record ArrayType(SchemaDefinition schemaDefinition, JsonNode node) implem
   }
 
   /**
+   * Returns the prefix items for tuple validation (JSON Schema Draft 2020-12+).
+   * <p>
+   * prefixItems is a modern alternative to the array-based items syntax for tuple validation.
+   * Each element in the returned array corresponds to a specific position in the array instance.
+   * </p>
+   * <p>
+   * Example:
+   * <pre>{@code
+   * // Schema with prefixItems
+   * ArrayType arrayType = (ArrayType) schema.model();
+   * Optional<ArrayItemType[]> prefixItems = arrayType.prefixItems();
+   * if (prefixItems.isPresent()) {
+   *     ArrayItemType[] items = prefixItems.get();
+   *     StringType first = (StringType) items[0].getType();
+   *     NumberType second = (NumberType) items[1].getType();
+   * }
+   * }</pre>
+   * </p>
+   *
+   * @return array of prefix item types if prefixItems is defined, empty Optional otherwise
+   */
+  public Optional<ArrayItemType[]> prefixItems() {
+    return Optional.ofNullable(node.get("prefixItems"))
+            .filter(n -> n.getNodeType().equals(JsonNodeType.ARRAY))
+            .map(prefixNode -> {
+              ArrayItemType[] arrayItemTypes = new ArrayItemType[prefixNode.size()];
+              for (int i = 0; i < prefixNode.size(); i++) {
+                arrayItemTypes[i] = new ArrayItemType(schemaDefinition, prefixNode.get(i));
+              }
+              return arrayItemTypes;
+            });
+  }
+
+  /**
    * Returns the minimum number of items constraint.
    *
    * @return the minimum array length if specified

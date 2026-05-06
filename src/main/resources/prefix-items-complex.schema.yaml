@@ -1,0 +1,15 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: array
+prefixItems:
+  - type: string
+    minLength: 1
+  - type: integer
+    minimum: 0
+  - type: object
+    properties:
+      enabled:
+        type: boolean
+    required: [enabled]
+minItems: 3
+maxItems: 5
+description: Complex tuple with prefixItems and constraints

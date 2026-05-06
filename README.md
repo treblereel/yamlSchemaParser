@@ -142,6 +142,44 @@ ArrayItemType[] tupleItems = tupleArray.getItems();
 // tupleItems[2] -> BooleanType
 ```
 
+### Prefix Items (Modern Tuple Validation)
+
+Prefix items provide a modern (JSON Schema Draft 2020-12+) way to define tuple validation, offering a more explicit alternative to array-based items.
+
+```java
+SchemaDefinition definition = parser.parse("tuple-schema.yaml");
+ArrayType tupleArray = (ArrayType) definition.model();
+
+// Get prefix items
+if (tupleArray.prefixItems().isPresent()) {
+    ArrayItemType[] prefixItems = tupleArray.prefixItems().get();
+    StringType first = (StringType) prefixItems[0].getType();
+    NumberType second = (NumberType) prefixItems[1].getType();
+    BooleanType third = (BooleanType) prefixItems[2].getType();
+}
+```
+
+Example schema:
+```yaml
+type: array
+prefixItems:
+  - type: string
+    minLength: 1
+  - type: number
+    minimum: 0
+  - type: boolean
+```
+
+Prefix items can be combined with items for additional elements:
+```yaml
+type: array
+prefixItems:
+  - type: string
+  - type: number
+items:
+  type: string  # Additional items must be strings
+```
+
 ### Nested Objects
 
 ```java
@@ -572,6 +610,7 @@ Represents array schemas.
 
 **Methods:**
 - `getItems()` - Item types (ArrayItemType[])
+- `prefixItems()` - Prefix items for tuple validation (Optional<ArrayItemType[]>)
 - `minItems()` - Minimum items (Optional<Integer>)
 - `maxItems()` - Maximum items (Optional<Integer>)
 - `uniqueItems()` - Unique constraint (Optional<Boolean>)

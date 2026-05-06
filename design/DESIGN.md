@@ -59,7 +59,7 @@ ObjectType                       ArrayType, StringType,
 | Type | Purpose |
 |------|---------|
 | **ObjectType** | Represents object schemas with properties, required fields, pattern properties, property names validation, dependent required/schemas |
-| **ArrayType** | Represents array schemas with items, min/max items, unique items constraints |
+| **ArrayType** | Represents array schemas with items, prefixItems (tuple validation), min/max items, unique items constraints |
 | **StringType** | String schemas with pattern, format, min/max length, enum, const |
 | **IntegerType** | Integer schemas with min/max, exclusive bounds, enum, const |
 | **NumberType** | Number (double) schemas with min/max, exclusive bounds, multipleOf, enum, const |
@@ -202,11 +202,12 @@ This is a library with no runtime configuration. All behavior is controlled via:
 | **ConditionalSchemaTest** | 11 tests covering if/then/else |
 | **NotCombinatorTest** | 14 tests covering not combinator |
 | **PatternPropertiesTest** | 17 tests covering regex-based properties |
+| **PrefixItemsTest** | 18 tests covering modern tuple validation with prefixItems |
 | **WorkflowTest** | 71 tests validating real-world Serverless Workflow DSL schema |
 | **ParserErrorHandlingTest** | 12 tests covering error cases |
 | **TypeResolutionTest** | 13 tests covering type resolution edge cases |
 
-**Total test count:** 275 tests (as of 2026-05-06)
+**Total test count:** 293 tests (as of 2026-05-06)
 
 ## Design Decisions
 
@@ -242,8 +243,7 @@ This is a library with no runtime configuration. All behavior is controlled via:
 
 See `MISSING_FEATURES.md` for tracking. Summary:
 
-**Remaining features (7 total):**
-- prefixItems (modern tuple validation)
+**Remaining features (6 total):**
 - contains / minContains / maxContains (array contains validation)
 - unevaluatedItems (unevaluated items control)
 - examples (metadata)
@@ -251,13 +251,14 @@ See `MISSING_FEATURES.md` for tracking. Summary:
 - readOnly / writeOnly (OpenAPI metadata)
 - exclusiveMinimum/exclusiveMaximum boolean syntax (Draft 4 compatibility)
 
-**Recently implemented (6 total):**
+**Recently implemented (7 total):**
 - ✅ if/then/else conditional schemas
 - ✅ not combinator
 - ✅ patternProperties
 - ✅ propertyNames
 - ✅ dependentRequired
 - ✅ dependentSchemas
+- ✅ prefixItems
 
 ### Future Enhancements
 

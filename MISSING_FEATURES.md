@@ -4,9 +4,9 @@
 
 ## 📊 Сводка
 
-**Всего нереализовано:** 7 фич  
-**Реализовано:** 6 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas)  
-**Приоритет:** High (3), Medium (2), Low (2)
+**Всего нереализовано:** 6 фич  
+**Реализовано:** 7 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas, prefixItems)  
+**Приоритет:** High (3), Medium (1), Low (2)
 
 ---
 
@@ -178,7 +178,7 @@ public Optional<Map<String, HasType>> dependentSchemas(); // ✅ Реализо�
 ## 🟡 Medium Priority (полезные фичи)
 
 ### 7. 📦 prefixItems (tuple validation улучшение)
-**Статус:** ❌ Не реализовано  
+**Статус:** ✅ Реализовано  
 **Использование в workflow.yaml:** Нет  
 **JSON Schema Spec:** Draft 2020-12
 
@@ -201,7 +201,7 @@ prefixItems:
 **API:**
 ```java
 // ArrayType.java
-public Optional<ArrayItemType[]> prefixItems();
+public Optional<ArrayItemType[]> prefixItems(); // ✅ Реализовано
 ```
 
 **Сложность:** Low  
