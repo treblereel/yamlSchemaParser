@@ -1,0 +1,10 @@
+type: array
+prefixItems:
+  - type: string
+    minLength: 3
+  - type: integer
+    minimum: 0
+items:
+  type: boolean
+unevaluatedItems: false
+description: First two elements are string/integer, remaining must be boolean

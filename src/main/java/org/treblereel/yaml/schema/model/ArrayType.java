@@ -204,6 +204,32 @@ public record ArrayType(SchemaDefinition schemaDefinition, JsonNode node) implem
   }
 
   /**
+   * Returns the unevaluated items constraint (JSON Schema Draft 2019-09+).
+   * <p>
+   * Controls whether array elements not covered by items or prefixItems are allowed.
+   * When false, only elements explicitly defined by items/prefixItems are permitted.
+   * When true, additional elements beyond those defined are allowed.
+   * </p>
+   * <p>
+   * Example:
+   * <pre>{@code
+   * ArrayType arrayType = (ArrayType) schema.model();
+   * if (arrayType.unevaluatedItems().isPresent()) {
+   *     boolean allowAdditional = arrayType.unevaluatedItems().get();
+   *     // false = reject additional items, true = allow additional items
+   * }
+   * }</pre>
+   * </p>
+   *
+   * @return true if additional items are allowed, false if not, empty if not specified
+   */
+  public Optional<Boolean> unevaluatedItems() {
+    return Optional.ofNullable(node.get("unevaluatedItems"))
+            .filter(JsonNode::isBoolean)
+            .map(JsonNode::booleanValue);
+  }
+
+  /**
    * Returns the title of this array type.
    *
    * @return the title if present

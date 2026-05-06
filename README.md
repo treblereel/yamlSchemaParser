@@ -221,6 +221,43 @@ minContains: 2
 maxContains: 5
 ```
 
+### Unevaluated Items Control
+
+The `unevaluatedItems` keyword controls whether array elements not covered by `items` or `prefixItems` are allowed (JSON Schema Draft 2019-09+).
+
+```java
+SchemaDefinition definition = parser.parse("array-schema.yaml");
+ArrayType arrayType = (ArrayType) definition.model();
+
+// Check unevaluatedItems constraint
+if (arrayType.unevaluatedItems().isPresent()) {
+    boolean allowAdditional = arrayType.unevaluatedItems().get();
+    // false = reject additional items beyond prefixItems
+    // true = allow additional items
+}
+```
+
+Example schema - exactly 2 elements (string, number):
+```yaml
+type: array
+prefixItems:
+  - type: string
+  - type: number
+unevaluatedItems: false  # Only 2 elements allowed
+```
+
+Example schema - first 2 elements typed, rest must be boolean:
+```yaml
+type: array
+prefixItems:
+  - type: string
+  - type: integer
+items:
+  type: boolean
+unevaluatedItems: false
+# First element: string, second: integer, remaining: boolean
+```
+
 ### Nested Objects
 
 ```java
@@ -659,6 +696,7 @@ Represents array schemas.
 - `maxItems()` - Maximum items (Optional<Integer>)
 - `uniqueItems()` - Unique constraint (Optional<Boolean>)
 - `additionalItems()` - Additional items allowed (Optional<Boolean>)
+- `unevaluatedItems()` - Unevaluated items allowed (Optional<Boolean>)
 - `not()` - not combinator (Optional<HasType>)
 
 ### StringType

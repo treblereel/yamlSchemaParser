@@ -4,9 +4,9 @@
 
 ## 📊 Сводка
 
-**Всего нереализовано:** 5 фич  
-**Реализовано:** 8 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas, prefixItems, contains)  
-**Приоритет:** High (3), Medium (0), Low (2)
+**Всего нереализовано:** 4 фичи  
+**Реализовано:** 9 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas, prefixItems, contains, unevaluatedItems)  
+**Приоритет:** High (3), Medium (0), Low (1)
 
 ---
 
@@ -239,7 +239,7 @@ public Optional<Integer> maxContains(); // ✅ Реализовано
 ---
 
 ### 9. 🔍 unevaluatedItems
-**Статус:** ❌ Не реализовано  
+**Статус:** ✅ Реализовано  
 **Использование в workflow.yaml:** Нет  
 **JSON Schema Spec:** Draft 2019-09+
 
@@ -254,10 +254,10 @@ prefixItems:
 unevaluatedItems: false  # Только 2 элемента разрешены
 ```
 
-**API:**
+**Реализация:**
 ```java
 // ArrayType.java
-public Optional<Boolean> unevaluatedItems();
+public Optional<Boolean> unevaluatedItems(); // ✅ Реализовано
 ```
 
 **Сложность:** Low  
