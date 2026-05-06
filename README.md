@@ -216,6 +216,47 @@ priceType.minimum();     // Optional<Double>
 priceType.maximum();     // Optional<Double>
 ```
 
+### Pattern Properties
+
+Pattern properties allow defining schemas for object properties whose names match regex patterns.
+
+```java
+ObjectType objectType = (ObjectType) definition.model();
+
+// Get pattern properties
+if (objectType.patternProperties().isPresent()) {
+    Map<String, HasType> patterns = objectType.patternProperties().get();
+    
+    // Check if schema defines pattern for properties starting with "s_"
+    if (patterns.containsKey("^s_")) {
+        HasType stringPattern = patterns.get("^s_");
+        // Properties matching ^s_ must be strings
+    }
+    
+    // Iterate over all patterns
+    for (Map.Entry<String, HasType> entry : patterns.entrySet()) {
+        String pattern = entry.getKey();      // Regex pattern
+        HasType schema = entry.getValue();    // Schema for matching properties
+    }
+}
+```
+
+Example schema:
+```yaml
+type: object
+properties:
+  name: { type: string }
+patternProperties:
+  "^s_":
+    type: string
+  "^i_":
+    type: integer
+  "^config_":
+    type: object
+    properties:
+      enabled: { type: boolean }
+```
+
 ### Schema Combinators
 
 #### allOf
@@ -365,6 +406,7 @@ Represents object schemas.
 
 **Methods:**
 - `properties()` - Property map (Optional<Map<String, HasType>>)
+- `patternProperties()` - Pattern-based property map (Optional<Map<String, HasType>>)
 - `required()` - Required fields (Optional<List<String>>)
 - `additionalProperties()` - Additional properties config (Optional<AdditionalProperties>)
 - `minProperties()` - Minimum properties (Optional<Integer>)

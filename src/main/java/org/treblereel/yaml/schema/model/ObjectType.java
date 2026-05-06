@@ -113,6 +113,34 @@ public class ObjectType implements HasType {
   }
 
   /**
+   * Returns the pattern properties as a map of regex patterns to their types.
+   * <p>
+   * Pattern properties allow defining schemas for object properties whose names
+   * match specific regex patterns. The map is sorted alphabetically by pattern.
+   * </p>
+   * <p>
+   * Example:
+   * <pre>{@code
+   * ObjectType objectType = (ObjectType) schema.model();
+   * Map<String, HasType> patterns = objectType.patternProperties().get();
+   * HasType stringPattern = patterns.get("^s_"); // Properties starting with s_
+   * }</pre>
+   * </p>
+   *
+   * @return map of regex patterns to types if patternProperties are defined
+   */
+  public Optional<Map<String, HasType>> patternProperties() {
+    return Optional.ofNullable(node.get("patternProperties"))
+            .filter(JsonNode::isObject)
+            .map(patternsNode -> {
+              Map<String, HasType> patterns = new TreeMap<>(String::compareTo);
+              patternsNode.fields().forEachRemaining(entry ->
+                      patterns.put(entry.getKey(), NodeFactory.resolveType(schema, entry.getValue())));
+              return patterns;
+            });
+  }
+
+  /**
    * Returns the additional properties configuration.
    * <p>
    * Determines whether properties not explicitly defined in the schema are allowed,

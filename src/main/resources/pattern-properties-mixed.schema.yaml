@@ -1,0 +1,17 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+properties:
+  name:
+    type: string
+  age:
+    type: integer
+patternProperties:
+  "^config_":
+    type: object
+    properties:
+      enabled:
+        type: boolean
+  "^metadata_":
+    type: string
+additionalProperties: false
+description: Mix of fixed properties and pattern-based properties

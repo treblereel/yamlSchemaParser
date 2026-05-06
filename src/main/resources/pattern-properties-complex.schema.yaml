@@ -1,0 +1,14 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+patternProperties:
+  "^[Ss]_":
+    type: string
+    minLength: 1
+  "^[Nn]um_":
+    type: number
+    minimum: 0
+  "^arr_.*$":
+    type: array
+    items:
+      type: string
+description: Complex pattern properties with case-insensitive patterns
