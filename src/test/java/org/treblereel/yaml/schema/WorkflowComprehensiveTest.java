@@ -43,7 +43,7 @@ public class WorkflowComprehensiveTest {
     static void setUp() {
         Parser parser = new Parser();
         schema = parser.parse("src/test/resources/workflow.yaml");
-        root = (ObjectType) schema.model();
+        root = schema.requireObject();
     }
 
     // ==================== Schema Metadata ====================
@@ -110,16 +110,16 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testNestedReferenceResolution() {
-        // Test that nested $refs resolve correctly
-        RefType inputRef = (RefType) root.properties().get("input");
-        HasType input = inputRef.resolve();
-        assertInstanceOf(ObjectType.class, input);
+        // Test that nested $refs resolve correctly using fluent API
+        ObjectType input = root.property("input")
+            .resolve()
+            .asObject()
+            .orElseThrow(() -> new AssertionError("input should be ObjectType"));
 
-        ObjectType inputObj = (ObjectType) input;
-        HasType schema = inputObj.properties().get("schema");
-        assertInstanceOf(RefType.class, schema);
+        HasType schemaType = input.properties().get("schema");
+        assertInstanceOf(RefType.class, schemaType);
 
-        RefType schemaRef = (RefType) schema;
+        RefType schemaRef = (RefType) schemaType;
         assertEquals("#/$defs/schema", schemaRef.ref());
     }
 
@@ -253,18 +253,23 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testPatternInDslVersion() {
-        ObjectType document = (ObjectType) root.properties().get("document");
-        StringType dsl = (StringType) document.properties().get("dsl");
+        // Demonstrates fluent API: navigate two levels and extract pattern
+        String pattern = root.property("document")
+            .property("dsl")
+            .asString()
+            .flatMap(StringType::pattern)
+            .orElseThrow(() -> new AssertionError("dsl pattern should be present"));
 
-        assertTrue(dsl.pattern().isPresent());
-        String pattern = dsl.pattern().get();
         assertTrue(pattern.contains("0|[1-9]"), "Should be semver pattern");
     }
 
     @Test
     void testPatternInNamespace() {
-        ObjectType document = (ObjectType) root.properties().get("document");
-        StringType namespace = (StringType) document.properties().get("namespace");
+        // Demonstrates getPropertyAsObject and getPropertyAsString
+        ObjectType document = root.getPropertyAsObject("document")
+            .orElseThrow(() -> new AssertionError("document should be present"));
+        StringType namespace = document.getPropertyAsString("namespace")
+            .orElseThrow(() -> new AssertionError("namespace should be string"));
 
         assertTrue(namespace.pattern().isPresent());
         assertEquals("^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$", namespace.pattern().get());
@@ -581,8 +586,12 @@ public class WorkflowComprehensiveTest {
     }
 
     private ObjectType getTaskItem() {
-        RefType doRef = (RefType) root.properties().get("do");
-        ArrayType taskList = (ArrayType) doRef.resolve();
-        return (ObjectType) taskList.getItems()[0].getType();
+        return root.property("do")
+            .resolve()
+            .asArray()
+            .map(arr -> arr.getItems()[0].getType())
+            .filter(ObjectType.class::isInstance)
+            .map(ObjectType.class::cast)
+            .orElseThrow(() -> new AssertionError("do[0] should be ObjectType"));
     }
 }
