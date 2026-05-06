@@ -91,6 +91,14 @@ public record StringType(SchemaDefinition schema, JsonNode node) implements HasT
   }
 
   /**
+   * Returns enum constraint - list of allowed values.
+   * @return List of allowed values, empty list if no enum constraint
+   */
+  public List<String> enumConstraint() {
+    return enumValues().orElse(List.of());
+  }
+
+  /**
    * Returns the const value constraint.
    * <p>
    * The string value must exactly match this constant value.

@@ -146,6 +146,14 @@ public record NumberType(SchemaDefinition schema, JsonNode node) implements HasT
   }
 
   /**
+   * Returns enum constraint - list of allowed values.
+   * @return List of allowed number values, empty list if no enum constraint
+   */
+  public List<Double> enumConstraint() {
+    return enumValues().orElse(List.of());
+  }
+
+  /**
    * Returns the const value constraint.
    * <p>
    * The number value must exactly match this constant value.

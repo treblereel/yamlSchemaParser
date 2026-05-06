@@ -130,6 +130,14 @@ public record IntegerType(SchemaDefinition schema, JsonNode node) implements Has
   }
 
   /**
+   * Returns enum constraint - list of allowed values.
+   * @return List of allowed integer values, empty list if no enum constraint
+   */
+  public List<Integer> enumConstraint() {
+    return enumValues().orElse(List.of());
+  }
+
+  /**
    * Returns the const value constraint.
    * <p>
    * The integer value must exactly match this constant value.
