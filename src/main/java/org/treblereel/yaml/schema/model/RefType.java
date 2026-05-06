@@ -1,6 +1,7 @@
 package org.treblereel.yaml.schema.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Optional;
 
 /**
  * Represents a $ref reference to another schema definition.
@@ -44,5 +45,19 @@ public record RefType(SchemaDefinition schema, String ref) implements HasType {
       return NodeFactory.resolveType(schema, node);
     }
     throw new IllegalArgumentException("Only local $defs references are supported: " + ref);
+  }
+
+  /**
+   * Resolves the reference and returns it as the specified type if it matches.
+   *
+   * @param <T> the expected type
+   * @param type the class of the expected type
+   * @return Optional containing the resolved type if it matches, or empty otherwise
+   */
+  public <T extends HasType> Optional<T> resolveAs(Class<T> type) {
+    HasType resolved = resolve();
+    return type.isInstance(resolved)
+        ? Optional.of(type.cast(resolved))
+        : Optional.empty();
   }
 }
