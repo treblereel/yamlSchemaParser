@@ -180,6 +180,47 @@ items:
   type: string  # Additional items must be strings
 ```
 
+### Array Contains Validation
+
+The `contains` keyword specifies that an array must contain at least one element matching a schema. Can be combined with `minContains` and `maxContains` to control the number of matching elements.
+
+```java
+SchemaDefinition definition = parser.parse("array-schema.yaml");
+ArrayType arrayType = (ArrayType) definition.model();
+
+// Check if contains constraint is present
+if (arrayType.contains().isPresent()) {
+    HasType containsSchema = arrayType.contains().get();
+    // Array must contain at least one element matching this schema
+    
+    // Check min/max constraints
+    if (arrayType.minContains().isPresent()) {
+        int min = arrayType.minContains().get(); // Minimum matching elements
+    }
+    if (arrayType.maxContains().isPresent()) {
+        int max = arrayType.maxContains().get(); // Maximum matching elements
+    }
+}
+```
+
+Example schema - at least one number >= 5:
+```yaml
+type: array
+contains:
+  type: number
+  minimum: 5
+```
+
+Example with constraints - 2 to 5 strings starting with 'test':
+```yaml
+type: array
+contains:
+  type: string
+  pattern: "^test"
+minContains: 2
+maxContains: 5
+```
+
 ### Nested Objects
 
 ```java
@@ -611,6 +652,9 @@ Represents array schemas.
 **Methods:**
 - `getItems()` - Item types (ArrayItemType[])
 - `prefixItems()` - Prefix items for tuple validation (Optional<ArrayItemType[]>)
+- `contains()` - Schema for array contains validation (Optional<HasType>)
+- `minContains()` - Minimum matching elements (Optional<Integer>)
+- `maxContains()` - Maximum matching elements (Optional<Integer>)
 - `minItems()` - Minimum items (Optional<Integer>)
 - `maxItems()` - Maximum items (Optional<Integer>)
 - `uniqueItems()` - Unique constraint (Optional<Boolean>)

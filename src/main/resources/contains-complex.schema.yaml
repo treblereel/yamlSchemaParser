@@ -1,0 +1,11 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: array
+contains:
+  type: object
+  properties:
+    status:
+      type: string
+      enum: [active, pending]
+  required: [status]
+minContains: 1
+description: Array must contain at least 1 object with status active or pending

@@ -149,6 +149,61 @@ public record ArrayType(SchemaDefinition schemaDefinition, JsonNode node) implem
   }
 
   /**
+   * Returns the contains constraint (JSON Schema Draft 6+).
+   * <p>
+   * Specifies that the array must contain at least one element that validates
+   * against the given schema. Used with minContains/maxContains to control
+   * how many matching elements are required.
+   * </p>
+   * <p>
+   * Example:
+   * <pre>{@code
+   * ArrayType arrayType = (ArrayType) schema.model();
+   * if (arrayType.contains().isPresent()) {
+   *     HasType containsSchema = arrayType.contains().get();
+   *     // Array must contain at least one element matching this schema
+   * }
+   * }</pre>
+   * </p>
+   *
+   * @return the schema that at least one array element must validate against
+   */
+  public Optional<HasType> contains() {
+    return Optional.ofNullable(node.get("contains"))
+            .map(containsNode -> NodeFactory.resolveType(schemaDefinition, containsNode));
+  }
+
+  /**
+   * Returns the minimum contains constraint (JSON Schema Draft 2019-09+).
+   * <p>
+   * Specifies the minimum number of array elements that must validate against
+   * the contains schema. Only meaningful when contains is present.
+   * </p>
+   *
+   * @return the minimum number of matching elements if specified
+   */
+  public Optional<Integer> minContains() {
+    return Optional.ofNullable(node.get("minContains"))
+            .filter(JsonNode::isInt)
+            .map(JsonNode::intValue);
+  }
+
+  /**
+   * Returns the maximum contains constraint (JSON Schema Draft 2019-09+).
+   * <p>
+   * Specifies the maximum number of array elements that must validate against
+   * the contains schema. Only meaningful when contains is present.
+   * </p>
+   *
+   * @return the maximum number of matching elements if specified
+   */
+  public Optional<Integer> maxContains() {
+    return Optional.ofNullable(node.get("maxContains"))
+            .filter(JsonNode::isInt)
+            .map(JsonNode::intValue);
+  }
+
+  /**
    * Returns the title of this array type.
    *
    * @return the title if present

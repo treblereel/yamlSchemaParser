@@ -4,9 +4,9 @@
 
 ## 📊 Сводка
 
-**Всего нереализовано:** 6 фич  
-**Реализовано:** 7 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas, prefixItems)  
-**Приоритет:** High (3), Medium (1), Low (2)
+**Всего нереализовано:** 5 фич  
+**Реализовано:** 8 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas, prefixItems, contains)  
+**Приоритет:** High (3), Medium (0), Low (2)
 
 ---
 
@@ -210,7 +210,7 @@ public Optional<ArrayItemType[]> prefixItems(); // ✅ Реализовано
 ---
 
 ### 8. 🔍 contains
-**Статус:** ❌ Не реализовано  
+**Статус:** ✅ Реализовано  
 **Использование в workflow.yaml:** Нет  
 **JSON Schema Spec:** Draft 6+
 
@@ -228,9 +228,9 @@ contains:
 **API:**
 ```java
 // ArrayType.java
-public Optional<HasType> contains();
-public Optional<Integer> minContains();
-public Optional<Integer> maxContains();
+public Optional<HasType> contains(); // ✅ Реализовано
+public Optional<Integer> minContains(); // ✅ Реализовано
+public Optional<Integer> maxContains(); // ✅ Реализовано
 ```
 
 **Сложность:** Low  

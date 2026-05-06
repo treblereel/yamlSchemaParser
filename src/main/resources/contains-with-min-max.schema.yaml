@@ -1,0 +1,8 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: array
+contains:
+  type: string
+  pattern: "^test"
+minContains: 2
+maxContains: 5
+description: Array must contain 2-5 strings starting with 'test'

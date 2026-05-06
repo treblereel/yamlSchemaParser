@@ -1,0 +1,6 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: array
+contains:
+  type: number
+  minimum: 5
+description: Array must contain at least one number >= 5
