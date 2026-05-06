@@ -31,6 +31,74 @@ import java.net.URI;
 public class Parser {
 
     private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+    private final boolean strictMode;
+    private final boolean resolveReferences;
+
+    /**
+     * Creates a Parser with default configuration.
+     */
+    public Parser() {
+        this(builder());
+    }
+
+    /**
+     * Creates a Parser from a Builder.
+     * Package-private constructor - use builder() or default constructor.
+     */
+    private Parser(Builder builder) {
+        this.strictMode = builder.strictMode;
+        this.resolveReferences = builder.resolveReferences;
+    }
+
+    /**
+     * Creates a new Parser.Builder for configurable parsing.
+     *
+     * @return new Builder instance
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Builder for creating configured Parser instances.
+     */
+    public static class Builder {
+        private boolean strictMode = false;
+        private boolean resolveReferences = true;
+
+        /**
+         * Enables strict mode - throws exception on unknown fields/types.
+         * Default: false
+         *
+         * @param value true to enable strict mode
+         * @return this builder for chaining
+         */
+        public Builder strictMode(boolean value) {
+            this.strictMode = value;
+            return this;
+        }
+
+        /**
+         * Enables automatic reference resolution during parsing.
+         * Default: true
+         *
+         * @param value true to resolve references automatically
+         * @return this builder for chaining
+         */
+        public Builder resolveReferences(boolean value) {
+            this.resolveReferences = value;
+            return this;
+        }
+
+        /**
+         * Builds the Parser with configured options.
+         *
+         * @return new Parser instance
+         */
+        public Parser build() {
+            return new Parser(this);
+        }
+    }
 
     /**
      * Loads a YAML schema from the given URI.
