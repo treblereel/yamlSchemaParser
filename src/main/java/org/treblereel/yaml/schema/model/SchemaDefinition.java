@@ -71,6 +71,146 @@ public record SchemaDefinition(JsonNode node) {
   }
 
   /**
+   * Returns the root type as ObjectType if it is one.
+   * @return Optional containing ObjectType, or empty if model is not an ObjectType
+   */
+  public Optional<ObjectType> modelAsObject() {
+    HasType type = model();
+    return type instanceof ObjectType obj ? Optional.of(obj) : Optional.empty();
+  }
+
+  /**
+   * Returns the root type as ArrayType if it is one.
+   * @return Optional containing ArrayType, or empty if model is not an ArrayType
+   */
+  public Optional<ArrayType> modelAsArray() {
+    HasType type = model();
+    return type instanceof ArrayType arr ? Optional.of(arr) : Optional.empty();
+  }
+
+  /**
+   * Returns the root type as StringType if it is one.
+   * @return Optional containing StringType, or empty if model is not a StringType
+   */
+  public Optional<StringType> modelAsString() {
+    HasType type = model();
+    return type instanceof StringType str ? Optional.of(str) : Optional.empty();
+  }
+
+  /**
+   * Returns the root type as IntegerType if it is one.
+   * @return Optional containing IntegerType, or empty if model is not an IntegerType
+   */
+  public Optional<IntegerType> modelAsInteger() {
+    HasType type = model();
+    return type instanceof IntegerType i ? Optional.of(i) : Optional.empty();
+  }
+
+  /**
+   * Returns the root type as NumberType if it is one.
+   * @return Optional containing NumberType, or empty if model is not a NumberType
+   */
+  public Optional<NumberType> modelAsNumber() {
+    HasType type = model();
+    return type instanceof NumberType num ? Optional.of(num) : Optional.empty();
+  }
+
+  /**
+   * Returns the root type as BooleanType if it is one.
+   * @return Optional containing BooleanType, or empty if model is not a BooleanType
+   */
+  public Optional<BooleanType> modelAsBoolean() {
+    HasType type = model();
+    return type instanceof BooleanType bool ? Optional.of(bool) : Optional.empty();
+  }
+
+  /**
+   * Returns the root type as AllOfType if it is one.
+   * @return Optional containing AllOfType, or empty if model is not an AllOfType
+   */
+  public Optional<AllOfType> modelAsAllOf() {
+    HasType type = model();
+    return type instanceof AllOfType allOf ? Optional.of(allOf) : Optional.empty();
+  }
+
+  /**
+   * Returns the root type as ObjectType, throwing if it is not one.
+   * @return ObjectType
+   * @throws TypeMismatchException if model is not an ObjectType
+   */
+  public ObjectType requireObject() {
+    return modelAsObject()
+        .orElseThrow(() -> new TypeMismatchException(
+            "Expected ObjectType but got " + model().getClass().getSimpleName()));
+  }
+
+  /**
+   * Returns the root type as ArrayType, throwing if it is not one.
+   * @return ArrayType
+   * @throws TypeMismatchException if model is not an ArrayType
+   */
+  public ArrayType requireArray() {
+    return modelAsArray()
+        .orElseThrow(() -> new TypeMismatchException(
+            "Expected ArrayType but got " + model().getClass().getSimpleName()));
+  }
+
+  /**
+   * Returns the root type as StringType, throwing if it is not one.
+   * @return StringType
+   * @throws TypeMismatchException if model is not a StringType
+   */
+  public StringType requireString() {
+    return modelAsString()
+        .orElseThrow(() -> new TypeMismatchException(
+            "Expected StringType but got " + model().getClass().getSimpleName()));
+  }
+
+  /**
+   * Returns the root type as IntegerType, throwing if it is not one.
+   * @return IntegerType
+   * @throws TypeMismatchException if model is not an IntegerType
+   */
+  public IntegerType requireInteger() {
+    return modelAsInteger()
+        .orElseThrow(() -> new TypeMismatchException(
+            "Expected IntegerType but got " + model().getClass().getSimpleName()));
+  }
+
+  /**
+   * Returns the root type as NumberType, throwing if it is not one.
+   * @return NumberType
+   * @throws TypeMismatchException if model is not a NumberType
+   */
+  public NumberType requireNumber() {
+    return modelAsNumber()
+        .orElseThrow(() -> new TypeMismatchException(
+            "Expected NumberType but got " + model().getClass().getSimpleName()));
+  }
+
+  /**
+   * Returns the root type as BooleanType, throwing if it is not one.
+   * @return BooleanType
+   * @throws TypeMismatchException if model is not a BooleanType
+   */
+  public BooleanType requireBoolean() {
+    return modelAsBoolean()
+        .orElseThrow(() -> new TypeMismatchException(
+            "Expected BooleanType but got " + model().getClass().getSimpleName()));
+  }
+
+  /**
+   * Returns the root type as AllOfType, throwing if it is one.
+   * @return AllOfType
+   * @throws TypeMismatchException if model is not an AllOfType
+   */
+  public AllOfType requireAllOf() {
+    return modelAsAllOf()
+        .orElseThrow(() -> new TypeMismatchException(
+            "Expected AllOfType but got " + model().getClass().getSimpleName()));
+  }
+
+  /**
    * Returns all schema definitions from the $defs section.
    * <p>
    * These definitions can be referenced using {@link RefType} with paths like "#/$defs/DefinitionName".
