@@ -4,9 +4,9 @@
 
 ## 📊 Сводка
 
-**Всего нереализовано:** 4 фичи  
-**Реализовано:** 9 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas, prefixItems, contains, unevaluatedItems)  
-**Приоритет:** High (3), Medium (0), Low (1)
+**Всего нереализовано:** 3 фичи  
+**Реализовано:** 10 фич (if/then/else, not combinator, patternProperties, propertyNames, dependentRequired, dependentSchemas, prefixItems, contains, unevaluatedItems, examples)  
+**Приоритет:** High (3), Medium (0), Low (0)
 
 ---
 
@@ -298,17 +298,17 @@ exclusiveMinimum: 0  # > 0
 ## 🔵 Low Priority (metadata, редко используемые)
 
 ### 12. 📝 examples
-**Статус:** ❌ Не реализовано  
+**Статус:** ✅ Реализовано  
 **Использование в workflow.yaml:** Нет  
 **JSON Schema Spec:** Draft 6+
 
 **Описание:**
 Массив примеров валидных значений.
 
-**API:**
+**Реализация:**
 ```java
-// Все типы
-public Optional<List<JsonNode>> examples();
+// Все типы (ObjectType, ArrayType, StringType, IntegerType, NumberType, BooleanType)
+public Optional<List<JsonNode>> examples(); // ✅ Реализовано
 ```
 
 **Сложность:** Low  

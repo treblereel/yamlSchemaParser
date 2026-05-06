@@ -139,6 +139,25 @@ public record IntegerType(SchemaDefinition schema, JsonNode node) implements Has
   }
 
   /**
+   * Returns the examples array (JSON Schema Draft 6+).
+   * <p>
+   * Provides example values for documentation purposes. These are metadata
+   * only and do not affect validation.
+   * </p>
+   *
+   * @return list of example values if specified
+   */
+  public Optional<List<JsonNode>> examples() {
+    return Optional.ofNullable(node.get("examples"))
+            .filter(JsonNode::isArray)
+            .map(examplesNode -> {
+              List<JsonNode> examples = new java.util.ArrayList<>();
+              examplesNode.forEach(examples::add);
+              return examples;
+            });
+  }
+
+  /**
    * Returns the not combinator schema.
    * <p>
    * The integer value must NOT validate against this schema.

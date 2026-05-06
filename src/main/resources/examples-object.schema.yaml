@@ -1,0 +1,11 @@
+type: object
+properties:
+  name:
+    type: string
+  age:
+    type: integer
+examples:
+  - name: "Alice"
+    age: 30
+  - name: "Bob"
+    age: 25

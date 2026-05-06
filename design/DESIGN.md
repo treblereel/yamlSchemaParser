@@ -58,12 +58,12 @@ ObjectType                       ArrayType, StringType,
 
 | Type | Purpose |
 |------|---------|
-| **ObjectType** | Represents object schemas with properties, required fields, pattern properties, property names validation, dependent required/schemas |
-| **ArrayType** | Represents array schemas with items, prefixItems (tuple validation), contains validation (minContains/maxContains), unevaluatedItems control, min/max items, unique items constraints |
-| **StringType** | String schemas with pattern, format, min/max length, enum, const |
-| **IntegerType** | Integer schemas with min/max, exclusive bounds, enum, const |
-| **NumberType** | Number (double) schemas with min/max, exclusive bounds, multipleOf, enum, const |
-| **BooleanType** | Boolean schemas with const, default values |
+| **ObjectType** | Represents object schemas with properties, required fields, pattern properties, property names validation, dependent required/schemas, examples metadata |
+| **ArrayType** | Represents array schemas with items, prefixItems (tuple validation), contains validation (minContains/maxContains), unevaluatedItems control, min/max items, unique items constraints, examples metadata |
+| **StringType** | String schemas with pattern, format, min/max length, enum, const, examples metadata |
+| **IntegerType** | Integer schemas with min/max, exclusive bounds, enum, const, examples metadata |
+| **NumberType** | Number (double) schemas with min/max, exclusive bounds, multipleOf, enum, const, examples metadata |
+| **BooleanType** | Boolean schemas with const, default values, examples metadata |
 | **NullType** | Null type schemas |
 | **RefType** | $ref references - resolves to target type via `resolve()` |
 | **AllOfType** | allOf combinator - must satisfy all schemas |
@@ -205,11 +205,12 @@ This is a library with no runtime configuration. All behavior is controlled via:
 | **PrefixItemsTest** | 18 tests covering modern tuple validation with prefixItems |
 | **ContainsTest** | 15 tests covering contains, minContains, maxContains array validation |
 | **UnevaluatedItemsTest** | 11 tests covering unevaluatedItems constraint for arrays |
+| **ExamplesTest** | 12 tests covering examples metadata across all types |
 | **WorkflowTest** | 71 tests validating real-world Serverless Workflow DSL schema |
 | **ParserErrorHandlingTest** | 12 tests covering error cases |
 | **TypeResolutionTest** | 13 tests covering type resolution edge cases |
 
-**Total test count:** 319 tests (as of 2026-05-06)
+**Total test count:** 331 tests (as of 2026-05-06)
 
 ## Design Decisions
 
@@ -245,13 +246,12 @@ This is a library with no runtime configuration. All behavior is controlled via:
 
 See `MISSING_FEATURES.md` for tracking. Summary:
 
-**Remaining features (4 total):**
-- examples (metadata)
+**Remaining features (3 total):**
 - deprecated (metadata)
 - readOnly / writeOnly (OpenAPI metadata)
 - exclusiveMinimum/exclusiveMaximum boolean syntax (Draft 4 compatibility)
 
-**Recently implemented (9 total):**
+**Recently implemented (10 total):**
 - ✅ if/then/else conditional schemas
 - ✅ not combinator
 - ✅ patternProperties
@@ -261,6 +261,7 @@ See `MISSING_FEATURES.md` for tracking. Summary:
 - ✅ prefixItems
 - ✅ contains / minContains / maxContains
 - ✅ unevaluatedItems
+- ✅ examples
 
 ### Future Enhancements
 

@@ -258,6 +258,49 @@ unevaluatedItems: false
 # First element: string, second: integer, remaining: boolean
 ```
 
+### Example Values (Metadata)
+
+The `examples` keyword provides example values for documentation purposes (JSON Schema Draft 6+). These are metadata only and do not affect validation.
+
+```java
+SchemaDefinition definition = parser.parse("schema.yaml");
+StringType stringType = (StringType) definition.model();
+
+// Access example values
+if (stringType.examples().isPresent()) {
+    List<JsonNode> examples = stringType.examples().get();
+    for (JsonNode example : examples) {
+        String exampleValue = example.asText();
+        // Use for documentation, code generation, etc.
+    }
+}
+```
+
+Example schema with examples:
+```yaml
+type: string
+pattern: "^[a-z]+$"
+examples:
+  - "hello"
+  - "world"
+  - "test"
+```
+
+Works with all types - strings, integers, objects, arrays:
+```yaml
+type: object
+properties:
+  name:
+    type: string
+  age:
+    type: integer
+examples:
+  - name: "Alice"
+    age: 30
+  - name: "Bob"
+    age: 25
+```
+
 ### Nested Objects
 
 ```java
@@ -697,6 +740,7 @@ Represents array schemas.
 - `uniqueItems()` - Unique constraint (Optional<Boolean>)
 - `additionalItems()` - Additional items allowed (Optional<Boolean>)
 - `unevaluatedItems()` - Unevaluated items allowed (Optional<Boolean>)
+- `examples()` - Example values (Optional<List<JsonNode>>)
 - `not()` - not combinator (Optional<HasType>)
 
 ### StringType
@@ -710,6 +754,7 @@ Represents string schemas.
 - `maxLength()` - Maximum length (Optional<Integer>)
 - `enumValues()` - Allowed values (Optional<List<String>>)
 - `constValue()` - Constant value (Optional<String>)
+- `examples()` - Example values (Optional<List<JsonNode>>)
 - `not()` - not combinator (Optional<HasType>)
 
 ### IntegerType
@@ -723,6 +768,7 @@ Represents integer schemas.
 - `exclusiveMaximum()` - Exclusive maximum (Optional<Integer>)
 - `enumValues()` - Allowed values (Optional<List<Integer>>)
 - `constValue()` - Constant value (Optional<Integer>)
+- `examples()` - Example values (Optional<List<JsonNode>>)
 - `not()` - not combinator (Optional<HasType>)
 
 ### NumberType
@@ -737,6 +783,7 @@ Represents number (floating-point) schemas.
 - `multipleOf()` - Multiple constraint (Optional<Double>)
 - `enumValues()` - Allowed values (Optional<List<Double>>)
 - `constValue()` - Constant value (Optional<Double>)
+- `examples()` - Example values (Optional<List<JsonNode>>)
 - `not()` - not combinator (Optional<HasType>)
 
 ### BooleanType
@@ -746,6 +793,7 @@ Represents boolean schemas.
 **Methods:**
 - `constValue()` - Constant value (Optional<Boolean>)
 - `defaultValue()` - Default value (Optional<Boolean>)
+- `examples()` - Example values (Optional<List<JsonNode>>)
 - `not()` - not combinator (Optional<HasType>)
 
 ### RefType

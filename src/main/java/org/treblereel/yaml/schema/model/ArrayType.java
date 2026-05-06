@@ -3,6 +3,7 @@ package org.treblereel.yaml.schema.model;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -254,6 +255,25 @@ public record ArrayType(SchemaDefinition schemaDefinition, JsonNode node) implem
    */
   public Optional<JsonNode> defaultValue() {
     return Optional.ofNullable(node.get("default"));
+  }
+
+  /**
+   * Returns the examples array (JSON Schema Draft 6+).
+   * <p>
+   * Provides example values for documentation purposes. These are metadata
+   * only and do not affect validation.
+   * </p>
+   *
+   * @return list of example values if specified
+   */
+  public Optional<List<JsonNode>> examples() {
+    return Optional.ofNullable(node.get("examples"))
+            .filter(JsonNode::isArray)
+            .map(examplesNode -> {
+              List<JsonNode> examples = new java.util.ArrayList<>();
+              examplesNode.forEach(examples::add);
+              return examples;
+            });
   }
 
   /**
