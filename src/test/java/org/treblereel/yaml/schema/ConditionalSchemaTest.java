@@ -45,9 +45,9 @@ public class ConditionalSchemaTest {
         assertInstanceOf(ObjectType.class, ifCondition, "if condition should be ObjectType");
 
         ObjectType ifObject = (ObjectType) ifCondition;
-        assertTrue(ifObject.properties().isPresent(), "if condition should have properties");
+        assertTrue(ifObject.properties().isEmpty() == false, "if condition should have properties");
 
-        var props = ifObject.properties().get();
+        var props = ifObject.properties();
         assertTrue(props.containsKey("country"), "if condition should check 'country' property");
 
         // Check const value for country
@@ -64,9 +64,9 @@ public class ConditionalSchemaTest {
         assertInstanceOf(ObjectType.class, thenSchema, "then schema should be ObjectType");
 
         ObjectType thenObject = (ObjectType) thenSchema;
-        assertTrue(thenObject.properties().isPresent(), "then schema should have properties");
+        assertTrue(thenObject.properties().isEmpty() == false, "then schema should have properties");
 
-        var props = thenObject.properties().get();
+        var props = thenObject.properties();
         assertTrue(props.containsKey("postalCode"), "then schema should define postalCode");
 
         StringType postalCodeType = (StringType) props.get("postalCode");
@@ -83,9 +83,9 @@ public class ConditionalSchemaTest {
         assertInstanceOf(ObjectType.class, elseSchema, "else schema should be ObjectType");
 
         ObjectType elseObject = (ObjectType) elseSchema;
-        assertTrue(elseObject.properties().isPresent(), "else schema should have properties");
+        assertTrue(elseObject.properties().isEmpty() == false, "else schema should have properties");
 
-        var props = elseObject.properties().get();
+        var props = elseObject.properties();
         assertTrue(props.containsKey("postalCode"), "else schema should define postalCode");
 
         StringType postalCodeType = (StringType) props.get("postalCode");
@@ -150,14 +150,14 @@ public class ConditionalSchemaTest {
 
         // Inner then - AMEX 15 digits
         ObjectType innerThen = (ObjectType) outerThen.thenSchema().get();
-        assertTrue(innerThen.properties().isPresent());
-        StringType amexPattern = (StringType) innerThen.properties().get().get("cardNumber");
+        assertTrue(innerThen.properties().isEmpty() == false);
+        StringType amexPattern = (StringType) innerThen.properties().get("cardNumber");
         assertEquals("^[0-9]{15}$", amexPattern.pattern().get(), "AMEX should be 15 digits");
 
         // Inner else - Other cards 16 digits
         ObjectType innerElse = (ObjectType) outerThen.elseSchema().get();
-        assertTrue(innerElse.properties().isPresent());
-        StringType otherPattern = (StringType) innerElse.properties().get().get("cardNumber");
+        assertTrue(innerElse.properties().isEmpty() == false);
+        StringType otherPattern = (StringType) innerElse.properties().get("cardNumber");
         assertEquals("^[0-9]{16}$", otherPattern.pattern().get(), "Other cards should be 16 digits");
     }
 

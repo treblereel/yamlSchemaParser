@@ -94,7 +94,7 @@ public class PropertyNamesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/property-names-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        assertTrue(objectType.properties().isPresent(),
+        assertTrue(objectType.properties().isEmpty() == false,
                    "Should have regular properties");
         assertTrue(objectType.propertyNames().isPresent(),
                    "Should have propertyNames constraint");
@@ -105,7 +105,7 @@ public class PropertyNamesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/property-names-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        var props = objectType.properties().get();
+        var props = objectType.properties();
         assertEquals(2, props.size(), "Should have 2 properties");
         assertTrue(props.containsKey("id"), "Should have id property");
         assertTrue(props.containsKey("name"), "Should have name property");
@@ -142,7 +142,7 @@ public class PropertyNamesTest {
                    "propertyNames should work independently");
 
         // This schema doesn't have patternProperties, but they can coexist
-        assertFalse(objectType.patternProperties().isPresent(),
+        assertFalse(objectType.patternProperties().isEmpty() == false,
                     "This particular schema has no patternProperties");
     }
 

@@ -15,7 +15,7 @@ import java.util.Optional;
  * <p>
  * Example usage:
  * <pre>{@code
- * NumberType priceType = (NumberType) objectType.properties().get().get("price");
+ * NumberType priceType = (NumberType) objectType.properties().get("price");
  * Optional<Double> min = priceType.minimum(); // 0.0
  * Optional<Double> max = priceType.maximum(); // 999999.99
  * Optional<Double> multipleOf = priceType.multipleOf(); // 0.01 (for currency)

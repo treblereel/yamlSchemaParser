@@ -111,10 +111,10 @@ public class ContainsTest {
 
         ObjectType objectType = (ObjectType) arrayType.contains().get();
 
-        assertTrue(objectType.properties().isPresent(),
+        assertTrue(objectType.properties().isEmpty() == false,
                    "Object should have properties");
 
-        Map<String, HasType> props = objectType.properties().get();
+        Map<String, HasType> props = objectType.properties();
         assertTrue(props.containsKey("status"),
                    "Object should have status property");
     }
@@ -138,7 +138,7 @@ public class ContainsTest {
         ArrayType arrayType = (ArrayType) schema.model();
 
         ObjectType objectType = (ObjectType) arrayType.contains().get();
-        Map<String, HasType> props = objectType.properties().get();
+        Map<String, HasType> props = objectType.properties();
         StringType statusType = (StringType) props.get("status");
 
         assertTrue(statusType.enumValues().isPresent(),

@@ -24,7 +24,7 @@ public class DependentRequiredTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-required-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        assertTrue(objectType.dependentRequired().isPresent(),
+        assertTrue(objectType.dependentRequired().isEmpty() == false,
                    "dependentRequired should be present");
     }
 
@@ -33,7 +33,7 @@ public class DependentRequiredTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-required-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, List<String>> deps = objectType.dependentRequired().get();
+        Map<String, List<String>> deps = objectType.dependentRequired();
         assertEquals(1, deps.size(), "Should have 1 dependent requirement");
     }
 
@@ -42,7 +42,7 @@ public class DependentRequiredTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-required-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, List<String>> deps = objectType.dependentRequired().get();
+        Map<String, List<String>> deps = objectType.dependentRequired();
         assertTrue(deps.containsKey("creditCard"),
                    "Should have creditCard dependency");
     }
@@ -52,7 +52,7 @@ public class DependentRequiredTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-required-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, List<String>> deps = objectType.dependentRequired().get();
+        Map<String, List<String>> deps = objectType.dependentRequired();
         List<String> required = deps.get("creditCard");
 
         assertNotNull(required, "creditCard should have required properties");
@@ -70,7 +70,7 @@ public class DependentRequiredTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-required-multiple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, List<String>> deps = objectType.dependentRequired().get();
+        Map<String, List<String>> deps = objectType.dependentRequired();
         assertEquals(3, deps.size(), "Should have 3 dependent requirements");
     }
 
@@ -79,7 +79,7 @@ public class DependentRequiredTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-required-multiple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, List<String>> deps = objectType.dependentRequired().get();
+        Map<String, List<String>> deps = objectType.dependentRequired();
 
         assertTrue(deps.containsKey("email"), "Should have email dependency");
         assertTrue(deps.containsKey("password"), "Should have password dependency");
@@ -92,7 +92,7 @@ public class DependentRequiredTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-required-multiple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, List<String>> deps = objectType.dependentRequired().get();
+        Map<String, List<String>> deps = objectType.dependentRequired();
         List<String> emailDeps = deps.get("email");
 
         assertEquals(1, emailDeps.size(), "email should require 1 property");
@@ -104,7 +104,7 @@ public class DependentRequiredTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-required-multiple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, List<String>> deps = objectType.dependentRequired().get();
+        Map<String, List<String>> deps = objectType.dependentRequired();
         List<String> passwordDeps = deps.get("password");
 
         assertEquals(1, passwordDeps.size(), "password should require 1 property");
@@ -117,7 +117,7 @@ public class DependentRequiredTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-required-multiple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, List<String>> deps = objectType.dependentRequired().get();
+        Map<String, List<String>> deps = objectType.dependentRequired();
         List<String> securityDeps = deps.get("securityQuestion");
 
         assertEquals(1, securityDeps.size(),
@@ -135,7 +135,7 @@ public class DependentRequiredTest {
 
         assertTrue(objectType.required().isPresent(),
                    "Should have regular required fields");
-        assertTrue(objectType.dependentRequired().isPresent(),
+        assertTrue(objectType.dependentRequired().isEmpty() == false,
                    "Should have dependent required fields");
     }
 
@@ -155,7 +155,7 @@ public class DependentRequiredTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-required-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, List<String>> deps = objectType.dependentRequired().get();
+        Map<String, List<String>> deps = objectType.dependentRequired();
         assertEquals(1, deps.size(), "Should have 1 dependent requirement");
         assertTrue(deps.containsKey("sameAsBilling"),
                    "Should have sameAsBilling dependency");
@@ -174,7 +174,7 @@ public class DependentRequiredTest {
         SchemaDefinition schema = parser.parse("src/test/resources/simple-string-props.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        assertFalse(objectType.dependentRequired().isPresent(),
+        assertFalse(objectType.dependentRequired().isEmpty() == false,
                     "Schema without dependentRequired should return empty Optional");
     }
 

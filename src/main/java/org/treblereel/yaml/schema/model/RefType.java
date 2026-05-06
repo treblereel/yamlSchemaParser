@@ -11,10 +11,10 @@ import com.fasterxml.jackson.databind.JsonNode;
  * <p>
  * Example usage:
  * <pre>{@code
- * RefType addressRef = (RefType) objectType.properties().get().get("address");
+ * RefType addressRef = (RefType) objectType.properties().get("address");
  * String refPath = addressRef.ref(); // "#/$defs/Address"
  * ObjectType addressType = (ObjectType) addressRef.resolve();
- * Map<String, HasType> addressProps = addressType.properties().get();
+ * Map<String, HasType> addressProps = addressType.properties();
  * }</pre>
  * </p>
  *

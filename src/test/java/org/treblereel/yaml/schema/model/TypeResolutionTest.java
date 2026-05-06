@@ -38,7 +38,7 @@ public class TypeResolutionTest {
 
         assertInstanceOf(ObjectType.class, type, "Empty schema should resolve to ObjectType");
         ObjectType objectType = (ObjectType) type;
-        assertFalse(objectType.properties().isPresent(), "Empty object should have no properties");
+        assertFalse(objectType.properties().isEmpty() == false, "Empty object should have no properties");
     }
 
     @Test
@@ -63,7 +63,7 @@ public class TypeResolutionTest {
 
         assertInstanceOf(ObjectType.class, type, "Schema with properties but no explicit 'type' should resolve to ObjectType");
         ObjectType objectType = (ObjectType) type;
-        assertTrue(objectType.properties().isPresent(), "Should have properties");
+        assertTrue(objectType.properties().isEmpty() == false, "Should have properties");
         assertTrue(objectType.required().isPresent(), "Should have required fields");
     }
 
@@ -148,8 +148,8 @@ public class TypeResolutionTest {
         assertFalse(objectType.additionalProperties().get().isAllowed(), "additionalProperties should be false");
         assertTrue(objectType.required().isPresent(), "Should have required");
         assertEquals(2, objectType.required().get().size(), "Should have 2 required fields");
-        assertTrue(objectType.properties().isPresent(), "Should have properties");
-        assertEquals(3, objectType.properties().get().size(), "Should have 3 properties");
+        assertTrue(objectType.properties().isEmpty() == false, "Should have properties");
+        assertEquals(3, objectType.properties().size(), "Should have 3 properties");
     }
 
     // ============== Pattern Properties Edge Cases ==============
@@ -176,8 +176,8 @@ public class TypeResolutionTest {
         assertInstanceOf(ObjectType.class, type);
         ObjectType objectType = (ObjectType) type;
 
-        assertTrue(objectType.properties().isPresent(), "Should have properties");
-        var props = objectType.properties().get();
+        assertTrue(objectType.properties().isEmpty() == false, "Should have properties");
+        var props = objectType.properties();
 
         assertEquals(6, props.size(), "Should have 6 properties");
         assertInstanceOf(StringType.class, props.get("stringProp"), "stringProp should be StringType");

@@ -32,8 +32,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(2, props.size());
     assertTrue(props.containsKey("firstName"));
     assertTrue(props.containsKey("lastName"));
@@ -47,8 +47,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(2, props.size());
     assertInstanceOf(IntegerType.class, props.get("age"));
     assertInstanceOf(IntegerType.class, props.get("count"));
@@ -60,8 +60,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(2, props.size());
     assertInstanceOf(BooleanType.class, props.get("active"));
     assertInstanceOf(BooleanType.class, props.get("verified"));
@@ -73,8 +73,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(2, props.size());
     assertInstanceOf(NumberType.class, props.get("price"));
     assertInstanceOf(NumberType.class, props.get("rate"));
@@ -86,8 +86,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(4, props.size());
     assertInstanceOf(StringType.class, props.get("name"));
     assertInstanceOf(IntegerType.class, props.get("age"));
@@ -116,8 +116,8 @@ public class ObjectParserTest {
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
     assertTrue(objectType.required().isPresent());
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(objectType.properties().get().size(), objectType.required().get().size());
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(objectType.properties().size(), objectType.required().get().size());
   }
 
   @Test
@@ -126,14 +126,14 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertTrue(props.containsKey("user"));
     assertInstanceOf(ObjectType.class, props.get("user"));
     ObjectType userType = (ObjectType) props.get("user");
-    assertTrue(userType.properties().isPresent());
-    assertTrue(userType.properties().get().containsKey("name"));
-    assertTrue(userType.properties().get().containsKey("age"));
+    assertTrue(userType.properties().isEmpty() == false);
+    assertTrue(userType.properties().containsKey("name"));
+    assertTrue(userType.properties().containsKey("age"));
   }
 
   @Test
@@ -142,14 +142,14 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType level0 = (ObjectType) type;
-    assertTrue(level0.properties().isPresent());
-    ObjectType level1 = (ObjectType) level0.properties().get().get("level1");
-    assertTrue(level1.properties().isPresent());
-    ObjectType level2 = (ObjectType) level1.properties().get().get("level2");
-    assertTrue(level2.properties().isPresent());
-    ObjectType level3 = (ObjectType) level2.properties().get().get("level3");
-    assertTrue(level3.properties().isPresent());
-    assertInstanceOf(StringType.class, level3.properties().get().get("value"));
+    assertTrue(level0.properties().isEmpty() == false);
+    ObjectType level1 = (ObjectType) level0.properties().get("level1");
+    assertTrue(level1.properties().isEmpty() == false);
+    ObjectType level2 = (ObjectType) level1.properties().get("level2");
+    assertTrue(level2.properties().isEmpty() == false);
+    ObjectType level3 = (ObjectType) level2.properties().get("level3");
+    assertTrue(level3.properties().isEmpty() == false);
+    assertInstanceOf(StringType.class, level3.properties().get("value"));
   }
 
   @Test
@@ -158,8 +158,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertInstanceOf(ArrayType.class, props.get("tags"));
     assertInstanceOf(ArrayType.class, props.get("scores"));
     ArrayType tagsArray = (ArrayType) props.get("tags");
@@ -174,17 +174,17 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertTrue(props.containsKey("address"));
     assertInstanceOf(RefType.class, props.get("address"));
     RefType refType = (RefType) props.get("address");
     assertEquals("#/$defs/Address", refType.ref());
     ObjectType addressType = (ObjectType) refType.resolve();
-    assertTrue(addressType.properties().isPresent());
-    assertTrue(addressType.properties().get().containsKey("street"));
-    assertTrue(addressType.properties().get().containsKey("city"));
-    assertTrue(addressType.properties().get().containsKey("zipCode"));
+    assertTrue(addressType.properties().isEmpty() == false);
+    assertTrue(addressType.properties().containsKey("street"));
+    assertTrue(addressType.properties().containsKey("city"));
+    assertTrue(addressType.properties().containsKey("zipCode"));
   }
 
   @Test
@@ -193,8 +193,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(3, props.size());
     assertInstanceOf(RefType.class, props.get("billing"));
     assertInstanceOf(RefType.class, props.get("shipping"));
@@ -211,15 +211,15 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    RefType companyRef = (RefType) objectType.properties().get().get("company");
+    assertTrue(objectType.properties().isEmpty() == false);
+    RefType companyRef = (RefType) objectType.properties().get("company");
     ObjectType companyType = (ObjectType) companyRef.resolve();
-    assertTrue(companyType.properties().isPresent());
-    assertInstanceOf(RefType.class, companyType.properties().get().get("ceo"));
-    RefType ceoRef = (RefType) companyType.properties().get().get("ceo");
+    assertTrue(companyType.properties().isEmpty() == false);
+    assertInstanceOf(RefType.class, companyType.properties().get("ceo"));
+    RefType ceoRef = (RefType) companyType.properties().get("ceo");
     ObjectType personType = (ObjectType) ceoRef.resolve();
-    assertTrue(personType.properties().isPresent());
-    assertTrue(personType.properties().get().containsKey("firstName"));
+    assertTrue(personType.properties().isEmpty() == false);
+    assertTrue(personType.properties().containsKey("firstName"));
   }
 
   @Test
@@ -228,15 +228,15 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    ArrayType employeesArray = (ArrayType) objectType.properties().get().get("employees");
+    assertTrue(objectType.properties().isEmpty() == false);
+    ArrayType employeesArray = (ArrayType) objectType.properties().get("employees");
     assertInstanceOf(RefType.class, employeesArray.getItems()[0].getType());
     RefType employeeRef = (RefType) employeesArray.getItems()[0].getType();
     ObjectType employeeType = (ObjectType) employeeRef.resolve();
-    assertTrue(employeeType.properties().isPresent());
-    assertTrue(employeeType.properties().get().containsKey("id"));
-    assertTrue(employeeType.properties().get().containsKey("name"));
-    assertTrue(employeeType.properties().get().containsKey("department"));
+    assertTrue(employeeType.properties().isEmpty() == false);
+    assertTrue(employeeType.properties().containsKey("id"));
+    assertTrue(employeeType.properties().containsKey("name"));
+    assertTrue(employeeType.properties().containsKey("department"));
   }
 
   @Test
@@ -245,10 +245,10 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    assertInstanceOf(StringType.class, objectType.properties().get().get("name"));
-    assertInstanceOf(ArrayType.class, objectType.properties().get().get("children"));
-    ArrayType childrenArray = (ArrayType) objectType.properties().get().get("children");
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertInstanceOf(StringType.class, objectType.properties().get("name"));
+    assertInstanceOf(ArrayType.class, objectType.properties().get("children"));
+    ArrayType childrenArray = (ArrayType) objectType.properties().get("children");
     assertInstanceOf(RefType.class, childrenArray.getItems()[0].getType());
     RefType nodeRef = (RefType) childrenArray.getItems()[0].getType();
     assertEquals("#/$defs/Node", nodeRef.ref());
@@ -307,8 +307,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    ObjectType contactType = (ObjectType) objectType.properties().get().get("contact");
+    assertTrue(objectType.properties().isEmpty() == false);
+    ObjectType contactType = (ObjectType) objectType.properties().get("contact");
     assertTrue(contactType.anyOf().isPresent());
     assertEquals(2, contactType.anyOf().get().size());
   }
@@ -319,8 +319,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    ObjectType paymentType = (ObjectType) objectType.properties().get().get("payment");
+    assertTrue(objectType.properties().isEmpty() == false);
+    ObjectType paymentType = (ObjectType) objectType.properties().get("payment");
     assertTrue(paymentType.oneOf().isPresent());
     assertEquals(2, paymentType.oneOf().get().size());
   }
@@ -343,7 +343,7 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertFalse(objectType.properties().isPresent());
+    assertFalse(objectType.properties().isEmpty() == false);
   }
 
   @Test
@@ -354,7 +354,7 @@ public class ObjectParserTest {
     ObjectType objectType = (ObjectType) type;
     assertTrue(objectType.required().isPresent());
     assertEquals(2, objectType.required().get().size());
-    assertFalse(objectType.properties().isPresent());
+    assertFalse(objectType.properties().isEmpty() == false);
   }
 
   @Test
@@ -373,15 +373,15 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType root = (ObjectType) type;
-    assertTrue(root.properties().isPresent());
-    ObjectType order = (ObjectType) root.properties().get().get("order");
-    assertTrue(order.properties().isPresent());
-    assertInstanceOf(IntegerType.class, order.properties().get().get("id"));
-    ObjectType customer = (ObjectType) order.properties().get().get("customer");
-    assertTrue(customer.properties().isPresent());
-    ObjectType address = (ObjectType) customer.properties().get().get("address");
-    assertTrue(address.properties().isPresent());
-    ArrayType items = (ArrayType) order.properties().get().get("items");
+    assertTrue(root.properties().isEmpty() == false);
+    ObjectType order = (ObjectType) root.properties().get("order");
+    assertTrue(order.properties().isEmpty() == false);
+    assertInstanceOf(IntegerType.class, order.properties().get("id"));
+    ObjectType customer = (ObjectType) order.properties().get("customer");
+    assertTrue(customer.properties().isEmpty() == false);
+    ObjectType address = (ObjectType) customer.properties().get("address");
+    assertTrue(address.properties().isEmpty() == false);
+    ArrayType items = (ArrayType) order.properties().get("items");
     assertNotNull(items);
   }
 
@@ -397,8 +397,8 @@ public class ObjectParserTest {
     assertInstanceOf(ObjectType.class, allOfList.get(1));
     RefType baseRef = (RefType) allOfList.get(0);
     ObjectType baseType = (ObjectType) baseRef.resolve();
-    assertTrue(baseType.properties().isPresent());
-    assertTrue(baseType.properties().get().containsKey("id"));
+    assertTrue(baseType.properties().isEmpty() == false);
+    assertTrue(baseType.properties().containsKey("id"));
   }
 
   @Test
@@ -409,7 +409,7 @@ public class ObjectParserTest {
     ObjectType objectType = (ObjectType) type;
     assertTrue(objectType.required().isPresent());
     assertTrue(objectType.required().get().contains("person"));
-    RefType personRef = (RefType) objectType.properties().get().get("person");
+    RefType personRef = (RefType) objectType.properties().get("person");
     ObjectType personType = (ObjectType) personRef.resolve();
     assertTrue(personType.required().isPresent());
     assertTrue(personType.required().get().contains("name"));
@@ -424,8 +424,8 @@ public class ObjectParserTest {
     assertTrue(defs.containsKey("Product"));
     assertTrue(defs.containsKey("Order"));
     ObjectType userDef = defs.get("User");
-    assertTrue(userDef.properties().isPresent());
-    assertTrue(userDef.properties().get().containsKey("id"));
+    assertTrue(userDef.properties().isEmpty() == false);
+    assertTrue(userDef.properties().containsKey("id"));
   }
 
   @Test
@@ -434,12 +434,12 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    ArrayType usersArray = (ArrayType) objectType.properties().get().get("users");
+    ArrayType usersArray = (ArrayType) objectType.properties().get("users");
     ObjectType userType = (ObjectType) usersArray.getItems()[0].getType();
     assertTrue(userType.required().isPresent());
     assertTrue(userType.required().get().contains("id"));
-    assertTrue(userType.properties().isPresent());
-    assertInstanceOf(ArrayType.class, userType.properties().get().get("roles"));
+    assertTrue(userType.properties().isEmpty() == false);
+    assertInstanceOf(ArrayType.class, userType.properties().get("roles"));
   }
 
   @Test
@@ -448,8 +448,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    AllOfType allOfType = (AllOfType) objectType.properties().get().get("data");
+    assertTrue(objectType.properties().isEmpty() == false);
+    AllOfType allOfType = (AllOfType) objectType.properties().get("data");
     List<HasType> allOfList = allOfType.getAllOf();
     assertEquals(2, allOfList.size());
     assertInstanceOf(ObjectType.class, allOfList.get(0));
@@ -462,11 +462,11 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    ArrayType departmentsArray = (ArrayType) objectType.properties().get().get("departments");
+    ArrayType departmentsArray = (ArrayType) objectType.properties().get("departments");
     RefType deptRef = (RefType) departmentsArray.getItems()[0].getType();
     ObjectType deptType = (ObjectType) deptRef.resolve();
-    assertTrue(deptType.properties().isPresent());
-    ArrayType employeesArray = (ArrayType) deptType.properties().get().get("employees");
+    assertTrue(deptType.properties().isEmpty() == false);
+    ArrayType employeesArray = (ArrayType) deptType.properties().get("employees");
     assertInstanceOf(RefType.class, employeesArray.getItems()[0].getType());
   }
 
@@ -476,9 +476,9 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(1, objectType.properties().get().size());
-    assertTrue(objectType.properties().get().containsKey("value"));
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(1, objectType.properties().size());
+    assertTrue(objectType.properties().containsKey("value"));
   }
 
   @Test
@@ -487,8 +487,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(10, objectType.properties().get().size());
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(10, objectType.properties().size());
   }
 
   @Test
@@ -499,10 +499,10 @@ public class ObjectParserTest {
     ObjectType root = (ObjectType) type;
     assertTrue(root.required().isPresent());
     assertTrue(root.required().get().contains("outer"));
-    ObjectType outer = (ObjectType) root.properties().get().get("outer");
+    ObjectType outer = (ObjectType) root.properties().get("outer");
     assertTrue(outer.required().isPresent());
     assertTrue(outer.required().get().contains("inner"));
-    ObjectType inner = (ObjectType) outer.properties().get().get("inner");
+    ObjectType inner = (ObjectType) outer.properties().get("inner");
     assertTrue(inner.required().isPresent());
     assertTrue(inner.required().get().contains("value"));
   }
@@ -523,8 +523,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertInstanceOf(ObjectType.class, props.get("inlineObj"));
     assertInstanceOf(RefType.class, props.get("refObj"));
     assertInstanceOf(ObjectType.class, props.get("anotherInline"));
@@ -552,8 +552,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    ArrayType matrixArray = (ArrayType) objectType.properties().get().get("matrix");
+    assertTrue(objectType.properties().isEmpty() == false);
+    ArrayType matrixArray = (ArrayType) objectType.properties().get("matrix");
     assertInstanceOf(ArrayType.class, matrixArray.getItems()[0].getType());
     ArrayType innerArray = (ArrayType) matrixArray.getItems()[0].getType();
     assertInstanceOf(IntegerType.class, innerArray.getItems()[0].getType());
@@ -565,11 +565,11 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    ObjectType configType = (ObjectType) objectType.properties().get().get("config");
+    assertTrue(objectType.properties().isEmpty() == false);
+    ObjectType configType = (ObjectType) objectType.properties().get("config");
     assertTrue(configType.anyOf().isPresent());
     assertEquals(2, configType.anyOf().get().size());
-    ObjectType settingType = (ObjectType) objectType.properties().get().get("setting");
+    ObjectType settingType = (ObjectType) objectType.properties().get("setting");
     assertTrue(settingType.oneOf().isPresent());
     assertEquals(2, settingType.oneOf().get().size());
   }
@@ -580,14 +580,14 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    RefType aRef = (RefType) objectType.properties().get().get("a");
+    RefType aRef = (RefType) objectType.properties().get("a");
     ObjectType typeA = (ObjectType) aRef.resolve();
-    RefType bRef = (RefType) typeA.properties().get().get("b");
+    RefType bRef = (RefType) typeA.properties().get("b");
     ObjectType typeB = (ObjectType) bRef.resolve();
-    RefType cRef = (RefType) typeB.properties().get().get("c");
+    RefType cRef = (RefType) typeB.properties().get("c");
     ObjectType typeC = (ObjectType) cRef.resolve();
-    assertTrue(typeC.properties().isPresent());
-    assertInstanceOf(StringType.class, typeC.properties().get().get("value"));
+    assertTrue(typeC.properties().isEmpty() == false);
+    assertInstanceOf(StringType.class, typeC.properties().get("value"));
   }
 
   @Test
@@ -596,8 +596,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(6, props.size());
     assertInstanceOf(StringType.class, props.get("stringProp"));
     assertInstanceOf(IntegerType.class, props.get("integerProp"));
@@ -615,9 +615,9 @@ public class ObjectParserTest {
     RefType refType = (RefType) type;
     assertEquals("#/$defs/MainType", refType.ref());
     ObjectType mainType = (ObjectType) refType.resolve();
-    assertTrue(mainType.properties().isPresent());
-    assertTrue(mainType.properties().get().containsKey("id"));
-    assertTrue(mainType.properties().get().containsKey("data"));
+    assertTrue(mainType.properties().isEmpty() == false);
+    assertTrue(mainType.properties().containsKey("id"));
+    assertTrue(mainType.properties().containsKey("data"));
   }
 
   @Test
@@ -629,8 +629,8 @@ public class ObjectParserTest {
     assertTrue(objectType.required().isPresent());
     assertEquals(1, objectType.required().get().size());
     assertTrue(objectType.required().get().contains("id"));
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(5, objectType.properties().get().size());
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(5, objectType.properties().size());
   }
 
   @Test
@@ -645,8 +645,8 @@ public class ObjectParserTest {
     assertFalse(objectType.additionalProperties().get().isAllowed());
     assertTrue(objectType.required().isPresent());
     assertEquals(2, objectType.required().get().size());
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(3, objectType.properties().get().size());
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(3, objectType.properties().size());
   }
 
   // ============ Additional Tests ============
@@ -657,8 +657,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(2, props.size());
     assertInstanceOf(StringType.class, props.get("status"));
     assertInstanceOf(IntegerType.class, props.get("priority"));
@@ -670,8 +670,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(3, objectType.properties().get().size());
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(3, objectType.properties().size());
   }
 
   @Test
@@ -680,8 +680,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(4, props.size());
     assertInstanceOf(StringType.class, props.get("name"));
     assertInstanceOf(IntegerType.class, props.get("count"));
@@ -695,8 +695,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(3, objectType.properties().get().size());
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(3, objectType.properties().size());
   }
 
   @Test
@@ -727,8 +727,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(3, objectType.properties().get().size());
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(3, objectType.properties().size());
   }
 
   @Test
@@ -737,8 +737,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(3, objectType.properties().get().size());
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(3, objectType.properties().size());
   }
 
   @Test
@@ -747,10 +747,10 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(2, objectType.properties().get().size());
-    assertInstanceOf(StringType.class, objectType.properties().get().get("country"));
-    assertInstanceOf(StringType.class, objectType.properties().get().get("postalCode"));
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(2, objectType.properties().size());
+    assertInstanceOf(StringType.class, objectType.properties().get("country"));
+    assertInstanceOf(StringType.class, objectType.properties().get("postalCode"));
   }
 
   @Test
@@ -759,8 +759,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(2, objectType.properties().get().size());
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(2, objectType.properties().size());
   }
 
   @Test
@@ -769,8 +769,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(5, props.size());
     assertInstanceOf(StringType.class, props.get("email"));
     assertInstanceOf(StringType.class, props.get("website"));
@@ -785,8 +785,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(3, props.size());
     assertInstanceOf(IntegerType.class, props.get("id"));
     assertInstanceOf(StringType.class, props.get("password"));
@@ -799,10 +799,10 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
+    assertTrue(objectType.properties().isEmpty() == false);
     assertTrue(objectType.required().isPresent());
     assertTrue(objectType.required().get().contains("name"));
-    assertEquals(2, objectType.properties().get().size());
+    assertEquals(2, objectType.properties().size());
   }
 
   @Test
@@ -826,7 +826,7 @@ public class ObjectParserTest {
     assertTrue(objectType.oneOf().isPresent());
     assertEquals(2, objectType.oneOf().get().size());
     ObjectType cardType = (ObjectType) objectType.oneOf().get().get(0);
-    assertTrue(cardType.properties().isPresent());
+    assertTrue(cardType.properties().isEmpty() == false);
     assertTrue(cardType.required().isPresent());
   }
 
@@ -836,9 +836,9 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    assertInstanceOf(RefType.class, objectType.properties().get().get("base"));
-    assertInstanceOf(StringType.class, objectType.properties().get().get("extra"));
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertInstanceOf(RefType.class, objectType.properties().get("base"));
+    assertInstanceOf(StringType.class, objectType.properties().get("extra"));
   }
 
   @Test
@@ -847,16 +847,16 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    RefType personRef = (RefType) objectType.properties().get().get("person");
+    assertTrue(objectType.properties().isEmpty() == false);
+    RefType personRef = (RefType) objectType.properties().get("person");
     ObjectType personType = (ObjectType) personRef.resolve();
-    assertTrue(personType.properties().isPresent());
-    assertInstanceOf(RefType.class, personType.properties().get().get("friend"));
-    assertInstanceOf(RefType.class, personType.properties().get().get("employer"));
-    RefType employerRef = (RefType) personType.properties().get().get("employer");
+    assertTrue(personType.properties().isEmpty() == false);
+    assertInstanceOf(RefType.class, personType.properties().get("friend"));
+    assertInstanceOf(RefType.class, personType.properties().get("employer"));
+    RefType employerRef = (RefType) personType.properties().get("employer");
     ObjectType companyType = (ObjectType) employerRef.resolve();
-    assertTrue(companyType.properties().isPresent());
-    ArrayType employeesArray = (ArrayType) companyType.properties().get().get("employees");
+    assertTrue(companyType.properties().isEmpty() == false);
+    ArrayType employeesArray = (ArrayType) companyType.properties().get("employees");
     assertInstanceOf(RefType.class, employeesArray.getItems()[0].getType());
   }
 
@@ -866,7 +866,7 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertFalse(objectType.properties().isPresent());
+    assertFalse(objectType.properties().isEmpty() == false);
     assertFalse(objectType.required().isPresent());
   }
 
@@ -876,7 +876,7 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertFalse(objectType.properties().isPresent());
+    assertFalse(objectType.properties().isEmpty() == false);
     assertTrue(objectType.additionalProperties().isPresent());
     assertTrue(objectType.additionalProperties().get().isAllowed());
     assertTrue(objectType.additionalProperties().get().getType().isPresent());
@@ -892,8 +892,8 @@ public class ObjectParserTest {
     assertTrue(objectType.required().isPresent());
     assertTrue(objectType.required().get().contains("success"));
     assertTrue(objectType.required().get().contains("data"));
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(4, props.size());
     assertInstanceOf(BooleanType.class, props.get("success"));
     assertInstanceOf(ObjectType.class, props.get("data"));
@@ -925,13 +925,13 @@ public class ObjectParserTest {
     ObjectType objectType = (ObjectType) type;
     assertTrue(objectType.required().isPresent());
     assertTrue(objectType.required().get().contains("error"));
-    assertTrue(objectType.properties().isPresent());
-    ObjectType errorType = (ObjectType) objectType.properties().get().get("error");
+    assertTrue(objectType.properties().isEmpty() == false);
+    ObjectType errorType = (ObjectType) objectType.properties().get("error");
     assertTrue(errorType.required().isPresent());
     assertTrue(errorType.required().get().contains("code"));
     assertTrue(errorType.required().get().contains("message"));
-    assertTrue(errorType.properties().isPresent());
-    assertEquals(4, errorType.properties().get().size());
+    assertTrue(errorType.properties().isEmpty() == false);
+    assertEquals(4, errorType.properties().size());
   }
 
   @Test
@@ -943,8 +943,8 @@ public class ObjectParserTest {
     assertTrue(objectType.required().isPresent());
     assertTrue(objectType.required().get().contains("version"));
     assertTrue(objectType.required().get().contains("database"));
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(4, props.size());
     ObjectType dbType = (ObjectType) props.get("database");
     assertTrue(dbType.required().isPresent());
@@ -973,8 +973,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    AllOfType dataAllOf = (AllOfType) objectType.properties().get().get("data");
+    assertTrue(objectType.properties().isEmpty() == false);
+    AllOfType dataAllOf = (AllOfType) objectType.properties().get("data");
     List<HasType> allOfList = dataAllOf.getAllOf();
     assertEquals(2, allOfList.size());
     assertInstanceOf(ObjectType.class, allOfList.get(0));
@@ -989,8 +989,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(3, props.size());
     assertInstanceOf(StringType.class, props.get("username"));
     assertInstanceOf(StringType.class, props.get("bio"));
@@ -1003,8 +1003,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(5, props.size());
     assertInstanceOf(IntegerType.class, props.get("age"));
     assertInstanceOf(NumberType.class, props.get("price"));
@@ -1019,8 +1019,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(4, objectType.properties().get().size());
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(4, objectType.properties().size());
   }
 
   @Test
@@ -1029,8 +1029,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(3, props.size());
     assertInstanceOf(StringType.class, props.get("name"));
     assertInstanceOf(StringType.class, props.get("email"));
@@ -1043,8 +1043,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> props = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> props = objectType.properties();
     assertEquals(4, props.size());
     assertInstanceOf(StringType.class, props.get("name"));
   }

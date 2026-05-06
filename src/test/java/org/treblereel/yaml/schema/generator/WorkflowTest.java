@@ -42,8 +42,8 @@ public class WorkflowTest {
 
   @Test
   void testRootProperties() {
-    assertTrue(rootType.properties().isPresent());
-    Map<String, HasType> props = rootType.properties().get();
+    assertTrue(rootType.properties().isEmpty() == false);
+    Map<String, HasType> props = rootType.properties();
     assertTrue(props.containsKey("document"));
     assertTrue(props.containsKey("input"));
     assertTrue(props.containsKey("use"));
@@ -55,21 +55,21 @@ public class WorkflowTest {
 
   @Test
   void testDocumentIsObject() {
-    Map<String, HasType> props = rootType.properties().get();
+    Map<String, HasType> props = rootType.properties();
     HasType documentType = props.get("document");
     assertInstanceOf(ObjectType.class, documentType);
   }
 
   @Test
   void testDocumentUnevaluatedProperties() {
-    ObjectType document = (ObjectType) rootType.properties().get().get("document");
+    ObjectType document = (ObjectType) rootType.properties().get("document");
     assertTrue(document.unevaluatedProperties().isPresent());
     assertFalse(document.unevaluatedProperties().get());
   }
 
   @Test
   void testDocumentRequiredFields() {
-    ObjectType document = (ObjectType) rootType.properties().get().get("document");
+    ObjectType document = (ObjectType) rootType.properties().get("document");
     assertTrue(document.required().isPresent());
     List<String> required = document.required().get();
     assertEquals(4, required.size());
@@ -81,8 +81,8 @@ public class WorkflowTest {
 
   @Test
   void testDocumentDslStringWithPattern() {
-    ObjectType document = (ObjectType) rootType.properties().get().get("document");
-    Map<String, HasType> docProps = document.properties().get();
+    ObjectType document = (ObjectType) rootType.properties().get("document");
+    Map<String, HasType> docProps = document.properties();
     HasType dslType = docProps.get("dsl");
     assertInstanceOf(StringType.class, dslType);
     StringType dsl = (StringType) dslType;
@@ -93,16 +93,16 @@ public class WorkflowTest {
 
   @Test
   void testDocumentNamespaceWithPattern() {
-    ObjectType document = (ObjectType) rootType.properties().get().get("document");
-    StringType namespace = (StringType) document.properties().get().get("namespace");
+    ObjectType document = (ObjectType) rootType.properties().get("document");
+    StringType namespace = (StringType) document.properties().get("namespace");
     assertTrue(namespace.pattern().isPresent());
     assertEquals("^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$", namespace.pattern().get());
   }
 
   @Test
   void testDocumentTitleAndDescription() {
-    ObjectType document = (ObjectType) rootType.properties().get().get("document");
-    StringType dsl = (StringType) document.properties().get().get("dsl");
+    ObjectType document = (ObjectType) rootType.properties().get("document");
+    StringType dsl = (StringType) document.properties().get("dsl");
     assertTrue(dsl.title().isPresent());
     assertEquals("WorkflowDSL", dsl.title().get());
     assertTrue(dsl.description().isPresent());
@@ -110,7 +110,7 @@ public class WorkflowTest {
 
   @Test
   void testInputIsRef() {
-    HasType inputType = rootType.properties().get().get("input");
+    HasType inputType = rootType.properties().get("input");
     assertInstanceOf(RefType.class, inputType);
     RefType ref = (RefType) inputType;
     assertEquals("#/$defs/input", ref.ref());
@@ -118,14 +118,14 @@ public class WorkflowTest {
 
   @Test
   void testRefResolveToObjectType() {
-    RefType inputRef = (RefType) rootType.properties().get().get("input");
+    RefType inputRef = (RefType) rootType.properties().get("input");
     HasType resolved = inputRef.resolve();
     assertInstanceOf(ObjectType.class, resolved);
   }
 
   @Test
   void testDoIsRefToTaskList() {
-    HasType doType = rootType.properties().get().get("do");
+    HasType doType = rootType.properties().get("do");
     assertInstanceOf(RefType.class, doType);
     RefType ref = (RefType) doType;
     assertEquals("#/$defs/taskList", ref.ref());
@@ -133,14 +133,14 @@ public class WorkflowTest {
 
   @Test
   void testTaskListIsArray() {
-    RefType doRef = (RefType) rootType.properties().get().get("do");
+    RefType doRef = (RefType) rootType.properties().get("do");
     HasType resolved = doRef.resolve();
     assertInstanceOf(ArrayType.class, resolved);
   }
 
   @Test
   void testTimeoutHasOneOf() {
-    HasType timeoutType = rootType.properties().get().get("timeout");
+    HasType timeoutType = rootType.properties().get("timeout");
     assertInstanceOf(ObjectType.class, timeoutType);
     ObjectType timeout = (ObjectType) timeoutType;
     assertTrue(timeout.oneOf().isPresent());
@@ -150,7 +150,7 @@ public class WorkflowTest {
 
   @Test
   void testTimeoutOneOfContainsRefAndString() {
-    ObjectType timeout = (ObjectType) rootType.properties().get().get("timeout");
+    ObjectType timeout = (ObjectType) rootType.properties().get("timeout");
     List<HasType> oneOfTypes = timeout.oneOf().get();
 
     // First should be $ref to timeout definition
@@ -162,7 +162,7 @@ public class WorkflowTest {
   @Test
   void testDefsTaskDefinition() {
     // Get task definition from $defs
-    RefType doRef = (RefType) rootType.properties().get().get("do");
+    RefType doRef = (RefType) rootType.properties().get("do");
     ArrayType taskList = (ArrayType) doRef.resolve();
 
     ArrayItemType itemType = taskList.getItems()[0];
@@ -240,8 +240,8 @@ public class WorkflowTest {
     // Second allOf item contains properties
     ObjectType propsObj = (ObjectType) allOfItems.get(1);
 
-    ObjectType withType = (ObjectType) propsObj.properties().get().get("with");
-    StringType protocol = (StringType) withType.properties().get().get("protocol");
+    ObjectType withType = (ObjectType) propsObj.properties().get("with");
+    StringType protocol = (StringType) withType.properties().get("protocol");
 
     assertTrue(protocol.enumValues().isPresent());
     List<String> enumVals = protocol.enumValues().get();
@@ -258,7 +258,7 @@ public class WorkflowTest {
     ObjectType httpCall = (ObjectType) callTask.oneOf().get().get(2);
     ObjectType httpProps = (ObjectType) httpCall.allOf().get().get(1);
 
-    StringType callProp = (StringType) httpProps.properties().get().get("call");
+    StringType callProp = (StringType) httpProps.properties().get("call");
     assertTrue(callProp.constValue().isPresent());
     assertEquals("http", callProp.constValue().get());
   }
@@ -270,9 +270,9 @@ public class WorkflowTest {
     ObjectType grpcCall = (ObjectType) callTask.oneOf().get().get(1);
 
     ObjectType grpcProps = (ObjectType) grpcCall.allOf().get().get(1);
-    ObjectType withType = (ObjectType) grpcProps.properties().get().get("with");
-    ObjectType serviceType = (ObjectType) withType.properties().get().get("service");
-    IntegerType port = (IntegerType) serviceType.properties().get().get("port");
+    ObjectType withType = (ObjectType) grpcProps.properties().get("with");
+    ObjectType serviceType = (ObjectType) withType.properties().get("service");
+    IntegerType port = (IntegerType) serviceType.properties().get("port");
 
     assertTrue(port.minimum().isPresent());
     assertEquals(0, port.minimum().get());
@@ -309,10 +309,10 @@ public class WorkflowTest {
 
   @Test
   void testUseSection() {
-    ObjectType useType = (ObjectType) rootType.properties().get().get("use");
-    assertTrue(useType.properties().isPresent());
+    ObjectType useType = (ObjectType) rootType.properties().get("use");
+    assertTrue(useType.properties().isEmpty() == false);
 
-    Map<String, HasType> useProps = useType.properties().get();
+    Map<String, HasType> useProps = useType.properties();
     assertTrue(useProps.containsKey("authentications"));
     assertTrue(useProps.containsKey("errors"));
     assertTrue(useProps.containsKey("extensions"));
@@ -325,8 +325,8 @@ public class WorkflowTest {
 
   @Test
   void testUseAuthenticationsHasAdditionalPropertiesRef() {
-    ObjectType useType = (ObjectType) rootType.properties().get().get("use");
-    ObjectType authentications = (ObjectType) useType.properties().get().get("authentications");
+    ObjectType useType = (ObjectType) rootType.properties().get("use");
+    ObjectType authentications = (ObjectType) useType.properties().get("authentications");
 
     assertTrue(authentications.additionalProperties().isPresent());
     assertTrue(authentications.additionalProperties().get().getType().isPresent());
@@ -339,8 +339,8 @@ public class WorkflowTest {
   @Test
   void testDurationDefinition() {
     // Duration is used in many places, let's test its oneOf structure
-    ObjectType schedule = (ObjectType) rootType.properties().get().get("schedule");
-    HasType everyType = schedule.properties().get().get("every");
+    ObjectType schedule = (ObjectType) rootType.properties().get("schedule");
+    HasType everyType = schedule.properties().get("every");
 
     assertInstanceOf(RefType.class, everyType);
     RefType durationRef = (RefType) everyType;
@@ -359,8 +359,8 @@ public class WorkflowTest {
   @Test
   void testUriTemplateFormat() {
     // Navigate to oauth2 -> endpoints -> token which has format: uri-template
-    ObjectType useType = (ObjectType) rootType.properties().get().get("use");
-    ObjectType authentications = (ObjectType) useType.properties().get().get("authentications");
+    ObjectType useType = (ObjectType) rootType.properties().get("use");
+    ObjectType authentications = (ObjectType) useType.properties().get("authentications");
 
     RefType authPolicyRef = (RefType) authentications.additionalProperties().get().getType().get();
     ObjectType authPolicy = (ObjectType) authPolicyRef.resolve();
@@ -377,8 +377,8 @@ public class WorkflowTest {
     ObjectType forTask = (ObjectType) forTaskRef.resolve();
 
     ObjectType forTaskProps = (ObjectType) forTask.allOf().get().get(1);
-    ObjectType forConfig = (ObjectType) forTaskProps.properties().get().get("for");
-    StringType each = (StringType) forConfig.properties().get().get("each");
+    ObjectType forConfig = (ObjectType) forTaskProps.properties().get("for");
+    StringType each = (StringType) forConfig.properties().get("each");
 
     assertTrue(each.defaultValue().isPresent());
     assertEquals("item", each.defaultValue().get());
@@ -389,8 +389,8 @@ public class WorkflowTest {
   @Test
   void testMinLength() {
     // referenceableAuthenticationPolicy -> use has minLength: 1
-    ObjectType useType = (ObjectType) rootType.properties().get().get("use");
-    ObjectType authentications = (ObjectType) useType.properties().get().get("authentications");
+    ObjectType useType = (ObjectType) rootType.properties().get("use");
+    ObjectType authentications = (ObjectType) useType.properties().get("authentications");
     RefType authPolicyRef = (RefType) authentications.additionalProperties().get().getType().get();
     ObjectType authPolicy = (ObjectType) authPolicyRef.resolve();
 
@@ -406,7 +406,7 @@ public class WorkflowTest {
     ObjectType switchTask = (ObjectType) switchTaskRef.resolve();
 
     ObjectType switchProps = (ObjectType) switchTask.allOf().get().get(1);
-    ArrayType switchArray = (ArrayType) switchProps.properties().get().get("switch");
+    ArrayType switchArray = (ArrayType) switchProps.properties().get("switch");
 
     assertTrue(switchArray.minItems().isPresent());
     assertEquals(1, switchArray.minItems().get());
@@ -425,17 +425,17 @@ public class WorkflowTest {
     ObjectType tryProps = (ObjectType) tryTask.allOf().get().get(1);
 
     // try is ref to taskList
-    HasType tryType = tryProps.properties().get().get("try");
+    HasType tryType = tryProps.properties().get("try");
     assertInstanceOf(RefType.class, tryType);
 
     // catch is object with its own structure
-    HasType catchType = tryProps.properties().get().get("catch");
+    HasType catchType = tryProps.properties().get("catch");
     assertInstanceOf(ObjectType.class, catchType);
 
     ObjectType catchObj = (ObjectType) catchType;
-    assertTrue(catchObj.properties().isPresent());
-    assertTrue(catchObj.properties().get().containsKey("errors"));
-    assertTrue(catchObj.properties().get().containsKey("retry"));
+    assertTrue(catchObj.properties().isEmpty() == false);
+    assertTrue(catchObj.properties().containsKey("errors"));
+    assertTrue(catchObj.properties().containsKey("retry"));
   }
 
   @Test
@@ -445,7 +445,7 @@ public class WorkflowTest {
     ObjectType runTask = (ObjectType) runTaskRef.resolve();
 
     ObjectType runProps = (ObjectType) runTask.allOf().get().get(1);
-    ObjectType runConfig = (ObjectType) runProps.properties().get().get("run");
+    ObjectType runConfig = (ObjectType) runProps.properties().get("run");
 
     assertTrue(runConfig.oneOf().isPresent());
     assertEquals(4, runConfig.oneOf().get().size());
@@ -453,8 +453,8 @@ public class WorkflowTest {
 
   @Test
   void testErrorDefinition() {
-    ObjectType useType = (ObjectType) rootType.properties().get().get("use");
-    ObjectType errors = (ObjectType) useType.properties().get().get("errors");
+    ObjectType useType = (ObjectType) rootType.properties().get("use");
+    ObjectType errors = (ObjectType) useType.properties().get("errors");
 
     RefType errorRef = (RefType) errors.additionalProperties().get().getType().get();
     assertEquals("#/$defs/error", errorRef.ref());
@@ -465,7 +465,7 @@ public class WorkflowTest {
     assertTrue(error.required().get().contains("status"));
 
     // status is integer
-    assertInstanceOf(IntegerType.class, error.properties().get().get("status"));
+    assertInstanceOf(IntegerType.class, error.properties().get("status"));
   }
 
   // ============== anyOf Tests ==============
@@ -474,7 +474,7 @@ public class WorkflowTest {
   void testFlowDirectiveHasAnyOf() {
     // flowDirective uses anyOf at root level
     ObjectType taskBase = (ObjectType) getDefByName("taskBase");
-    HasType thenType = taskBase.properties().get().get("then");
+    HasType thenType = taskBase.properties().get("then");
 
     assertInstanceOf(RefType.class, thenType);
     RefType flowDirectiveRef = (RefType) thenType;
@@ -536,7 +536,7 @@ public class WorkflowTest {
     ObjectType callFunction = (ObjectType) callFunctionType;
     ObjectType callFunctionProps = (ObjectType) callFunction.allOf().get().get(1);
 
-    StringType callProp = (StringType) callFunctionProps.properties().get().get("call");
+    StringType callProp = (StringType) callFunctionProps.properties().get("call");
     // The 'call' property has 'not' with enum
     assertNotNull(callProp);
   }
@@ -590,7 +590,7 @@ public class WorkflowTest {
   void testMinLengthOnString() {
     // secretBasedAuthenticationPolicy -> use has minLength: 1
     ObjectType secretAuth = (ObjectType) getDefByName("secretBasedAuthenticationPolicy");
-    StringType useField = (StringType) secretAuth.properties().get().get("use");
+    StringType useField = (StringType) secretAuth.properties().get("use");
 
     assertTrue(useField.minLength().isPresent());
     assertEquals(1, useField.minLength().get());
@@ -603,7 +603,7 @@ public class WorkflowTest {
 
     // First oneOf has 'use' with minLength
     ObjectType authRef = (ObjectType) refAuthPolicy.oneOf().get().get(0);
-    StringType useField = (StringType) authRef.properties().get().get("use");
+    StringType useField = (StringType) authRef.properties().get("use");
 
     assertTrue(useField.minLength().isPresent());
     assertEquals(1, useField.minLength().get());
@@ -614,7 +614,7 @@ public class WorkflowTest {
   @Test
   void testContainerCleanupEnumWithDefault() {
     ObjectType containerLifetime = (ObjectType) getDefByName("containerLifetime");
-    StringType cleanup = (StringType) containerLifetime.properties().get().get("cleanup");
+    StringType cleanup = (StringType) containerLifetime.properties().get("cleanup");
 
     assertTrue(cleanup.enumValues().isPresent());
     List<String> enumVals = cleanup.enumValues().get();
@@ -633,8 +633,8 @@ public class WorkflowTest {
     ObjectType listenTask = (ObjectType) listenTaskRef.resolve();
 
     ObjectType listenProps = (ObjectType) listenTask.allOf().get().get(1);
-    ObjectType listenConfig = (ObjectType) listenProps.properties().get().get("listen");
-    StringType readType = (StringType) listenConfig.properties().get().get("read");
+    ObjectType listenConfig = (ObjectType) listenProps.properties().get("listen");
+    StringType readType = (StringType) listenConfig.properties().get("read");
 
     assertTrue(readType.enumValues().isPresent());
     assertTrue(readType.enumValues().get().contains("data"));
@@ -649,8 +649,8 @@ public class WorkflowTest {
 
   @Test
   void testSecretsIsStringArray() {
-    ObjectType useType = (ObjectType) rootType.properties().get().get("use");
-    ArrayType secrets = (ArrayType) useType.properties().get().get("secrets");
+    ObjectType useType = (ObjectType) rootType.properties().get("use");
+    ArrayType secrets = (ArrayType) useType.properties().get("secrets");
 
     ArrayItemType[] items = secrets.getItems();
     assertEquals(1, items.length);
@@ -664,9 +664,9 @@ public class WorkflowTest {
   @Test
   void testRetryPolicyStructure() {
     ObjectType retryPolicy = (ObjectType) getDefByName("retryPolicy");
-    assertTrue(retryPolicy.properties().isPresent());
+    assertTrue(retryPolicy.properties().isEmpty() == false);
 
-    Map<String, HasType> props = retryPolicy.properties().get();
+    Map<String, HasType> props = retryPolicy.properties();
     assertTrue(props.containsKey("when"));
     assertTrue(props.containsKey("exceptWhen"));
     assertTrue(props.containsKey("delay"));
@@ -678,7 +678,7 @@ public class WorkflowTest {
   @Test
   void testRetryPolicyBackoffOneOf() {
     ObjectType retryPolicy = (ObjectType) getDefByName("retryPolicy");
-    ObjectType backoff = (ObjectType) retryPolicy.properties().get().get("backoff");
+    ObjectType backoff = (ObjectType) retryPolicy.properties().get("backoff");
 
     assertTrue(backoff.oneOf().isPresent());
     assertEquals(3, backoff.oneOf().get().size());
@@ -687,7 +687,7 @@ public class WorkflowTest {
     for (HasType backoffType : backoff.oneOf().get()) {
       assertInstanceOf(ObjectType.class, backoffType);
       ObjectType backoffObj = (ObjectType) backoffType;
-      assertTrue(backoffObj.properties().isPresent());
+      assertTrue(backoffObj.properties().isEmpty() == false);
     }
   }
 
@@ -700,8 +700,8 @@ public class WorkflowTest {
     ObjectType httpCall = (ObjectType) callTask.oneOf().get().get(2);
 
     ObjectType httpProps = (ObjectType) httpCall.allOf().get().get(1);
-    ObjectType withType = (ObjectType) httpProps.properties().get().get("with");
-    HasType redirectType = withType.properties().get().get("redirect");
+    ObjectType withType = (ObjectType) httpProps.properties().get("with");
+    HasType redirectType = withType.properties().get("redirect");
 
     assertInstanceOf(BooleanType.class, redirectType);
   }
@@ -713,8 +713,8 @@ public class WorkflowTest {
     ObjectType forkTask = (ObjectType) forkTaskRef.resolve();
 
     ObjectType forkProps = (ObjectType) forkTask.allOf().get().get(1);
-    ObjectType forkConfig = (ObjectType) forkProps.properties().get().get("fork");
-    BooleanType compete = (BooleanType) forkConfig.properties().get().get("compete");
+    ObjectType forkConfig = (ObjectType) forkProps.properties().get("fork");
+    BooleanType compete = (BooleanType) forkConfig.properties().get("compete");
 
     assertTrue(compete.defaultValue().isPresent());
     assertFalse(compete.defaultValue().get());
@@ -727,8 +727,8 @@ public class WorkflowTest {
     ObjectType runTask = (ObjectType) runTaskRef.resolve();
 
     ObjectType runProps = (ObjectType) runTask.allOf().get().get(1);
-    ObjectType runConfig = (ObjectType) runProps.properties().get().get("run");
-    BooleanType awaitProp = (BooleanType) runConfig.properties().get().get("await");
+    ObjectType runConfig = (ObjectType) runProps.properties().get("run");
+    BooleanType awaitProp = (BooleanType) runConfig.properties().get("await");
 
     assertTrue(awaitProp.defaultValue().isPresent());
     assertTrue(awaitProp.defaultValue().get());
@@ -748,9 +748,9 @@ public class WorkflowTest {
   @Test
   void testEventFilterStructure() {
     ObjectType eventFilter = (ObjectType) getDefByName("eventFilter");
-    assertTrue(eventFilter.properties().isPresent());
-    assertTrue(eventFilter.properties().get().containsKey("with"));
-    assertTrue(eventFilter.properties().get().containsKey("correlate"));
+    assertTrue(eventFilter.properties().isEmpty() == false);
+    assertTrue(eventFilter.properties().containsKey("with"));
+    assertTrue(eventFilter.properties().containsKey("correlate"));
 
     assertTrue(eventFilter.required().isPresent());
     assertTrue(eventFilter.required().get().contains("with"));
@@ -761,7 +761,7 @@ public class WorkflowTest {
   @Test
   void testExtensionExtendEnum() {
     ObjectType extension = (ObjectType) getDefByName("extension");
-    StringType extend = (StringType) extension.properties().get().get("extend");
+    StringType extend = (StringType) extension.properties().get("extend");
 
     assertTrue(extend.enumValues().isPresent());
     List<String> enumVals = extend.enumValues().get();
@@ -781,10 +781,10 @@ public class WorkflowTest {
     assertEquals(2, schema.oneOf().get().size());
 
     // Inline vs External
-    assertTrue(schema.properties().isPresent());
-    assertTrue(schema.properties().get().containsKey("format"));
+    assertTrue(schema.properties().isEmpty() == false);
+    assertTrue(schema.properties().containsKey("format"));
 
-    StringType format = (StringType) schema.properties().get().get("format");
+    StringType format = (StringType) schema.properties().get("format");
     assertTrue(format.defaultValue().isPresent());
     assertEquals("json", format.defaultValue().get());
   }
@@ -801,9 +801,9 @@ public class WorkflowTest {
     assertTrue(processResult.required().get().contains("stdout"));
     assertTrue(processResult.required().get().contains("stderr"));
 
-    assertInstanceOf(IntegerType.class, processResult.properties().get().get("code"));
-    assertInstanceOf(StringType.class, processResult.properties().get().get("stdout"));
-    assertInstanceOf(StringType.class, processResult.properties().get().get("stderr"));
+    assertInstanceOf(IntegerType.class, processResult.properties().get("code"));
+    assertInstanceOf(StringType.class, processResult.properties().get("stdout"));
+    assertInstanceOf(StringType.class, processResult.properties().get("stderr"));
   }
 
   // ============== Catalog Definition Tests ==============
@@ -815,7 +815,7 @@ public class WorkflowTest {
     assertTrue(catalog.required().isPresent());
     assertTrue(catalog.required().get().contains("endpoint"));
 
-    HasType endpointType = catalog.properties().get().get("endpoint");
+    HasType endpointType = catalog.properties().get("endpoint");
     assertInstanceOf(RefType.class, endpointType);
     assertEquals("#/$defs/endpoint", ((RefType) endpointType).ref());
   }
@@ -843,7 +843,7 @@ public class WorkflowTest {
     assertTrue(timeout.required().isPresent());
     assertTrue(timeout.required().get().contains("after"));
 
-    HasType afterType = timeout.properties().get().get("after");
+    HasType afterType = timeout.properties().get("after");
     assertInstanceOf(RefType.class, afterType);
     assertEquals("#/$defs/duration", ((RefType) afterType).ref());
   }
@@ -853,12 +853,12 @@ public class WorkflowTest {
   @Test
   void testInputDefinition() {
     ObjectType input = (ObjectType) getDefByName("input");
-    assertTrue(input.properties().isPresent());
-    assertTrue(input.properties().get().containsKey("schema"));
-    assertTrue(input.properties().get().containsKey("from"));
+    assertTrue(input.properties().isEmpty() == false);
+    assertTrue(input.properties().containsKey("schema"));
+    assertTrue(input.properties().containsKey("from"));
 
     // from has oneOf (string or object)
-    HasType fromType = input.properties().get().get("from");
+    HasType fromType = input.properties().get("from");
     assertInstanceOf(ObjectType.class, fromType);
     ObjectType from = (ObjectType) fromType;
     assertTrue(from.oneOf().isPresent());
@@ -868,17 +868,17 @@ public class WorkflowTest {
   @Test
   void testOutputDefinition() {
     ObjectType output = (ObjectType) getDefByName("output");
-    assertTrue(output.properties().isPresent());
-    assertTrue(output.properties().get().containsKey("schema"));
-    assertTrue(output.properties().get().containsKey("as"));
+    assertTrue(output.properties().isEmpty() == false);
+    assertTrue(output.properties().containsKey("schema"));
+    assertTrue(output.properties().containsKey("as"));
   }
 
   @Test
   void testExportDefinition() {
     ObjectType export = (ObjectType) getDefByName("export");
-    assertTrue(export.properties().isPresent());
-    assertTrue(export.properties().get().containsKey("schema"));
-    assertTrue(output().properties().get().containsKey("as"));
+    assertTrue(export.properties().isEmpty() == false);
+    assertTrue(export.properties().containsKey("schema"));
+    assertTrue(output().properties().containsKey("as"));
   }
 
   // ============== AsyncAPI Tests ==============
@@ -889,9 +889,9 @@ public class WorkflowTest {
     assertTrue(asyncApiServer.required().isPresent());
     assertTrue(asyncApiServer.required().get().contains("name"));
 
-    assertTrue(asyncApiServer.properties().isPresent());
-    assertTrue(asyncApiServer.properties().get().containsKey("name"));
-    assertTrue(asyncApiServer.properties().get().containsKey("variables"));
+    assertTrue(asyncApiServer.properties().isEmpty() == false);
+    assertTrue(asyncApiServer.properties().containsKey("name"));
+    assertTrue(asyncApiServer.properties().containsKey("variables"));
   }
 
   @Test
@@ -900,10 +900,10 @@ public class WorkflowTest {
     assertTrue(subscription.required().isPresent());
     assertTrue(subscription.required().get().contains("consume"));
 
-    assertTrue(subscription.properties().isPresent());
-    assertTrue(subscription.properties().get().containsKey("filter"));
-    assertTrue(subscription.properties().get().containsKey("consume"));
-    assertTrue(subscription.properties().get().containsKey("foreach"));
+    assertTrue(subscription.properties().isEmpty() == false);
+    assertTrue(subscription.properties().containsKey("filter"));
+    assertTrue(subscription.properties().containsKey("consume"));
+    assertTrue(subscription.properties().containsKey("foreach"));
   }
 
   // ============== OAuth2 Tests ==============
@@ -920,7 +920,7 @@ public class WorkflowTest {
   @Test
   void testOAuth2GrantEnum() {
     ObjectType oauth2Props = (ObjectType) getDefByName("oauth2AuthenticationProperties");
-    StringType grant = (StringType) oauth2Props.properties().get().get("grant");
+    StringType grant = (StringType) oauth2Props.properties().get("grant");
 
     assertTrue(grant.enumValues().isPresent());
     assertTrue(grant.enumValues().get().contains("authorization_code"));
@@ -943,9 +943,9 @@ public class WorkflowTest {
   @Test
   void testTaskBaseProperties() {
     ObjectType taskBase = (ObjectType) getDefByName("taskBase");
-    assertTrue(taskBase.properties().isPresent());
+    assertTrue(taskBase.properties().isEmpty() == false);
 
-    Map<String, HasType> props = taskBase.properties().get();
+    Map<String, HasType> props = taskBase.properties();
     assertTrue(props.containsKey("if"));
     assertTrue(props.containsKey("input"));
     assertTrue(props.containsKey("output"));
@@ -992,11 +992,11 @@ public class WorkflowTest {
     ObjectType runTask = (ObjectType) runTaskRef.resolve();
 
     ObjectType runProps = (ObjectType) runTask.allOf().get().get(1);
-    ObjectType runConfig = (ObjectType) runProps.properties().get().get("run");
+    ObjectType runConfig = (ObjectType) runProps.properties().get("run");
 
     // First oneOf is container
     ObjectType containerRun = (ObjectType) runConfig.oneOf().get().get(0);
-    ObjectType containerType = (ObjectType) containerRun.properties().get().get("container");
+    ObjectType containerType = (ObjectType) containerRun.properties().get("container");
 
     assertTrue(containerType.required().isPresent());
     assertTrue(containerType.required().get().contains("image"));
@@ -1011,12 +1011,12 @@ public class WorkflowTest {
     ObjectType runTask = (ObjectType) runTaskRef.resolve();
 
     ObjectType runProps = (ObjectType) runTask.allOf().get().get(1);
-    ObjectType runConfig = (ObjectType) runProps.properties().get().get("run");
+    ObjectType runConfig = (ObjectType) runProps.properties().get("run");
 
     // Fourth oneOf is workflow
     ObjectType workflowRun = (ObjectType) runConfig.oneOf().get().get(3);
-    ObjectType workflowType = (ObjectType) workflowRun.properties().get().get("workflow");
-    StringType version = (StringType) workflowType.properties().get().get("version");
+    ObjectType workflowType = (ObjectType) workflowRun.properties().get("workflow");
+    StringType version = (StringType) workflowType.properties().get("version");
 
     assertTrue(version.defaultValue().isPresent());
     assertEquals("latest", version.defaultValue().get());
@@ -1025,7 +1025,7 @@ public class WorkflowTest {
   // ============== Helper Methods ==============
 
   private ObjectType getTaskItemType() {
-    RefType doRef = (RefType) rootType.properties().get().get("do");
+    RefType doRef = (RefType) rootType.properties().get("do");
     ArrayType taskList = (ArrayType) doRef.resolve();
     return (ObjectType) taskList.getItems()[0].getType();
   }

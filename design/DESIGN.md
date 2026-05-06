@@ -97,7 +97,7 @@ SchemaDefinition schema = parser.parse("path/to/schema.yaml");
 ObjectType root = (ObjectType) schema.model();
 
 // Navigate properties
-Map<String, HasType> props = root.properties().get();
+Map<String, HasType> props = root.properties();
 StringType name = (StringType) props.get("name");
 
 // Check constraints

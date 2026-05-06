@@ -15,7 +15,7 @@ import java.util.Optional;
  * <p>
  * Example usage:
  * <pre>{@code
- * StringType emailType = (StringType) objectType.properties().get().get("email");
+ * StringType emailType = (StringType) objectType.properties().get("email");
  * Optional<String> pattern = emailType.pattern();
  * Optional<String> format = emailType.format(); // "email", "uri", "date-time", etc.
  * Optional<List<String>> enumValues = emailType.enumValues();

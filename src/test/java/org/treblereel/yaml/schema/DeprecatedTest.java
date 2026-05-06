@@ -55,9 +55,9 @@ public class DeprecatedTest {
         SchemaDefinition schema = parser.parse("src/test/resources/deprecated-object.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        assertTrue(objectType.properties().isPresent(),
+        assertTrue(objectType.properties().isEmpty() == false,
                    "properties should be present");
-        assertEquals(2, objectType.properties().get().size(),
+        assertEquals(2, objectType.properties().size(),
                      "Should have 2 properties");
     }
 

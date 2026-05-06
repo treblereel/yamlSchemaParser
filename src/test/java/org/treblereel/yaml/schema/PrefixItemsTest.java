@@ -118,9 +118,9 @@ public class PrefixItemsTest {
         ArrayItemType[] items = arrayType.prefixItems().get();
         ObjectType objectType = (ObjectType) items[2].getType();
 
-        assertTrue(objectType.properties().isPresent(),
+        assertTrue(objectType.properties().isEmpty() == false,
                    "Object should have properties");
-        assertTrue(objectType.properties().get().containsKey("enabled"),
+        assertTrue(objectType.properties().containsKey("enabled"),
                    "Object should have enabled property");
     }
 

@@ -45,9 +45,9 @@ public class ReadOnlyWriteOnlyTest {
         SchemaDefinition schema = parser.parse("src/test/resources/readonly-object.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        assertTrue(objectType.properties().isPresent(),
+        assertTrue(objectType.properties().isEmpty() == false,
                    "properties should be present");
-        Map<String, HasType> properties = objectType.properties().get();
+        Map<String, HasType> properties = objectType.properties();
 
         // Check id property is readOnly
         StringType idType = (StringType) properties.get("id");

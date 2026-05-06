@@ -111,12 +111,12 @@ public class WorkflowComprehensiveTest {
     @Test
     void testNestedReferenceResolution() {
         // Test that nested $refs resolve correctly
-        RefType inputRef = (RefType) root.properties().get().get("input");
+        RefType inputRef = (RefType) root.properties().get("input");
         HasType input = inputRef.resolve();
         assertInstanceOf(ObjectType.class, input);
 
         ObjectType inputObj = (ObjectType) input;
-        HasType schema = inputObj.properties().get().get("schema");
+        HasType schema = inputObj.properties().get("schema");
         assertInstanceOf(RefType.class, schema);
 
         RefType schemaRef = (RefType) schema;
@@ -130,7 +130,7 @@ public class WorkflowComprehensiveTest {
         ObjectType taskBase = (ObjectType) resolveDef("taskBase");
         // taskBase exists and is a valid ObjectType
         assertNotNull(taskBase);
-        assertTrue(taskBase.properties().isPresent());
+        assertTrue(taskBase.properties().isEmpty() == false);
     }
 
     @Test
@@ -182,7 +182,7 @@ public class WorkflowComprehensiveTest {
     @Test
     void testAnyOfInTimeout() {
         // timeout is in root properties, not in $defs
-        ObjectType timeout = (ObjectType) root.properties().get().get("timeout");
+        ObjectType timeout = (ObjectType) root.properties().get("timeout");
         // timeout may have oneOf instead of anyOf
         assertNotNull(timeout);
     }
@@ -204,7 +204,7 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testOneOfInTimeout() {
-        ObjectType timeout = (ObjectType) root.properties().get().get("timeout");
+        ObjectType timeout = (ObjectType) root.properties().get("timeout");
         assertTrue(timeout.oneOf().isPresent());
         assertEquals(2, timeout.oneOf().get().size());
     }
@@ -253,8 +253,8 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testPatternInDslVersion() {
-        ObjectType document = (ObjectType) root.properties().get().get("document");
-        StringType dsl = (StringType) document.properties().get().get("dsl");
+        ObjectType document = (ObjectType) root.properties().get("document");
+        StringType dsl = (StringType) document.properties().get("dsl");
 
         assertTrue(dsl.pattern().isPresent());
         String pattern = dsl.pattern().get();
@@ -263,8 +263,8 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testPatternInNamespace() {
-        ObjectType document = (ObjectType) root.properties().get().get("document");
-        StringType namespace = (StringType) document.properties().get().get("namespace");
+        ObjectType document = (ObjectType) root.properties().get("document");
+        StringType namespace = (StringType) document.properties().get("namespace");
 
         assertTrue(namespace.pattern().isPresent());
         assertEquals("^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$", namespace.pattern().get());
@@ -272,8 +272,8 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testPatternInWorkflowName() {
-        ObjectType document = (ObjectType) root.properties().get().get("document");
-        StringType name = (StringType) document.properties().get().get("name");
+        ObjectType document = (ObjectType) root.properties().get("document");
+        StringType name = (StringType) document.properties().get("name");
 
         assertTrue(name.pattern().isPresent());
         assertEquals("^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$", name.pattern().get());
@@ -281,8 +281,8 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testPatternInWorkflowVersion() {
-        ObjectType document = (ObjectType) root.properties().get().get("document");
-        StringType version = (StringType) document.properties().get().get("version");
+        ObjectType document = (ObjectType) root.properties().get("document");
+        StringType version = (StringType) document.properties().get("version");
 
         assertTrue(version.pattern().isPresent());
         assertTrue(version.pattern().get().contains("0|[1-9]"), "Should be semver pattern");
@@ -316,7 +316,7 @@ public class WorkflowComprehensiveTest {
     @Test
     void testEnumInOAuth2Grant() {
         ObjectType oauth2Props = (ObjectType) resolveDef("oauth2AuthenticationProperties");
-        StringType grant = (StringType) oauth2Props.properties().get().get("grant");
+        StringType grant = (StringType) oauth2Props.properties().get("grant");
 
         assertTrue(grant.enumValues().isPresent());
         List<String> values = grant.enumValues().get();
@@ -381,7 +381,7 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testMinPropertiesInTaskItem() {
-        RefType doRef = (RefType) root.properties().get().get("do");
+        RefType doRef = (RefType) root.properties().get("do");
         ArrayType taskList = (ArrayType) doRef.resolve();
         ObjectType taskItem = (ObjectType) taskList.getItems()[0].getType();
 
@@ -391,7 +391,7 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testMaxPropertiesInTaskItem() {
-        RefType doRef = (RefType) root.properties().get().get("do");
+        RefType doRef = (RefType) root.properties().get("do");
         ArrayType taskList = (ArrayType) doRef.resolve();
         ObjectType taskItem = (ObjectType) taskList.getItems()[0].getType();
 
@@ -401,8 +401,8 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testMinPropertiesInExtensionItem() {
-        ObjectType use = (ObjectType) root.properties().get().get("use");
-        ArrayType extensions = (ArrayType) use.properties().get().get("extensions");
+        ObjectType use = (ObjectType) root.properties().get("use");
+        ArrayType extensions = (ArrayType) use.properties().get("extensions");
         ObjectType extensionItem = (ObjectType) extensions.getItems()[0].getType();
 
         assertTrue(extensionItem.minProperties().isPresent());
@@ -411,8 +411,8 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testMaxPropertiesInExtensionItem() {
-        ObjectType use = (ObjectType) root.properties().get().get("use");
-        ArrayType extensions = (ArrayType) use.properties().get().get("extensions");
+        ObjectType use = (ObjectType) root.properties().get("use");
+        ArrayType extensions = (ArrayType) use.properties().get("extensions");
         ObjectType extensionItem = (ObjectType) extensions.getItems()[0].getType();
 
         assertTrue(extensionItem.maxProperties().isPresent());
@@ -430,8 +430,8 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testAdditionalPropertiesTrue() {
-        ObjectType document = (ObjectType) root.properties().get().get("document");
-        ObjectType metadata = (ObjectType) document.properties().get().get("metadata");
+        ObjectType document = (ObjectType) root.properties().get("document");
+        ObjectType metadata = (ObjectType) document.properties().get("metadata");
 
         assertTrue(metadata.additionalProperties().isPresent());
         assertTrue(metadata.additionalProperties().get().isAllowed());
@@ -447,8 +447,8 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testAdditionalPropertiesInAuthentications() {
-        ObjectType use = (ObjectType) root.properties().get().get("use");
-        ObjectType authentications = (ObjectType) use.properties().get().get("authentications");
+        ObjectType use = (ObjectType) root.properties().get("use");
+        ObjectType authentications = (ObjectType) use.properties().get("authentications");
 
         assertTrue(authentications.additionalProperties().isPresent());
         assertTrue(authentications.additionalProperties().get().getType().isPresent());
@@ -459,14 +459,14 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testUnevaluatedPropertiesFalseInDocument() {
-        ObjectType document = (ObjectType) root.properties().get().get("document");
+        ObjectType document = (ObjectType) root.properties().get("document");
         assertTrue(document.unevaluatedProperties().isPresent());
         assertFalse(document.unevaluatedProperties().get());
     }
 
     @Test
     void testUnevaluatedPropertiesFalseInUse() {
-        ObjectType use = (ObjectType) root.properties().get().get("use");
+        ObjectType use = (ObjectType) root.properties().get("use");
         assertTrue(use.unevaluatedProperties().isPresent());
         assertFalse(use.unevaluatedProperties().get());
     }
@@ -490,12 +490,12 @@ public class WorkflowComprehensiveTest {
     void testDefaultInWorkflowVersion() {
         ObjectType runTask = (ObjectType) resolveDef("runTask");
         ObjectType runProps = (ObjectType) runTask.allOf().get().get(1);
-        ObjectType runConfig = (ObjectType) runProps.properties().get().get("run");
+        ObjectType runConfig = (ObjectType) runProps.properties().get("run");
 
         // Navigate to workflow oneOf option
         ObjectType workflowRun = (ObjectType) runConfig.oneOf().get().get(3);
-        ObjectType workflow = (ObjectType) workflowRun.properties().get().get("workflow");
-        StringType version = (StringType) workflow.properties().get().get("version");
+        ObjectType workflow = (ObjectType) workflowRun.properties().get("workflow");
+        StringType version = (StringType) workflow.properties().get("version");
 
         assertTrue(version.defaultValue().isPresent());
         assertEquals("latest", version.defaultValue().get());
@@ -514,7 +514,7 @@ public class WorkflowComprehensiveTest {
     @Test
     void testCompleteTaskFlowWithAllCombinators() {
         // This test verifies a complete task definition flow uses all major combinators
-        RefType doRef = (RefType) root.properties().get().get("do");
+        RefType doRef = (RefType) root.properties().get("do");
         ArrayType taskList = (ArrayType) doRef.resolve();
         ObjectType taskItem = (ObjectType) taskList.getItems()[0].getType();
 
@@ -544,8 +544,8 @@ public class WorkflowComprehensiveTest {
     @Test
     void testAuthenticationPolicyChain() {
         // Test complete authentication flow: use -> authentications -> policy -> type
-        ObjectType use = (ObjectType) root.properties().get().get("use");
-        ObjectType authentications = (ObjectType) use.properties().get().get("authentications");
+        ObjectType use = (ObjectType) root.properties().get("use");
+        ObjectType authentications = (ObjectType) use.properties().get("authentications");
 
         // additionalProperties points to authenticationPolicy
         RefType policyRef = (RefType) authentications.additionalProperties().get().getType().get();
@@ -581,7 +581,7 @@ public class WorkflowComprehensiveTest {
     }
 
     private ObjectType getTaskItem() {
-        RefType doRef = (RefType) root.properties().get().get("do");
+        RefType doRef = (RefType) root.properties().get("do");
         ArrayType taskList = (ArrayType) doRef.resolve();
         return (ObjectType) taskList.getItems()[0].getType();
     }

@@ -15,7 +15,7 @@ import java.util.Optional;
  * <p>
  * Example usage:
  * <pre>{@code
- * IntegerType portType = (IntegerType) objectType.properties().get().get("port");
+ * IntegerType portType = (IntegerType) objectType.properties().get("port");
  * Optional<Integer> min = portType.minimum(); // 0
  * Optional<Integer> max = portType.maximum(); // 65535
  * }</pre>

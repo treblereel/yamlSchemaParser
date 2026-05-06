@@ -93,7 +93,7 @@ ObjectType userType = (ObjectType) definition.model();
 
 // Get properties
 if (userType.properties().isPresent()) {
-    Map<String, HasType> props = userType.properties().get();
+    Map<String, HasType> props = userType.properties();
     
     // Check property types
     StringType firstName = (StringType) props.get("firstName");
@@ -350,13 +350,13 @@ SchemaDefinition definition = parser.parse("schema.yaml");
 ObjectType objectType = (ObjectType) definition.model();
 
 // Check readOnly property
-StringType idField = (StringType) objectType.properties().get().get("id");
+StringType idField = (StringType) objectType.properties().get("id");
 if (idField.readOnly().isPresent() && idField.readOnly().get()) {
     // This field is server-generated, should not be in requests
 }
 
 // Check writeOnly property  
-StringType passwordField = (StringType) objectType.properties().get().get("password");
+StringType passwordField = (StringType) objectType.properties().get("password");
 if (passwordField.writeOnly().isPresent() && passwordField.writeOnly().get()) {
     // This field is sensitive, should not be in responses
 }
@@ -395,9 +395,9 @@ SchemaDefinition definition = parser.parse("nested-schema.yaml");
 ObjectType root = (ObjectType) definition.model();
 
 // Navigate nested structure
-ObjectType userType = (ObjectType) root.properties().get().get("user");
-StringType userName = (StringType) userType.properties().get().get("name");
-IntegerType userAge = (IntegerType) userType.properties().get().get("age");
+ObjectType userType = (ObjectType) root.properties().get("user");
+StringType userName = (StringType) userType.properties().get("name");
+IntegerType userAge = (IntegerType) userType.properties().get("age");
 ```
 
 ### References ($ref)
@@ -407,12 +407,12 @@ SchemaDefinition definition = parser.parse("schema-with-refs.yaml");
 ObjectType root = (ObjectType) definition.model();
 
 // Get reference
-RefType addressRef = (RefType) root.properties().get().get("address");
+RefType addressRef = (RefType) root.properties().get("address");
 String refPath = addressRef.ref(); // "#/$defs/Address"
 
 // Resolve reference
 ObjectType addressType = (ObjectType) addressRef.resolve();
-Map<String, HasType> addressProps = addressType.properties().get();
+Map<String, HasType> addressProps = addressType.properties();
 
 // Access definitions
 Map<String, ObjectType> defs = definition.definitions();
@@ -422,7 +422,7 @@ ObjectType addressDef = defs.get("Address");
 ### String Types with Constraints
 
 ```java
-StringType emailType = (StringType) objectType.properties().get().get("email");
+StringType emailType = (StringType) objectType.properties().get("email");
 
 // Pattern validation
 emailType.pattern();     // Optional<String>
@@ -455,7 +455,7 @@ emailType.examples();    // Optional<List<JsonNode>>
 ### Number and Integer Types
 
 ```java
-IntegerType portType = (IntegerType) objectType.properties().get().get("port");
+IntegerType portType = (IntegerType) objectType.properties().get("port");
 
 // Range constraints
 portType.minimum();      // Optional<Integer>
@@ -467,7 +467,7 @@ portType.readOnly();     // Optional<Boolean>
 portType.writeOnly();    // Optional<Boolean>
 portType.examples();     // Optional<List<JsonNode>>
 
-NumberType priceType = (NumberType) objectType.properties().get().get("price");
+NumberType priceType = (NumberType) objectType.properties().get("price");
 priceType.minimum();     // Optional<Double>
 priceType.maximum();     // Optional<Double>
 
@@ -577,7 +577,7 @@ ObjectType objectType = (ObjectType) definition.model();
 
 // Get pattern properties
 if (objectType.patternProperties().isPresent()) {
-    Map<String, HasType> patterns = objectType.patternProperties().get();
+    Map<String, HasType> patterns = objectType.patternProperties();
     
     // Check if schema defines pattern for properties starting with "s_"
     if (patterns.containsKey("^s_")) {
@@ -656,7 +656,7 @@ ObjectType objectType = (ObjectType) definition.model();
 
 // Check if dependent requirements are defined
 if (objectType.dependentRequired().isPresent()) {
-    Map<String, List<String>> deps = objectType.dependentRequired().get();
+    Map<String, List<String>> deps = objectType.dependentRequired();
     
     // Check what's required when creditCard is present
     if (deps.containsKey("creditCard")) {
@@ -704,7 +704,7 @@ ObjectType objectType = (ObjectType) definition.model();
 
 // Check if dependent schemas are defined
 if (objectType.dependentSchemas().isPresent()) {
-    Map<String, HasType> deps = objectType.dependentSchemas().get();
+    Map<String, HasType> deps = objectType.dependentSchemas();
     
     // Get schema that applies when creditCard is present
     if (deps.containsKey("creditCard")) {
@@ -844,12 +844,12 @@ List<String> required = root.required().get();
 // required: ["document", "do"]
 
 // Access document metadata
-ObjectType document = (ObjectType) root.properties().get().get("document");
-StringType dsl = (StringType) document.properties().get().get("dsl");
+ObjectType document = (ObjectType) root.properties().get("document");
+StringType dsl = (StringType) document.properties().get("dsl");
 String pattern = dsl.pattern().get(); // Semver pattern
 
 // Navigate to tasks
-RefType doRef = (RefType) root.properties().get().get("do");
+RefType doRef = (RefType) root.properties().get("do");
 ArrayType taskList = (ArrayType) doRef.resolve();
 
 // Task items with min/max properties constraint

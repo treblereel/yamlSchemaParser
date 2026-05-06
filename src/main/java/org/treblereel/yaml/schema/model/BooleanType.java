@@ -13,7 +13,7 @@ import java.util.Optional;
  * <p>
  * Example usage:
  * <pre>{@code
- * BooleanType activeType = (BooleanType) objectType.properties().get().get("active");
+ * BooleanType activeType = (BooleanType) objectType.properties().get("active");
  * Optional<Boolean> defaultValue = activeType.defaultValue(); // false
  * Optional<Boolean> constValue = activeType.constValue(); // true (if fixed value)
  * }</pre>

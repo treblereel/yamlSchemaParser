@@ -18,7 +18,7 @@ import java.util.TreeMap;
  * Example usage:
  * <pre>{@code
  * ObjectType userType = (ObjectType) schema.model();
- * Map<String, HasType> props = userType.properties().get();
+ * Map<String, HasType> props = userType.properties();
  * List<String> required = userType.required().get();
  * boolean nameRequired = required.contains("name");
  * }</pre>
@@ -94,14 +94,14 @@ public class ObjectType implements HasType {
   }
 
   /**
-   * Returns the object properties as a map of property names to their types.
+   * Returns all properties defined in this object schema.
    * <p>
    * The map is sorted alphabetically by property name.
    * </p>
    *
-   * @return map of property names to types if properties are defined
+   * @return Map of property names to their types, empty map if no properties defined
    */
-  public Optional<Map<String, HasType>> properties() {
+  public Map<String, HasType> properties() {
     return Optional.ofNullable(node.get("properties"))
             .filter(JsonNode::isObject)
             .map(propsNode -> {
@@ -109,11 +109,113 @@ public class ObjectType implements HasType {
               propsNode.fields().forEachRemaining(entry ->
                       properties.put(entry.getKey(), NodeFactory.resolveType(schema, entry.getValue())));
               return properties;
-            });
+            })
+            .orElse(Map.of());
   }
 
   /**
-   * Returns the pattern properties as a map of regex patterns to their types.
+   * Checks if a property with the given name exists.
+   *
+   * @param name property name
+   * @return true if property exists, false otherwise
+   */
+  public boolean hasProperty(String name) {
+    return properties().containsKey(name);
+  }
+
+  /**
+   * Returns the type of a property by name.
+   *
+   * @param name property name
+   * @return Optional containing the property type, or empty if property doesn't exist
+   */
+  public Optional<HasType> getProperty(String name) {
+    return Optional.ofNullable(properties().get(name));
+  }
+
+  /**
+   * Returns the property as StringType if it exists and is a StringType.
+   *
+   * @param name property name
+   * @return Optional containing StringType, or empty if property doesn't exist or is not StringType
+   */
+  public Optional<StringType> getPropertyAsString(String name) {
+    return Optional.ofNullable(properties().get(name))
+            .filter(StringType.class::isInstance)
+            .map(StringType.class::cast);
+  }
+
+  /**
+   * Returns the property as ObjectType if it exists and is an ObjectType.
+   *
+   * @param name property name
+   * @return Optional containing ObjectType, or empty if property doesn't exist or is not ObjectType
+   */
+  public Optional<ObjectType> getPropertyAsObject(String name) {
+    return Optional.ofNullable(properties().get(name))
+            .filter(ObjectType.class::isInstance)
+            .map(ObjectType.class::cast);
+  }
+
+  /**
+   * Returns the property as ArrayType if it exists and is an ArrayType.
+   *
+   * @param name property name
+   * @return Optional containing ArrayType, or empty if property doesn't exist or is not ArrayType
+   */
+  public Optional<ArrayType> getPropertyAsArray(String name) {
+    return Optional.ofNullable(properties().get(name))
+            .filter(ArrayType.class::isInstance)
+            .map(ArrayType.class::cast);
+  }
+
+  /**
+   * Returns the property as IntegerType if it exists and is an IntegerType.
+   *
+   * @param name property name
+   * @return Optional containing IntegerType, or empty if property doesn't exist or is not IntegerType
+   */
+  public Optional<IntegerType> getPropertyAsInteger(String name) {
+    return Optional.ofNullable(properties().get(name))
+            .filter(IntegerType.class::isInstance)
+            .map(IntegerType.class::cast);
+  }
+
+  /**
+   * Returns the property as NumberType if it exists and is a NumberType.
+   *
+   * @param name property name
+   * @return Optional containing NumberType, or empty if property doesn't exist or is not NumberType
+   */
+  public Optional<NumberType> getPropertyAsNumber(String name) {
+    return Optional.ofNullable(properties().get(name))
+            .filter(NumberType.class::isInstance)
+            .map(NumberType.class::cast);
+  }
+
+  /**
+   * Returns the property as BooleanType if it exists and is a BooleanType.
+   *
+   * @param name property name
+   * @return Optional containing BooleanType, or empty if property doesn't exist or is not BooleanType
+   */
+  public Optional<BooleanType> getPropertyAsBoolean(String name) {
+    return Optional.ofNullable(properties().get(name))
+            .filter(BooleanType.class::isInstance)
+            .map(BooleanType.class::cast);
+  }
+
+  /**
+   * Returns property stream for iteration.
+   *
+   * @return Stream of map entries (property name -> type)
+   */
+  public java.util.stream.Stream<Map.Entry<String, HasType>> propertiesStream() {
+    return properties().entrySet().stream();
+  }
+
+  /**
+   * Returns pattern properties - regex-based property schemas.
    * <p>
    * Pattern properties allow defining schemas for object properties whose names
    * match specific regex patterns. The map is sorted alphabetically by pattern.
@@ -122,14 +224,14 @@ public class ObjectType implements HasType {
    * Example:
    * <pre>{@code
    * ObjectType objectType = (ObjectType) schema.model();
-   * Map<String, HasType> patterns = objectType.patternProperties().get();
+   * Map<String, HasType> patterns = objectType.patternProperties();
    * HasType stringPattern = patterns.get("^s_"); // Properties starting with s_
    * }</pre>
    * </p>
    *
-   * @return map of regex patterns to types if patternProperties are defined
+   * @return Map of regex patterns to their schemas, empty map if none defined
    */
-  public Optional<Map<String, HasType>> patternProperties() {
+  public Map<String, HasType> patternProperties() {
     return Optional.ofNullable(node.get("patternProperties"))
             .filter(JsonNode::isObject)
             .map(patternsNode -> {
@@ -137,7 +239,8 @@ public class ObjectType implements HasType {
               patternsNode.fields().forEachRemaining(entry ->
                       patterns.put(entry.getKey(), NodeFactory.resolveType(schema, entry.getValue())));
               return patterns;
-            });
+            })
+            .orElse(Map.of());
   }
 
   /**
@@ -216,7 +319,7 @@ public class ObjectType implements HasType {
   }
 
   /**
-   * Returns the dependent required constraints.
+   * Returns dependent required fields - conditional required based on property presence.
    * <p>
    * Specifies that if a property (key) is present, then the properties in its
    * associated list (value) must also be present. This enables conditional
@@ -226,17 +329,15 @@ public class ObjectType implements HasType {
    * Example:
    * <pre>{@code
    * ObjectType objectType = (ObjectType) schema.model();
-   * if (objectType.dependentRequired().isPresent()) {
-   *     Map<String, List<String>> deps = objectType.dependentRequired().get();
-   *     List<String> required = deps.get("creditCard");
-   *     // If creditCard is present, these properties must also be present
-   * }
+   * Map<String, List<String>> deps = objectType.dependentRequired();
+   * List<String> required = deps.get("creditCard");
+   * // If creditCard is present, these properties must also be present
    * }</pre>
    * </p>
    *
-   * @return map of property names to their dependent required properties if specified
+   * @return Map of property names to lists of dependent required fields, empty map if none
    */
-  public Optional<Map<String, List<String>>> dependentRequired() {
+  public Map<String, List<String>> dependentRequired() {
     return Optional.ofNullable(node.get("dependentRequired"))
             .filter(JsonNode::isObject)
             .map(depsNode -> {
@@ -251,11 +352,12 @@ public class ObjectType implements HasType {
                 }
               });
               return deps;
-            });
+            })
+            .orElse(Map.of());
   }
 
   /**
-   * Returns the dependent schemas constraints.
+   * Returns dependent schemas - conditional schemas based on property presence.
    * <p>
    * Specifies that if a property (key) is present, then the associated schema (value)
    * must also be applied to the instance. This enables conditional schema application
@@ -265,17 +367,15 @@ public class ObjectType implements HasType {
    * Example:
    * <pre>{@code
    * ObjectType objectType = (ObjectType) schema.model();
-   * if (objectType.dependentSchemas().isPresent()) {
-   *     Map<String, HasType> deps = objectType.dependentSchemas().get();
-   *     HasType schema = deps.get("creditCard");
-   *     // If creditCard is present, this schema must also be applied
-   * }
+   * Map<String, HasType> deps = objectType.dependentSchemas();
+   * HasType schema = deps.get("creditCard");
+   * // If creditCard is present, this schema must also be applied
    * }</pre>
    * </p>
    *
-   * @return map of property names to their dependent schemas if specified
+   * @return Map of property names to dependent schemas, empty map if none defined
    */
-  public Optional<Map<String, HasType>> dependentSchemas() {
+  public Map<String, HasType> dependentSchemas() {
     return Optional.ofNullable(node.get("dependentSchemas"))
             .filter(JsonNode::isObject)
             .map(schemasNode -> {
@@ -283,7 +383,8 @@ public class ObjectType implements HasType {
               schemasNode.fields().forEachRemaining(entry ->
                       schemas.put(entry.getKey(), NodeFactory.resolveType(schema, entry.getValue())));
               return schemas;
-            });
+            })
+            .orElse(Map.of());
   }
 
   /**

@@ -62,12 +62,12 @@ public class ArrayParserTest {
     ArrayItemType itemType = arrayType.getItems()[0];
     assertInstanceOf(ObjectType.class, itemType.getType());
     ObjectType objectType = (ObjectType) itemType.getType();
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(3, objectType.properties().get().size());
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(3, objectType.properties().size());
     assertTrue(objectType.required().isPresent());
     assertEquals(2, objectType.required().get().size());
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> properties = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> properties = objectType.properties();
     assertTrue(properties.containsKey("id"));
     assertInstanceOf(IntegerType.class, properties.get("id"));
     assertTrue(properties.containsKey("name"));
@@ -118,9 +118,9 @@ public class ArrayParserTest {
     ArrayItemType itemType = arrayType.getItems()[0];
     assertInstanceOf(ObjectType.class, itemType.getType());
     ObjectType objectType = (ObjectType) itemType.getType();
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(2, objectType.properties().get().size());
-    Map<String, HasType> properties = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(2, objectType.properties().size());
+    Map<String, HasType> properties = objectType.properties();
     assertTrue(properties.containsKey("tags"));
     assertInstanceOf(ArrayType.class, properties.get("tags"));
     ArrayType tagsArray = (ArrayType) properties.get("tags");
@@ -171,10 +171,10 @@ public class ArrayParserTest {
     ArrayItemType itemType = arrayType.getItems()[0];
     assertInstanceOf(ObjectType.class, itemType.getType());
     ObjectType objectType = (ObjectType) itemType.getType();
-    assertTrue(objectType.properties().isPresent());
-    assertEquals(1, objectType.properties().get().size());
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> properties = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertEquals(1, objectType.properties().size());
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> properties = objectType.properties();
     assertTrue(properties.containsKey("matrix"));
     assertInstanceOf(ArrayType.class, properties.get("matrix"));
     ArrayType level1 = (ArrayType) properties.get("matrix");
@@ -257,8 +257,8 @@ public class ArrayParserTest {
     assertInstanceOf(IntegerType.class, arrayType.getItems()[3].getType());
     assertInstanceOf(ObjectType.class, arrayType.getItems()[4].getType());
     ObjectType objectType = (ObjectType) arrayType.getItems()[4].getType();
-    assertTrue(objectType.properties().isPresent());
-    assertTrue(objectType.properties().get().containsKey("name"));
+    assertTrue(objectType.properties().isEmpty() == false);
+    assertTrue(objectType.properties().containsKey("name"));
   }
 
   @Test
@@ -288,15 +288,15 @@ public class ArrayParserTest {
     assertEquals(1, arrayType.getItems().length);
     assertInstanceOf(ObjectType.class, arrayType.getItems()[0].getType());
     ObjectType objectType = (ObjectType) arrayType.getItems()[0].getType();
-    assertTrue(objectType.properties().isPresent());
-    Map<String, HasType> properties = objectType.properties().get();
+    assertTrue(objectType.properties().isEmpty() == false);
+    Map<String, HasType> properties = objectType.properties();
     assertEquals(2, properties.size());
     assertTrue(properties.containsKey("user"));
     assertInstanceOf(ObjectType.class, properties.get("user"));
     ObjectType userObject = (ObjectType) properties.get("user");
-    assertTrue(userObject.properties().isPresent());
-    assertTrue(userObject.properties().get().containsKey("id"));
-    assertTrue(userObject.properties().get().containsKey("email"));
+    assertTrue(userObject.properties().isEmpty() == false);
+    assertTrue(userObject.properties().containsKey("id"));
+    assertTrue(userObject.properties().containsKey("email"));
     assertTrue(userObject.required().isPresent());
     assertTrue(userObject.required().get().contains("id"));
     assertTrue(properties.containsKey("roles"));

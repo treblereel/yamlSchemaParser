@@ -22,7 +22,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        assertTrue(objectType.patternProperties().isPresent(),
+        assertTrue(objectType.patternProperties().isEmpty() == false,
                    "patternProperties should be present");
     }
 
@@ -31,7 +31,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> patterns = objectType.patternProperties().get();
+        Map<String, HasType> patterns = objectType.patternProperties();
         assertEquals(2, patterns.size(), "Should have 2 pattern properties");
     }
 
@@ -40,7 +40,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> patterns = objectType.patternProperties().get();
+        Map<String, HasType> patterns = objectType.patternProperties();
 
         assertTrue(patterns.containsKey("^s_"), "Should contain pattern ^s_");
         assertTrue(patterns.containsKey("^i_"), "Should contain pattern ^i_");
@@ -51,7 +51,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> patterns = objectType.patternProperties().get();
+        Map<String, HasType> patterns = objectType.patternProperties();
         HasType stringPattern = patterns.get("^s_");
 
         assertInstanceOf(StringType.class, stringPattern,
@@ -63,7 +63,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> patterns = objectType.patternProperties().get();
+        Map<String, HasType> patterns = objectType.patternProperties();
         HasType integerPattern = patterns.get("^i_");
 
         assertInstanceOf(IntegerType.class, integerPattern,
@@ -77,9 +77,9 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        assertTrue(objectType.properties().isPresent(),
+        assertTrue(objectType.properties().isEmpty() == false,
                    "Should have regular properties");
-        assertTrue(objectType.patternProperties().isPresent(),
+        assertTrue(objectType.patternProperties().isEmpty() == false,
                    "Should have pattern properties");
     }
 
@@ -88,7 +88,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> props = objectType.properties().get();
+        Map<String, HasType> props = objectType.properties();
 
         assertTrue(props.containsKey("name"), "Should have name property");
         assertTrue(props.containsKey("age"), "Should have age property");
@@ -100,7 +100,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> patterns = objectType.patternProperties().get();
+        Map<String, HasType> patterns = objectType.patternProperties();
 
         assertTrue(patterns.containsKey("^config_"), "Should have ^config_ pattern");
         assertTrue(patterns.containsKey("^metadata_"), "Should have ^metadata_ pattern");
@@ -112,17 +112,17 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> patterns = objectType.patternProperties().get();
+        Map<String, HasType> patterns = objectType.patternProperties();
         HasType configPattern = patterns.get("^config_");
 
         assertInstanceOf(ObjectType.class, configPattern,
                          "config_ pattern should be ObjectType");
 
         ObjectType configObject = (ObjectType) configPattern;
-        assertTrue(configObject.properties().isPresent(),
+        assertTrue(configObject.properties().isEmpty() == false,
                    "config object should have properties");
 
-        Map<String, HasType> configProps = configObject.properties().get();
+        Map<String, HasType> configProps = configObject.properties();
         assertTrue(configProps.containsKey("enabled"),
                    "config should have enabled property");
         assertInstanceOf(BooleanType.class, configProps.get("enabled"),
@@ -134,7 +134,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> patterns = objectType.patternProperties().get();
+        Map<String, HasType> patterns = objectType.patternProperties();
         HasType metadataPattern = patterns.get("^metadata_");
 
         assertInstanceOf(StringType.class, metadataPattern,
@@ -148,7 +148,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-complex.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> patterns = objectType.patternProperties().get();
+        Map<String, HasType> patterns = objectType.patternProperties();
         assertEquals(3, patterns.size(), "Should have 3 complex patterns");
     }
 
@@ -157,7 +157,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-complex.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> patterns = objectType.patternProperties().get();
+        Map<String, HasType> patterns = objectType.patternProperties();
 
         assertTrue(patterns.containsKey("^[Ss]_"),
                    "Should have case-insensitive string pattern");
@@ -177,7 +177,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-complex.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> patterns = objectType.patternProperties().get();
+        Map<String, HasType> patterns = objectType.patternProperties();
 
         assertTrue(patterns.containsKey("^[Nn]um_"),
                    "Should have number pattern");
@@ -197,7 +197,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-complex.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> patterns = objectType.patternProperties().get();
+        Map<String, HasType> patterns = objectType.patternProperties();
 
         assertTrue(patterns.containsKey("^arr_.*$"),
                    "Should have array pattern");
@@ -219,7 +219,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/simple-string-props.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        assertFalse(objectType.patternProperties().isPresent(),
+        assertFalse(objectType.patternProperties().isEmpty() == false,
                     "Schema without patternProperties should return empty Optional");
     }
 
@@ -228,7 +228,7 @@ public class PatternPropertiesTest {
         SchemaDefinition schema = parser.parse("src/test/resources/pattern-properties-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        assertTrue(objectType.patternProperties().isPresent(),
+        assertTrue(objectType.patternProperties().isEmpty() == false,
                    "Should have pattern properties");
         assertTrue(objectType.additionalProperties().isPresent(),
                    "Should have additionalProperties set to false");

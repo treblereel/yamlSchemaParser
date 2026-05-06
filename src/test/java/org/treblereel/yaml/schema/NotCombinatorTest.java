@@ -152,7 +152,7 @@ public class NotCombinatorTest {
         SchemaDefinition schema = parser.parse("src/test/resources/simple-string-props.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        var props = objectType.properties().get();
+        var props = objectType.properties();
         StringType nameType = (StringType) props.get("firstName");
 
         assertFalse(nameType.not().isPresent(), "Type without not should return empty Optional");

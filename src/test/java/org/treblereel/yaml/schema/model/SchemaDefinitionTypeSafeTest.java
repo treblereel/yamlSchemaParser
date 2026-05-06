@@ -42,7 +42,7 @@ class SchemaDefinitionTypeSafeTest {
     void modelAsString_shouldReturnStringType_whenModelIsString() {
         SchemaDefinition schema = parser.parse("src/test/resources/simple-string-props.schema.yaml");
         ObjectType obj = (ObjectType) schema.model();
-        HasType nameType = obj.properties().get().get("firstName");
+        HasType nameType = obj.properties().get("firstName");
 
         // For this test we need to create a schema with string root
         // Using ref resolution as workaround

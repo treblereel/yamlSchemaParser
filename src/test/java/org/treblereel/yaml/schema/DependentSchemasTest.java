@@ -23,7 +23,7 @@ public class DependentSchemasTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        assertTrue(objectType.dependentSchemas().isPresent(),
+        assertTrue(objectType.dependentSchemas().isEmpty() == false,
                    "dependentSchemas should be present");
     }
 
@@ -32,7 +32,7 @@ public class DependentSchemasTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> deps = objectType.dependentSchemas().get();
+        Map<String, HasType> deps = objectType.dependentSchemas();
         assertEquals(1, deps.size(), "Should have 1 dependent schema");
     }
 
@@ -41,7 +41,7 @@ public class DependentSchemasTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> deps = objectType.dependentSchemas().get();
+        Map<String, HasType> deps = objectType.dependentSchemas();
         assertTrue(deps.containsKey("creditCard"),
                    "Should have creditCard dependency");
     }
@@ -51,7 +51,7 @@ public class DependentSchemasTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> deps = objectType.dependentSchemas().get();
+        Map<String, HasType> deps = objectType.dependentSchemas();
         HasType creditCardSchema = deps.get("creditCard");
 
         assertNotNull(creditCardSchema, "creditCard should have dependent schema");
@@ -64,13 +64,13 @@ public class DependentSchemasTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> deps = objectType.dependentSchemas().get();
+        Map<String, HasType> deps = objectType.dependentSchemas();
         ObjectType creditCardSchema = (ObjectType) deps.get("creditCard");
 
-        assertTrue(creditCardSchema.properties().isPresent(),
+        assertTrue(creditCardSchema.properties().isEmpty() == false,
                    "creditCard schema should have properties");
 
-        Map<String, HasType> props = creditCardSchema.properties().get();
+        Map<String, HasType> props = creditCardSchema.properties();
         assertTrue(props.containsKey("billingAddress"),
                    "Should have billingAddress property");
         assertTrue(props.containsKey("cvv"),
@@ -82,7 +82,7 @@ public class DependentSchemasTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> deps = objectType.dependentSchemas().get();
+        Map<String, HasType> deps = objectType.dependentSchemas();
         ObjectType creditCardSchema = (ObjectType) deps.get("creditCard");
 
         assertTrue(creditCardSchema.required().isPresent(),
@@ -101,10 +101,10 @@ public class DependentSchemasTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-simple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> deps = objectType.dependentSchemas().get();
+        Map<String, HasType> deps = objectType.dependentSchemas();
         ObjectType creditCardSchema = (ObjectType) deps.get("creditCard");
 
-        Map<String, HasType> props = creditCardSchema.properties().get();
+        Map<String, HasType> props = creditCardSchema.properties();
         StringType cvvType = (StringType) props.get("cvv");
 
         assertTrue(cvvType.pattern().isPresent(),
@@ -120,7 +120,7 @@ public class DependentSchemasTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-multiple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> deps = objectType.dependentSchemas().get();
+        Map<String, HasType> deps = objectType.dependentSchemas();
         assertEquals(2, deps.size(), "Should have 2 dependent schemas");
     }
 
@@ -129,7 +129,7 @@ public class DependentSchemasTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-multiple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> deps = objectType.dependentSchemas().get();
+        Map<String, HasType> deps = objectType.dependentSchemas();
 
         assertTrue(deps.containsKey("email"), "Should have email dependency");
         assertTrue(deps.containsKey("isPremium"), "Should have isPremium dependency");
@@ -140,13 +140,13 @@ public class DependentSchemasTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-multiple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> deps = objectType.dependentSchemas().get();
+        Map<String, HasType> deps = objectType.dependentSchemas();
         ObjectType emailSchema = (ObjectType) deps.get("email");
 
-        assertTrue(emailSchema.properties().isPresent(),
+        assertTrue(emailSchema.properties().isEmpty() == false,
                    "email schema should have properties");
 
-        Map<String, HasType> props = emailSchema.properties().get();
+        Map<String, HasType> props = emailSchema.properties();
         assertTrue(props.containsKey("emailVerified"),
                    "Should have emailVerified property");
 
@@ -160,13 +160,13 @@ public class DependentSchemasTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-multiple.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> deps = objectType.dependentSchemas().get();
+        Map<String, HasType> deps = objectType.dependentSchemas();
         ObjectType premiumSchema = (ObjectType) deps.get("isPremium");
 
-        assertTrue(premiumSchema.properties().isPresent(),
+        assertTrue(premiumSchema.properties().isEmpty() == false,
                    "isPremium schema should have properties");
 
-        Map<String, HasType> props = premiumSchema.properties().get();
+        Map<String, HasType> props = premiumSchema.properties();
         assertTrue(props.containsKey("subscriptionId"),
                    "Should have subscriptionId property");
         assertTrue(props.containsKey("expiryDate"),
@@ -189,7 +189,7 @@ public class DependentSchemasTest {
 
         assertTrue(objectType.required().isPresent(),
                    "Should have regular required fields");
-        assertTrue(objectType.dependentSchemas().isPresent(),
+        assertTrue(objectType.dependentSchemas().isEmpty() == false,
                    "Should have dependent schemas");
     }
 
@@ -209,7 +209,7 @@ public class DependentSchemasTest {
         SchemaDefinition schema = parser.parse("src/test/resources/dependent-schemas-mixed.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        Map<String, HasType> deps = objectType.dependentSchemas().get();
+        Map<String, HasType> deps = objectType.dependentSchemas();
         assertEquals(1, deps.size(), "Should have 1 dependent schema");
         assertTrue(deps.containsKey("type"),
                    "Should have type dependency");
@@ -233,7 +233,7 @@ public class DependentSchemasTest {
         SchemaDefinition schema = parser.parse("src/test/resources/simple-string-props.schema.yaml");
         ObjectType objectType = (ObjectType) schema.model();
 
-        assertFalse(objectType.dependentSchemas().isPresent(),
+        assertFalse(objectType.dependentSchemas().isEmpty() == false,
                     "Schema without dependentSchemas should return empty Optional");
     }
 
