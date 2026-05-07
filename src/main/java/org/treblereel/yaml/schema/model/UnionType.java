@@ -5,6 +5,19 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a union type schema (type: [string, null]).
+ * <p>
+ * Union types allow a value to be one of multiple types specified in an array.
+ * This is commonly used for nullable types (e.g., [string, null]) or multi-type
+ * fields (e.g., [string, number]).
+ * </p>
+ *
+ * @param schema the parent schema definition
+ * @param node the JSON node representing this union type
+ * @param types the list of type names in the union
+ * @author Dmitrii Tikhomirov
+ */
 public record UnionType(
     SchemaDefinition schema,
     JsonNode node,
@@ -21,7 +34,7 @@ public record UnionType(
             throw new IllegalArgumentException("Union type must have array type field");
         }
 
-        List<String> types = new ArrayList<>();
+        final List<String> types = new ArrayList<>();
         typeNode.forEach(t -> types.add(t.asText()));
 
         if (types.isEmpty()) {
@@ -29,9 +42,5 @@ public record UnionType(
         }
 
         return List.copyOf(types);
-    }
-
-    public List<String> getTypes() {
-        return types;
     }
 }

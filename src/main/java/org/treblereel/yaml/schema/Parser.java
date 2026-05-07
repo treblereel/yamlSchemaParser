@@ -148,4 +148,20 @@ public class Parser {
         JsonNode root = load(uri);
         return new SchemaDefinition(root);
     }
+
+    /**
+     * Parses YAML schema from a string (for testing).
+     *
+     * @param yamlContent the YAML content as a string
+     * @return the parsed schema definition
+     * @throws RuntimeException if the YAML cannot be parsed
+     */
+    public SchemaDefinition parseYaml(String yamlContent) {
+        try {
+            JsonNode root = mapper.readTree(yamlContent);
+            return new SchemaDefinition(root);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

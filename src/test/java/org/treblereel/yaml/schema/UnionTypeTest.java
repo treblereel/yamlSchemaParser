@@ -2,6 +2,7 @@ package org.treblereel.yaml.schema;
 
 import org.junit.jupiter.api.Test;
 import org.treblereel.yaml.schema.model.UnionType;
+import org.treblereel.yaml.schema.model.SchemaDefinition;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class UnionTypeTest {
@@ -15,6 +16,6 @@ class UnionTypeTest {
 
         assertThat(schema.model()).isInstanceOf(UnionType.class);
         UnionType unionType = (UnionType) schema.model();
-        assertThat(unionType.getTypes()).containsExactly("string", "null");
+        assertThat(unionType.types()).containsExactly("string", "null");
     }
 }
