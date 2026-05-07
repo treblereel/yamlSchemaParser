@@ -2,6 +2,7 @@ package org.treblereel.yaml.schema;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
+import org.treblereel.yaml.schema.model.HasType;
 import org.treblereel.yaml.schema.model.ObjectType;
 import org.treblereel.yaml.schema.model.SchemaDefinition;
 
@@ -33,5 +34,19 @@ class ExtensionMetadataTest {
         assertThat(extensions).containsKey("x-class-name");
         assertThat(extensions.get("x-java-type").asText()).isEqualTo("com.example.CustomType");
         assertThat(extensions.get("x-class-name").asText()).isEqualTo("MyClass");
+    }
+
+    @Test
+    void should_return_empty_extensions_for_NullType() {
+        String yaml = """
+            type: "null"
+            """;
+
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        HasType nullType = schema.model();
+
+        assertThat(nullType.getExtensions()).isEmpty();
+        assertThat(nullType.getExtension("x-anything")).isEmpty();
     }
 }
