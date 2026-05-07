@@ -9,12 +9,16 @@ class NodeFactory {
     if (value == null || value.isNull()) {
       return new NullType(value);
     }
+    
+    // Check for union types BEFORE array check
+    JsonNode typeNode = value.get("type");
+    if(typeNode != null && typeNode.isArray()) {
+      return new UnionType(schema, value);
+    }
+    
+    // Array schema check (not union type)
     if(value.isArray()) {
         return new ArrayType(schema, value);
-    }
-    JsonNode node = value.get("type");
-    if(node != null && node.isArray()) {
-      return new ArrayType(schema, node);
     }
 
     if (value.get("type") != null) {
