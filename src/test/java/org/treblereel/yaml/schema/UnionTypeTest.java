@@ -10,6 +10,7 @@ import org.treblereel.yaml.schema.model.NullType;
 import org.treblereel.yaml.schema.model.HasType;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UnionTypeTest {
     @Test
@@ -83,5 +84,73 @@ class UnionTypeTest {
         assertThat(resolved.get(0)).isInstanceOf(StringType.class);
         assertThat(resolved.get(1)).isInstanceOf(IntegerType.class);
         assertThat(resolved.get(2)).isInstanceOf(NullType.class);
+    }
+
+    @Test
+    void should_handle_single_element_union() {
+        String yaml = """
+            type: [string]
+            """;
+        
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        UnionType unionType = (UnionType) schema.model();
+        
+        assertThat(unionType.types()).containsExactly("string");
+        assertThat(unionType.isNullable()).isFalse();
+    }
+
+    @Test
+    void should_preserve_type_order() {
+        String yaml = """
+            type: [integer, string, boolean]
+            """;
+        
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        UnionType unionType = (UnionType) schema.model();
+        
+        assertThat(unionType.types()).containsExactly("integer", "string", "boolean");
+    }
+
+    @Test
+    void should_throw_on_empty_union() {
+        String yaml = """
+            type: []
+            """;
+        
+        Parser parser = new Parser();
+        
+        assertThatThrownBy(() -> parser.parseYaml(yaml))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("Union type must contain at least one type");
+    }
+
+    @Test
+    void should_handle_all_primitive_types() {
+        String yaml = """
+            type: [string, number, integer, boolean, null, object, array]
+            """;
+        
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        UnionType unionType = (UnionType) schema.model();
+        
+        assertThat(unionType.types()).hasSize(7);
+        assertThat(unionType.isNullable()).isTrue();
+    }
+
+    @Test
+    void should_allow_duplicate_types() {
+        // Parser doesn't validate - schema validator's job
+        String yaml = """
+            type: [string, string]
+            """;
+        
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        UnionType unionType = (UnionType) schema.model();
+        
+        assertThat(unionType.types()).containsExactly("string", "string");
     }
 }
