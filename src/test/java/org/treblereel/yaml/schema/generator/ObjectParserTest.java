@@ -13,6 +13,7 @@ import org.treblereel.yaml.schema.model.RefType;
 import org.treblereel.yaml.schema.model.SchemaDefinition;
 import org.treblereel.yaml.schema.model.StringType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -1047,5 +1048,35 @@ public class ObjectParserTest {
     Map<String, HasType> props = objectType.properties();
     assertEquals(4, props.size());
     assertInstanceOf(StringType.class, props.get("name"));
+  }
+
+  @Test
+  void properties_should_preserve_schema_order_not_alphabetical() {
+    // v2.1 BREAKING CHANGE: LinkedHashMap replaces TreeMap
+    // This test validates the new behavior
+    
+    String yaml = """
+        type: object
+        properties:
+          userName:
+            type: string
+          age:
+            type: integer
+          email:
+            type: string
+        """;
+    
+    Parser parser = new Parser();
+    SchemaDefinition schema = parser.parseYaml(yaml);
+    ObjectType obj = schema.requireObject();
+    
+    List<String> keys = new ArrayList<>(obj.properties().keySet());
+    
+    // Schema order, NOT alphabetical
+    assertEquals(3, keys.size());
+    assertEquals("userName", keys.get(0));
+    assertEquals("age", keys.get(1));
+    assertEquals("email", keys.get(2));
+    // v2.0 would return: ["age", "email", "userName"]
   }
 }
