@@ -322,4 +322,26 @@ public record RefType(SchemaDefinition schema, String ref) implements HasType {
     if (resolved instanceof StringType str) return str.writeOnly();
     return Optional.empty();
   }
+
+  // ============ Extension metadata delegation ============
+
+  /**
+   * Delegates to resolved type's getExtensions().
+   * Returns empty map if resolved type is null.
+   */
+  @Override
+  public Map<String, JsonNode> getExtensions() {
+    HasType resolved = resolve();
+    return resolved != null ? resolved.getExtensions() : Map.of();
+  }
+
+  /**
+   * Delegates to resolved type's getExtension().
+   * Returns empty Optional if resolved type is null.
+   */
+  @Override
+  public Optional<JsonNode> getExtension(String key) {
+    HasType resolved = resolve();
+    return resolved != null ? resolved.getExtension(key) : Optional.empty();
+  }
 }

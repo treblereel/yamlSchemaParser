@@ -49,4 +49,32 @@ class ExtensionMetadataTest {
         assertThat(nullType.getExtensions()).isEmpty();
         assertThat(nullType.getExtension("x-anything")).isEmpty();
     }
+
+    @Test
+    void should_delegate_extensions_from_RefType_to_resolved_type() {
+        String yaml = """
+            $defs:
+              MyType:
+                type: object
+                x-java-class: com.example.MyType
+                properties:
+                  name:
+                    type: string
+            type: object
+            properties:
+              ref:
+                $ref: '#/$defs/MyType'
+            """;
+
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        ObjectType obj = schema.requireObject();
+
+        HasType refType = obj.properties().get("ref");
+        assertThat(refType).isInstanceOf(org.treblereel.yaml.schema.model.RefType.class);
+
+        Map<String, JsonNode> extensions = refType.getExtensions();
+        assertThat(extensions).containsKey("x-java-class");
+        assertThat(extensions.get("x-java-class").asText()).isEqualTo("com.example.MyType");
+    }
 }
