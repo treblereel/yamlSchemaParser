@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 
 /**
  * Represents an object type schema.
@@ -252,7 +251,7 @@ public class ObjectType implements HasType {
    * Returns pattern properties - regex-based property schemas.
    * <p>
    * Pattern properties allow defining schemas for object properties whose names
-   * match specific regex patterns. The map is sorted alphabetically by pattern.
+   * match specific regex patterns. The map preserves the order as defined in the schema (insertion order).
    * </p>
    * <p>
    * Example:
@@ -269,7 +268,7 @@ public class ObjectType implements HasType {
     return Optional.ofNullable(node.get("patternProperties"))
             .filter(JsonNode::isObject)
             .map(patternsNode -> {
-              Map<String, HasType> patterns = new TreeMap<>(String::compareTo);
+              Map<String, HasType> patterns = new LinkedHashMap<>();
               patternsNode.fields().forEachRemaining(entry ->
                       patterns.put(entry.getKey(), NodeFactory.resolveType(schema, entry.getValue())));
               return patterns;
@@ -360,6 +359,9 @@ public class ObjectType implements HasType {
    * property requirements based on the presence of other properties.
    * </p>
    * <p>
+   * The map preserves the order as defined in the schema (insertion order).
+   * </p>
+   * <p>
    * Example:
    * <pre>{@code
    * ObjectType objectType = (ObjectType) schema.model();
@@ -375,7 +377,7 @@ public class ObjectType implements HasType {
     return Optional.ofNullable(node.get("dependentRequired"))
             .filter(JsonNode::isObject)
             .map(depsNode -> {
-              Map<String, List<String>> deps = new TreeMap<>(String::compareTo);
+              Map<String, List<String>> deps = new LinkedHashMap<>();
               depsNode.fields().forEachRemaining(entry -> {
                 String propertyName = entry.getKey();
                 JsonNode requiredArray = entry.getValue();
@@ -398,6 +400,9 @@ public class ObjectType implements HasType {
    * based on the presence of properties.
    * </p>
    * <p>
+   * The map preserves the order as defined in the schema (insertion order).
+   * </p>
+   * <p>
    * Example:
    * <pre>{@code
    * ObjectType objectType = (ObjectType) schema.model();
@@ -413,7 +418,7 @@ public class ObjectType implements HasType {
     return Optional.ofNullable(node.get("dependentSchemas"))
             .filter(JsonNode::isObject)
             .map(schemasNode -> {
-              Map<String, HasType> schemas = new TreeMap<>(String::compareTo);
+              Map<String, HasType> schemas = new LinkedHashMap<>();
               schemasNode.fields().forEachRemaining(entry ->
                       schemas.put(entry.getKey(), NodeFactory.resolveType(schema, entry.getValue())));
               return schemas;

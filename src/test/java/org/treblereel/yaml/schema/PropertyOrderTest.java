@@ -188,4 +188,85 @@ class PropertyOrderTest {
         assertTrue(obj.properties().isEmpty(),
                    "Object without properties should return empty map");
     }
+
+    @Test
+    void patternProperties_preserve_schema_order() {
+        String yaml = """
+            type: object
+            patternProperties:
+              "^z.*":
+                type: string
+              "^a.*":
+                type: integer
+              "^m.*":
+                type: boolean
+            """;
+
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        ObjectType obj = (ObjectType) schema.model();
+
+        List<String> patterns = new ArrayList<>(obj.patternProperties().keySet());
+
+        // Schema order, NOT alphabetical
+        assertEquals(3, patterns.size(), "Should have 3 patterns");
+        assertEquals("^z.*", patterns.get(0), "First pattern should be ^z.*");
+        assertEquals("^a.*", patterns.get(1), "Second pattern should be ^a.*");
+        assertEquals("^m.*", patterns.get(2), "Third pattern should be ^m.*");
+    }
+
+    @Test
+    void dependentSchemas_preserve_schema_order() {
+        String yaml = """
+            type: object
+            properties:
+              zip:
+                type: string
+              area:
+                type: string
+            dependentSchemas:
+              zip:
+                properties:
+                  zipExt:
+                    type: string
+              area:
+                properties:
+                  areaCode:
+                    type: string
+            """;
+
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        ObjectType obj = (ObjectType) schema.model();
+
+        List<String> deps = new ArrayList<>(obj.dependentSchemas().keySet());
+
+        // Schema order, NOT alphabetical
+        assertEquals(2, deps.size(), "Should have 2 dependent schemas");
+        assertEquals("zip", deps.get(0), "First should be zip");
+        assertEquals("area", deps.get(1), "Second should be area");
+    }
+
+    @Test
+    void dependentRequired_preserve_schema_order() {
+        String yaml = """
+            type: object
+            dependentRequired:
+              zip:
+                - zipExt
+              area:
+                - areaCode
+              name:
+                - title
+            """;
+
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        ObjectType obj = (ObjectType) schema.model();
+
+        List<String> deps = new ArrayList<>(obj.dependentRequired().keySet());
+
+        // Schema order, NOT alphabetical
+        assertEquals(3, deps.size(), "Should have 3 dependent required entries");
+        assertEquals("zip", deps.get(0), "First should be zip");
+        assertEquals("area", deps.get(1), "Second should be area");
+        assertEquals("name", deps.get(2), "Third should be name");
+    }
 }
