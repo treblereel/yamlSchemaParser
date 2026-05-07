@@ -32,6 +32,7 @@ public class ObjectType implements HasType {
   private final JsonNode node;
 
   private final Applicators applicators;
+  private final Optional<Discriminator> discriminator;
 
   /**
    * Constructs an ObjectType from a schema definition and JSON node.
@@ -43,6 +44,7 @@ public class ObjectType implements HasType {
     this.schema = schema;
     this.node = node;
     applicators = new Applicators(schema, node);
+    this.discriminator = parseDiscriminator(node);
   }
 
   /**
@@ -569,6 +571,56 @@ public class ObjectType implements HasType {
    */
   public Optional<HasType> elseSchema() {
     return applicators.getElse();
+  }
+
+  /**
+   * Parses discriminator metadata from the JSON node (v2.1).
+   * <p>
+   * Discriminator is used in polymorphic schemas (oneOf/anyOf) to specify
+   * which property determines the actual schema type, and optionally provides
+   * a mapping from property values to schema references.
+   * </p>
+   *
+   * @param node the JSON node to parse
+   * @return Optional containing the Discriminator if present
+   * @throws IllegalArgumentException if discriminator exists but lacks propertyName
+   */
+  private static Optional<Discriminator> parseDiscriminator(JsonNode node) {
+    if (!node.has("discriminator")) {
+      return Optional.empty();
+    }
+    
+    JsonNode discNode = node.get("discriminator");
+    
+    if (!discNode.has("propertyName")) {
+      throw new IllegalArgumentException("Discriminator must have propertyName field");
+    }
+    
+    String propertyName = discNode.get("propertyName").asText();
+    
+    Map<String, String> mapping = new LinkedHashMap<>();
+    if (discNode.has("mapping")) {
+      JsonNode mappingNode = discNode.get("mapping");
+      mappingNode.fields().forEachRemaining(entry -> {
+        mapping.put(entry.getKey(), entry.getValue().asText());
+      });
+    }
+    
+    return Optional.of(new Discriminator(propertyName, mapping));
+  }
+
+  /**
+   * Returns the discriminator metadata (v2.1).
+   * <p>
+   * Used in polymorphic schemas (oneOf/anyOf) to specify which property
+   * determines the actual schema type, and optionally provides a mapping
+   * from property values to schema references.
+   * </p>
+   *
+   * @return the discriminator if present
+   */
+  public Optional<Discriminator> discriminator() {
+    return discriminator;
   }
 
 }

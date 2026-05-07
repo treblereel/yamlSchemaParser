@@ -2,11 +2,14 @@ package org.treblereel.yaml.schema;
 
 import org.junit.jupiter.api.Test;
 import org.treblereel.yaml.schema.model.Discriminator;
+import org.treblereel.yaml.schema.model.ObjectType;
+import org.treblereel.yaml.schema.model.SchemaDefinition;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -72,5 +75,32 @@ class DiscriminatorTest {
         
         List<String> keys = new ArrayList<>(disc.mapping().keySet());
         assertThat(keys).containsExactly("zebra", "apple", "middle");
+    }
+
+    @Test
+    void should_parse_discriminator_from_ObjectType() {
+        String yaml = """
+            type: object
+            oneOf:
+              - $ref: '#/components/schemas/Cat'
+              - $ref: '#/components/schemas/Dog'
+            discriminator:
+              propertyName: petType
+              mapping:
+                cat: '#/components/schemas/Cat'
+                dog: '#/components/schemas/Dog'
+            """;
+        
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        ObjectType obj = schema.requireObject();
+        
+        Optional<Discriminator> disc = obj.discriminator();
+        
+        assertThat(disc).isPresent();
+        assertThat(disc.get().propertyName()).isEqualTo("petType");
+        assertThat(disc.get().mapping()).hasSize(2);
+        assertThat(disc.get().mapping().get("cat")).isEqualTo("#/components/schemas/Cat");
+        assertThat(disc.get().mapping().get("dog")).isEqualTo("#/components/schemas/Dog");
     }
 }
