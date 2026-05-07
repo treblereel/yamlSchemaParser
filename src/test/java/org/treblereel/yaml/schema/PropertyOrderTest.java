@@ -269,4 +269,54 @@ class PropertyOrderTest {
         assertEquals("area", deps.get(1), "Second should be area");
         assertEquals("name", deps.get(2), "Third should be name");
     }
+
+    @Test
+    void should_handle_single_property() {
+        String yaml = """
+            type: object
+            properties:
+              name:
+                type: string
+            """;
+
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        ObjectType obj = (ObjectType) schema.model();
+
+        assertEquals(1, obj.properties().size(), "Should have exactly 1 property");
+        assertTrue(obj.properties().keySet().contains("name"), "Properties should contain 'name'");
+        List<String> keys = new ArrayList<>(obj.properties().keySet());
+        assertEquals("name", keys.get(0), "Single property should be 'name'");
+    }
+
+    @Test
+    void should_handle_empty_properties() {
+        String yaml = """
+            type: object
+            """;
+
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        ObjectType obj = (ObjectType) schema.model();
+
+        assertTrue(obj.properties().isEmpty(), "Empty object should have no properties");
+    }
+
+    @Test
+    void should_preserve_order_with_many_properties() {
+        StringBuilder yaml = new StringBuilder("type: object\nproperties:\n");
+        for (int i = 100; i >= 1; i--) {
+            yaml.append("  prop").append(i).append(":\n    type: string\n");
+        }
+
+        SchemaDefinition schema = parser.parseYaml(yaml.toString());
+        ObjectType obj = (ObjectType) schema.model();
+
+        List<String> keys = new ArrayList<>(obj.properties().keySet());
+
+        // First property should be prop100 (not prop1)
+        assertEquals("prop100", keys.get(0), "First property should be prop100");
+        // Last property should be prop1 (not prop99)
+        assertEquals("prop1", keys.get(99), "Last property should be prop1");
+        // All 100 properties in reverse numeric order
+        assertEquals(100, keys.size(), "Should have all 100 properties");
+    }
 }
