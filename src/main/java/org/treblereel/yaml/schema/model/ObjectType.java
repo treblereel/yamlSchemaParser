@@ -114,6 +114,17 @@ public class ObjectType implements HasType {
   }
 
   /**
+   * Returns the raw JsonNode for this object type.
+   * Used by default extension metadata methods to access x- prefixed properties.
+   *
+   * @return the underlying JsonNode
+   */
+  @Override
+  public JsonNode getRawNode() {
+    return node;
+  }
+
+  /**
    * Checks if a property with the given name exists.
    *
    * @param name property name
