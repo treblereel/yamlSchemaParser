@@ -146,11 +146,39 @@ class UnionTypeTest {
         String yaml = """
             type: [string, string]
             """;
-        
+
         Parser parser = new Parser();
         SchemaDefinition schema = parser.parseYaml(yaml);
         UnionType unionType = (UnionType) schema.model();
-        
+
         assertThat(unionType.types()).containsExactly("string", "string");
+    }
+
+    @Test
+    void should_route_to_UnionType_not_StringType() {
+        // Single-element union goes to UnionType, not StringType
+        String yaml = """
+            type: [string]
+            """;
+
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+
+        assertThat(schema.model()).isInstanceOf(UnionType.class);
+    }
+
+    @Test
+    void should_throw_on_unknown_type_in_union_during_resolution() {
+        String yaml = """
+            type: [string, unknownType]
+            """;
+
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        UnionType unionType = (UnionType) schema.model();
+
+        assertThatThrownBy(() -> unionType.getResolvedTypes())
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("Type not supported");
     }
 }
