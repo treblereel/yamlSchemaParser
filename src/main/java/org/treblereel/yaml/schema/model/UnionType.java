@@ -62,4 +62,15 @@ public record UnionType(
         syntheticNode.put("type", typeName);
         return syntheticNode;
     }
+
+    /**
+     * Returns the raw JsonNode for this union type.
+     * Used by default extension metadata methods to access x- prefixed properties.
+     *
+     * @return the underlying JsonNode
+     */
+    @Override
+    public JsonNode getRawNode() {
+        return node;
+    }
 }

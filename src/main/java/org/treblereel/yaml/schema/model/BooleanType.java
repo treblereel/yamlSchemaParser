@@ -134,6 +134,17 @@ public record BooleanType(SchemaDefinition schema, JsonNode node) implements Has
   }
 
   /**
+   * Returns the raw JsonNode for this boolean type.
+   * Used by default extension metadata methods to access x- prefixed properties.
+   *
+   * @return the underlying JsonNode
+   */
+  @Override
+  public JsonNode getRawNode() {
+    return node;
+  }
+
+  /**
    * Returns the not combinator schema.
    * <p>
    * The boolean value must NOT validate against this schema.

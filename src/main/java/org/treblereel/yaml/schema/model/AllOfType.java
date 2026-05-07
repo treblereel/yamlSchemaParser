@@ -76,6 +76,17 @@ public record AllOfType(SchemaDefinition schema, JsonNode node) implements HasTy
   }
 
   /**
+   * Returns the raw JsonNode for this allOf type.
+   * Used by default extension metadata methods to access x- prefixed properties.
+   *
+   * @return the underlying JsonNode
+   */
+  @Override
+  public JsonNode getRawNode() {
+    return node;
+  }
+
+  /**
    * Returns the description of this allOf combinator.
    *
    * @return the description if present

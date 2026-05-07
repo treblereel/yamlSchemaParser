@@ -262,6 +262,17 @@ public record NumberType(SchemaDefinition schema, JsonNode node) implements HasT
   }
 
   /**
+   * Returns the raw JsonNode for this number type.
+   * Used by default extension metadata methods to access x- prefixed properties.
+   *
+   * @return the underlying JsonNode
+   */
+  @Override
+  public JsonNode getRawNode() {
+    return node;
+  }
+
+  /**
    * Returns the not combinator schema.
    * <p>
    * The number value must NOT validate against this schema.

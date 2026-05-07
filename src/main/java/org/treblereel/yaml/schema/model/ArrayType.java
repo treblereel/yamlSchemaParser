@@ -323,6 +323,17 @@ public record ArrayType(SchemaDefinition schemaDefinition, JsonNode node) implem
   }
 
   /**
+   * Returns the raw JsonNode for this array type.
+   * Used by default extension metadata methods to access x- prefixed properties.
+   *
+   * @return the underlying JsonNode
+   */
+  @Override
+  public JsonNode getRawNode() {
+    return node;
+  }
+
+  /**
    * Returns the not combinator schema.
    * <p>
    * The array must NOT validate against this schema.
