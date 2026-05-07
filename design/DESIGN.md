@@ -34,14 +34,15 @@ yamlSchemaParser is a Java library that parses YAML schema files (JSON Schema in
 ObjectType                       ArrayType, StringType,
 (with Applicators)               IntegerType, NumberType,
                                  BooleanType, NullType,
-                                 RefType, AllOfType
+                                 RefType, AllOfType,
+                                 UnionType
 ```
 
 **Key design principles:**
 - **Immutability**: All type classes use `final` fields and record-based structures
 - **Type-safe API** (v2.0): Collections return `Map`/`List` directly (not `Optional<Map>`); type-safe accessors (`requireObject()`, `modelAsArray()`) eliminate casting; fluent navigation via `PropertyNavigator`
 - **Lazy resolution**: References ($ref) are resolved on-demand, with auto-delegation in v2.0 for transparent navigation
-- **TreeMap for ordering**: Collections use `TreeMap` for deterministic alphabetical ordering (reproducibility)
+- **LinkedHashMap for ordering**: Collections use LinkedHashMap to preserve schema insertion order (v2.1+)
 
 ## Components
 
@@ -67,6 +68,7 @@ ObjectType                       ArrayType, StringType,
 | **NullType** | Null type schemas |
 | **RefType** | $ref references - resolves via `resolve()` or auto-delegates to resolved type (v2.0: `properties()`, `property()`, `pattern()` etc.) |
 | **AllOfType** | allOf combinator - must satisfy all schemas |
+| **UnionType** | Represents union types (type: [string, null]) with isNullable() detection, lazy type resolution via getResolvedTypes() |
 
 ### Supporting Classes
 
@@ -77,6 +79,7 @@ ObjectType                       ArrayType, StringType,
 | **ArrayItemType** | Wrapper for array item schemas (supports tuple validation) |
 | **TypeMismatchException** | Runtime exception thrown by `require*()` methods when type assertion fails (v2.0) |
 | **PropertyNavigator** | Fluent navigation API for traversing schema trees - supports chaining: `root.property("address").property("city")` (v2.0) |
+| **Discriminator** | OpenAPI polymorphism metadata - propertyName and mapping (full $ref paths) for oneOf/anyOf schemas |
 
 ## API
 
@@ -155,7 +158,8 @@ HasType (interface)
 ├── BooleanType      - boolean values
 ├── NullType         - null type
 ├── RefType          - $ref references
-└── AllOfType        - allOf combinator
+├── AllOfType        - allOf combinator
+└── UnionType        - union types (type: [string, null])
 ```
 
 ### ObjectType Features
@@ -239,7 +243,7 @@ This is a library with no runtime configuration. All behavior is controlled via:
 | **ParserErrorHandlingTest** | 12 tests covering error cases |
 | **TypeResolutionTest** | 13 tests covering type resolution edge cases |
 
-**Total test count:** 472 tests (as of 2026-05-06, v2.0 release)
+**Total test count:** 522 tests (as of 2026-05-06, v2.1 release)
 
 ## Design Decisions
 
@@ -250,6 +254,8 @@ This is a library with no runtime configuration. All behavior is controlled via:
 **Rationale:** Ensures deterministic alphabetical ordering across test runs. Without this, HashMap's iteration order is non-deterministic, causing flaky tests where assertion order depends on JVM hashCode implementation.
 
 **Alternative considered:** LinkedHashMap (insertion order) - rejected because order depends on schema file order, not semantic meaning.
+
+**v2.1 Change:** Reversed to LinkedHashMap for code generation use cases. Preserving schema order enables generating Java code that matches the schema structure exactly, which is more valuable for tooling than alphabetical reproducibility. Users needing alphabetical order can wrap results in TreeMap.
 
 ### Why Optional-First API?
 
@@ -268,6 +274,36 @@ This is a library with no runtime configuration. All behavior is controlled via:
 **Decision:** Use Java records and final fields for all model classes
 
 **Rationale:** Thread-safe by default. Prevents accidental mutation. Clearer intent - types represent parsed schema, not mutable builders.
+
+## v2.1 Features (2026-05-06)
+
+### Code Generation API Enhancements
+
+**Union Types:**
+- `UnionType` class handles `type: ["string", "null"]`
+- `getTypes()` returns list of type strings
+- `isNullable()` convenience method checks for "null" in types
+- `getResolvedTypes()` lazily resolves to concrete HasType instances
+
+**Extension Metadata:**
+- `HasType.getExtensions()` returns all x- prefixed properties
+- `HasType.getExtension(String key)` returns specific extension
+- All types support extensions via `getRawNode()` pattern
+- RefType delegates to resolved type
+
+**Property Order Preservation (BREAKING):**
+- TreeMap → LinkedHashMap in all ObjectType collections
+- Properties, patternProperties, dependentSchemas, dependentRequired
+- Schema order preserved, not alphabetical
+- Migration: wrap in TreeMap if alphabetical order needed
+
+**Discriminator Support:**
+- `Discriminator` record with propertyName and mapping
+- `ObjectType.discriminator()` returns Optional<Discriminator>
+- Mapping contains full $ref paths
+- Supports OpenAPI polymorphism (oneOf/anyOf)
+
+**Test Coverage:** 522 tests (actual count from Task 23)
 
 ### v2.0 API Breaking Changes
 
@@ -353,14 +389,18 @@ See `MISSING_FEATURES.md` for tracking. Summary:
 ---
 
 **Last updated:** 2026-05-06
-**Version:** 2.0 (breaking changes from 1.0-SNAPSHOT)
+**Version:** 2.1 (BREAKING from 2.0)
+
+**v2.1 Breaking Changes:**
+- Property iteration order changed from alphabetical (TreeMap) to schema order (LinkedHashMap)
+- Affects: properties(), patternProperties(), dependentRequired(), dependentSchemas()
+- Migration: If alphabetical order needed, wrap result in TreeMap
+
+**v2.1 New Features:**
+- Union type support (UnionType class)
+- Extension metadata access (getExtensions() / getExtension())
+- Discriminator support (Discriminator record)
 
 **v2.0 Breaking Changes:**
 - Collections return `Map`/`List` directly (not `Optional<Map>`/`Optional<List>`)
-- Migration: remove `.get()` calls on `properties()`, `enum()`, `patternProperties()`, `dependentRequired()`, `dependentSchemas()`
-
-**v2.0 New Features:**
-- Type-safe accessors: `requireObject()`, `modelAsArray()`, etc.
-- Fluent navigation: `PropertyNavigator` with `property()`, `item()`, `as*()` chaining
-- Auto-resolving RefType: transparent delegation without explicit `resolve()`
-- Parser.Builder: configurable parsing with `strictMode()`, `resolveReferences()`
+- Migration: remove `.get()` calls on `properties()`, `enum()`, etc.
