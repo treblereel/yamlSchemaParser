@@ -28,11 +28,37 @@ class UnionTypeTest {
             items:
               type: string
             """;
-        
+
         Parser parser = new Parser();
         SchemaDefinition schema = parser.parseYaml(yaml);
-        
+
         assertThat(schema.model()).isInstanceOf(ArrayType.class);
         assertThat(schema.model()).isNotInstanceOf(UnionType.class);
+    }
+
+    @Test
+    void should_return_true_when_nullable() {
+        String yaml = """
+            type: [string, null]
+            """;
+
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        UnionType unionType = (UnionType) schema.model();
+
+        assertThat(unionType.isNullable()).isTrue();
+    }
+
+    @Test
+    void should_return_false_when_not_nullable() {
+        String yaml = """
+            type: [string, integer]
+            """;
+
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        UnionType unionType = (UnionType) schema.model();
+
+        assertThat(unionType.isNullable()).isFalse();
     }
 }

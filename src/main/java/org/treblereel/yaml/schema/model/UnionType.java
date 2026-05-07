@@ -43,4 +43,8 @@ public record UnionType(
 
         return List.copyOf(types);
     }
+
+    public boolean isNullable() {
+        return types.contains("null");
+    }
 }
