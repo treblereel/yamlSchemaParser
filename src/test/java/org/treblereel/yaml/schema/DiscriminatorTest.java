@@ -103,4 +103,111 @@ class DiscriminatorTest {
         assertThat(disc.get().mapping().get("cat")).isEqualTo("#/components/schemas/Cat");
         assertThat(disc.get().mapping().get("dog")).isEqualTo("#/components/schemas/Dog");
     }
+
+    @Test
+    void should_return_empty_when_no_discriminator() {
+        String yaml = """
+            type: object
+            properties:
+              name:
+                type: string
+            """;
+        
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        ObjectType obj = schema.requireObject();
+        
+        assertThat(obj.discriminator()).isEmpty();
+    }
+
+    @Test
+    void should_parse_discriminator_without_mapping() {
+        String yaml = """
+            type: object
+            discriminator:
+              propertyName: type
+            """;
+        
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        ObjectType obj = schema.requireObject();
+        
+        Optional<Discriminator> disc = obj.discriminator();
+        
+        assertThat(disc).isPresent();
+        assertThat(disc.get().propertyName()).isEqualTo("type");
+        assertThat(disc.get().mapping()).isEmpty();
+    }
+
+    @Test
+    void should_parse_discriminator_with_empty_mapping() {
+        String yaml = """
+            type: object
+            discriminator:
+              propertyName: type
+              mapping: {}
+            """;
+        
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        ObjectType obj = schema.requireObject();
+        
+        assertThat(obj.discriminator().orElseThrow().mapping()).isEmpty();
+    }
+
+    @Test
+    void should_accept_discriminator_without_oneOf() {
+        // Parser is permissive - doesn't validate schema correctness
+        String yaml = """
+            type: object
+            discriminator:
+              propertyName: type
+            properties:
+              name:
+                type: string
+            """;
+        
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        ObjectType obj = schema.requireObject();
+        
+        assertThat(obj.discriminator()).isPresent();
+    }
+
+    @Test
+    void should_store_non_ref_mapping_values() {
+        // Parser doesn't validate - stores as-is
+        String yaml = """
+            type: object
+            discriminator:
+              propertyName: type
+              mapping:
+                cat: Cat
+                dog: Dog
+            """;
+        
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        ObjectType obj = schema.requireObject();
+        
+        Discriminator disc = obj.discriminator().orElseThrow();
+        assertThat(disc.mapping().get("cat")).isEqualTo("Cat");
+        assertThat(disc.mapping().get("dog")).isEqualTo("Dog");
+    }
+
+    @Test
+    void should_throw_when_discriminator_has_no_propertyName() {
+        String yaml = """
+            type: object
+            discriminator:
+              mapping:
+                cat: '#/components/schemas/Cat'
+            """;
+        
+        Parser parser = new Parser();
+        
+        assertThatThrownBy(() -> parser.parseYaml(yaml).requireObject())
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("Discriminator must have propertyName field");
+    }
 }
