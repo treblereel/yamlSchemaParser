@@ -118,10 +118,10 @@ class UnionTypeTest {
         String yaml = """
             type: []
             """;
-        
+
         Parser parser = new Parser();
-        
-        assertThatThrownBy(() -> parser.parseYaml(yaml))
+
+        assertThatThrownBy(() -> parser.parseYaml(yaml).model())
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessageContaining("Union type must contain at least one type");
     }
