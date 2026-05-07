@@ -39,8 +39,8 @@ ObjectType                       ArrayType, StringType,
 
 **Key design principles:**
 - **Immutability**: All type classes use `final` fields and record-based structures
-- **Optional-first API**: All nullable values return `Optional<T>` to prevent NullPointerExceptions
-- **Lazy resolution**: References ($ref) are resolved on-demand via `RefType.resolve()`
+- **Type-safe API** (v2.0): Collections return `Map`/`List` directly (not `Optional<Map>`); type-safe accessors (`requireObject()`, `modelAsArray()`) eliminate casting; fluent navigation via `PropertyNavigator`
+- **Lazy resolution**: References ($ref) are resolved on-demand, with auto-delegation in v2.0 for transparent navigation
 - **TreeMap for ordering**: Collections use `TreeMap` for deterministic alphabetical ordering (reproducibility)
 
 ## Components
@@ -49,8 +49,8 @@ ObjectType                       ArrayType, StringType,
 
 | Component | Responsibility |
 |-----------|----------------|
-| **Parser** | Entry point - loads YAML files and creates SchemaDefinition |
-| **SchemaDefinition** | Root schema container - provides access to $id, $schema, title, model, and $defs |
+| **Parser** | Entry point - loads YAML files and creates SchemaDefinition. Supports Builder pattern for configuration (v2.0) |
+| **SchemaDefinition** | Root schema container - provides access to $id, $schema, title, model, and $defs. Type-safe accessors: `modelAsObject()`, `requireObject()` etc. (v2.0) |
 | **NodeFactory** | Type resolution factory - maps JsonNode "type" field to appropriate HasType implementation |
 | **HasType** | Marker interface for all schema types |
 
@@ -65,7 +65,7 @@ ObjectType                       ArrayType, StringType,
 | **NumberType** | Number (double) schemas with min/max, exclusive bounds, multipleOf, enum, const, deprecated/readOnly/writeOnly metadata, examples metadata |
 | **BooleanType** | Boolean schemas with const, default values, deprecated/readOnly/writeOnly metadata, examples metadata |
 | **NullType** | Null type schemas |
-| **RefType** | $ref references - resolves to target type via `resolve()` |
+| **RefType** | $ref references - resolves via `resolve()` or auto-delegates to resolved type (v2.0: `properties()`, `property()`, `pattern()` etc.) |
 | **AllOfType** | allOf combinator - must satisfy all schemas |
 
 ### Supporting Classes
@@ -75,13 +75,23 @@ ObjectType                       ArrayType, StringType,
 | **Applicators** | Encapsulates schema combinators (allOf, anyOf, oneOf, not, if/then/else) |
 | **AdditionalProperties** | Configuration for properties not defined in schema |
 | **ArrayItemType** | Wrapper for array item schemas (supports tuple validation) |
+| **TypeMismatchException** | Runtime exception thrown by `require*()` methods when type assertion fails (v2.0) |
+| **PropertyNavigator** | Fluent navigation API for traversing schema trees - supports chaining: `root.property("address").property("city")` (v2.0) |
 
 ## API
 
 ### Public Entry Point
 
 ```java
+// Simple usage
 Parser parser = new Parser();
+SchemaDefinition schema = parser.parse("path/to/schema.yaml");
+
+// Configurable (v2.0+)
+Parser parser = Parser.builder()
+    .strictMode(true)
+    .resolveReferences(false)
+    .build();
 SchemaDefinition schema = parser.parse("path/to/schema.yaml");
 ```
 
@@ -90,30 +100,45 @@ SchemaDefinition schema = parser.parse("path/to/schema.yaml");
 - File object
 - URI
 
-### Type-Safe Navigation
+### Type-Safe Navigation (v2.0)
 
 ```java
-// Access root type
-ObjectType root = (ObjectType) schema.model();
+// Type-safe root access - no casting
+ObjectType root = schema.requireObject();
 
-// Navigate properties
-Map<String, HasType> props = root.properties();
-StringType name = (StringType) props.get("name");
+// Safe map access - collections return Map/List directly
+Map<String, HasType> props = root.properties();  // Not Optional<Map>
+List<String> required = root.required();  // Not Optional<List>
 
-// Check constraints
-List<String> required = root.required().get();
-Optional<String> pattern = name.pattern();
+// Type-safe property access
+Optional<StringType> name = root.getPropertyAsString("name");
+Optional<String> pattern = name.flatMap(StringType::pattern);
+
+// Fluent navigation - chain 3+ levels
+Optional<String> zipPattern = root
+    .property("address")
+    .property("zipCode")
+    .asString()
+    .flatMap(StringType::pattern);
+
+// Check property existence
+if (root.hasProperty("email")) {
+    // ...
+}
 ```
 
-### Reference Resolution
+### Reference Resolution (v2.0)
 
 ```java
-// Get reference
-RefType ref = (RefType) props.get("address");
-String refPath = ref.ref();  // "#/$defs/Address"
+// Auto-resolving RefType - no explicit resolve() needed
+RefType addressRef = (RefType) root.properties().get("address");
 
-// Resolve to target type
-ObjectType address = (ObjectType) ref.resolve();
+// Direct navigation through RefType
+addressRef.property("city");  // Auto-delegates to resolved type
+Map<String, HasType> addressProps = addressRef.properties();  // Auto-resolves
+
+// Type-safe resolution when needed
+Optional<ObjectType> address = addressRef.resolveAs(ObjectType.class);
 ```
 
 ## Data Model
@@ -214,7 +239,7 @@ This is a library with no runtime configuration. All behavior is controlled via:
 | **ParserErrorHandlingTest** | 12 tests covering error cases |
 | **TypeResolutionTest** | 13 tests covering type resolution edge cases |
 
-**Total test count:** 415 tests (as of 2026-05-06)
+**Total test count:** 472 tests (as of 2026-05-06, v2.0 release)
 
 ## Design Decisions
 
@@ -243,6 +268,58 @@ This is a library with no runtime configuration. All behavior is controlled via:
 **Decision:** Use Java records and final fields for all model classes
 
 **Rationale:** Thread-safe by default. Prevents accidental mutation. Clearer intent - types represent parsed schema, not mutable builders.
+
+### v2.0 API Breaking Changes
+
+**Decision:** Remove `Optional<Map>` / `Optional<List>` wrapping from collection-returning methods
+
+**Rationale:** Empty collections are more idiomatic Java than `Optional.empty()`. The pattern `properties().orElse(Map.of())` is verbose; returning `Map.of()` directly is cleaner. Collections are never null in our model, so Optional adds no safety - just ceremony.
+
+**Migration:** Remove `.get()` calls: `properties().get()` → `properties()`
+
+**Alternative considered:** Keep Optional wrapping for consistency - rejected because it creates friction (chained `.get().get()` patterns) without benefit.
+
+### Why Type-Safe Accessors?
+
+**Decision:** Add `modelAsObject()`, `requireObject()` etc. to SchemaDefinition for type-safe access
+
+**Rationale:** Eliminates unsafe casting: `(ObjectType) schema.model()`. The `require*()` methods throw `TypeMismatchException` with descriptive messages when type doesn't match, catching errors early. Optional-returning `modelAs*()` methods enable safe conditional logic.
+
+**Example:**
+```java
+// Old: unsafe cast
+ObjectType root = (ObjectType) schema.model();  // ClassCastException if not ObjectType
+
+// New: type-safe
+ObjectType root = schema.requireObject();  // TypeMismatchException with clear message
+Optional<ObjectType> maybeRoot = schema.modelAsObject();  // Safe check
+```
+
+### Why Fluent Navigation?
+
+**Decision:** Add `PropertyNavigator` interface with `property()`, `item()`, `as*()` methods for chain navigation
+
+**Rationale:** Reduces verbosity for deep property access. Pattern `root.property("a").property("b").asString()` is clearer than manual navigation with intermediate variables and type checks. Integrates with RefType auto-delegation for transparent traversal.
+
+**Example:**
+```java
+// Old: verbose with intermediate variables
+Map<String, HasType> props = ((ObjectType) schema.model()).properties().get();
+HasType addressType = props.get("address");
+ObjectType address = (ObjectType) ((RefType) addressType).resolve();
+Map<String, HasType> addressProps = address.properties().get();
+StringType city = (StringType) addressProps.get("city");
+Optional<String> pattern = city.pattern();
+
+// New: fluent chain
+Optional<String> pattern = schema.requireObject()
+    .property("address")
+    .property("city")
+    .asString()
+    .flatMap(StringType::pattern);
+```
+
+**Code reduction:** ~60% fewer lines for deep navigation patterns in tests.
 
 ## Open Questions / Future Work
 
@@ -276,4 +353,14 @@ See `MISSING_FEATURES.md` for tracking. Summary:
 ---
 
 **Last updated:** 2026-05-06
-**Version:** 1.0-SNAPSHOT
+**Version:** 2.0 (breaking changes from 1.0-SNAPSHOT)
+
+**v2.0 Breaking Changes:**
+- Collections return `Map`/`List` directly (not `Optional<Map>`/`Optional<List>`)
+- Migration: remove `.get()` calls on `properties()`, `enum()`, `patternProperties()`, `dependentRequired()`, `dependentSchemas()`
+
+**v2.0 New Features:**
+- Type-safe accessors: `requireObject()`, `modelAsArray()`, etc.
+- Fluent navigation: `PropertyNavigator` with `property()`, `item()`, `as*()` chaining
+- Auto-resolving RefType: transparent delegation without explicit `resolve()`
+- Parser.Builder: configurable parsing with `strictMode()`, `resolveReferences()`
