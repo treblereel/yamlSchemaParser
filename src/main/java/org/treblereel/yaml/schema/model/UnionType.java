@@ -1,6 +1,8 @@
 package org.treblereel.yaml.schema.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,5 +48,18 @@ public record UnionType(
 
     public boolean isNullable() {
         return types.contains("null");
+    }
+
+    public List<HasType> getResolvedTypes() {
+        return types.stream()
+            .map(this::createTypeNode)
+            .map(typeNode -> NodeFactory.resolveType(schema, typeNode))
+            .toList();
+    }
+
+    private JsonNode createTypeNode(String typeName) {
+        ObjectNode syntheticNode = JsonNodeFactory.instance.objectNode();
+        syntheticNode.put("type", typeName);
+        return syntheticNode;
     }
 }

@@ -12,6 +12,7 @@ import org.treblereel.yaml.schema.model.NumberType;
 import org.treblereel.yaml.schema.model.ObjectType;
 import org.treblereel.yaml.schema.model.SchemaDefinition;
 import org.treblereel.yaml.schema.model.StringType;
+import org.treblereel.yaml.schema.model.UnionType;
 
 import java.util.Map;
 
@@ -197,7 +198,11 @@ public class ArrayParserTest {
     ArrayType arrayType = (ArrayType) type;
     assertEquals(1, arrayType.getItems().length);
     ArrayItemType itemType = arrayType.getItems()[0];
-    assertInstanceOf(ArrayType.class, itemType.getType());
+    assertInstanceOf(UnionType.class, itemType.getType());
+    UnionType unionType = (UnionType) itemType.getType();
+    assertEquals(2, unionType.types().size());
+    assertTrue(unionType.types().contains("string"));
+    assertTrue(unionType.types().contains("null"));
   }
 
   @Test

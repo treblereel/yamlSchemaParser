@@ -4,6 +4,11 @@ import org.junit.jupiter.api.Test;
 import org.treblereel.yaml.schema.model.UnionType;
 import org.treblereel.yaml.schema.model.SchemaDefinition;
 import org.treblereel.yaml.schema.model.ArrayType;
+import org.treblereel.yaml.schema.model.StringType;
+import org.treblereel.yaml.schema.model.IntegerType;
+import org.treblereel.yaml.schema.model.NullType;
+import org.treblereel.yaml.schema.model.HasType;
+import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class UnionTypeTest {
@@ -60,5 +65,23 @@ class UnionTypeTest {
         UnionType unionType = (UnionType) schema.model();
 
         assertThat(unionType.isNullable()).isFalse();
+    }
+
+    @Test
+    void should_resolve_types_lazily() {
+        String yaml = """
+            type: [string, integer, null]
+            """;
+
+        Parser parser = new Parser();
+        SchemaDefinition schema = parser.parseYaml(yaml);
+        UnionType unionType = (UnionType) schema.model();
+
+        List<HasType> resolved = unionType.getResolvedTypes();
+
+        assertThat(resolved).hasSize(3);
+        assertThat(resolved.get(0)).isInstanceOf(StringType.class);
+        assertThat(resolved.get(1)).isInstanceOf(IntegerType.class);
+        assertThat(resolved.get(2)).isInstanceOf(NullType.class);
     }
 }
