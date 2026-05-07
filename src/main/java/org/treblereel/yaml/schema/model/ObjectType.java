@@ -3,6 +3,7 @@ package org.treblereel.yaml.schema.model;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -96,7 +97,7 @@ public class ObjectType implements HasType {
   /**
    * Returns all properties defined in this object schema.
    * <p>
-   * The map is sorted alphabetically by property name.
+   * The map preserves the order as defined in the schema (insertion order).
    * </p>
    *
    * @return Map of property names to their types, empty map if no properties defined
@@ -105,7 +106,7 @@ public class ObjectType implements HasType {
     return Optional.ofNullable(node.get("properties"))
             .filter(JsonNode::isObject)
             .map(propsNode -> {
-              Map<String, HasType> properties = new TreeMap<>(String::compareTo);
+              Map<String, HasType> properties = new LinkedHashMap<>();
               propsNode.fields().forEachRemaining(entry ->
                       properties.put(entry.getKey(), NodeFactory.resolveType(schema, entry.getValue())));
               return properties;
