@@ -141,17 +141,16 @@ public class WorkflowTest {
   @Test
   void testTimeoutHasOneOf() {
     HasType timeoutType = rootType.properties().get("timeout");
-    assertInstanceOf(ObjectType.class, timeoutType);
-    ObjectType timeout = (ObjectType) timeoutType;
-    assertTrue(timeout.oneOf().isPresent());
-    List<HasType> oneOfTypes = timeout.oneOf().get();
+    assertInstanceOf(OneOfType.class, timeoutType);
+    OneOfType timeout = (OneOfType) timeoutType;
+    List<HasType> oneOfTypes = timeout.getOneOf();
     assertEquals(2, oneOfTypes.size());
   }
 
   @Test
   void testTimeoutOneOfContainsRefAndString() {
-    ObjectType timeout = (ObjectType) rootType.properties().get("timeout");
-    List<HasType> oneOfTypes = timeout.oneOf().get();
+    OneOfType timeout = (OneOfType) rootType.properties().get("timeout");
+    List<HasType> oneOfTypes = timeout.getOneOf();
 
     // First should be $ref to timeout definition
     assertInstanceOf(RefType.class, oneOfTypes.get(0));
@@ -187,12 +186,11 @@ public class WorkflowTest {
     assertEquals("#/$defs/task", taskRef.ref());
 
     HasType taskType = taskRef.resolve();
-    assertInstanceOf(ObjectType.class, taskType);
+    assertInstanceOf(OneOfType.class, taskType);
 
-    ObjectType task = (ObjectType) taskType;
-    assertTrue(task.oneOf().isPresent());
+    OneOfType task = (OneOfType) taskType;
     // 12 task types: call, do, fork, emit, for, listen, raise, run, set, switch, try, wait
-    assertEquals(12, task.oneOf().get().size());
+    assertEquals(12, task.getOneOf().size());
 
   }
 
@@ -200,24 +198,23 @@ public class WorkflowTest {
 
   @Test
   void testCallTaskUsesAllOf() {
-    ObjectType task = getTaskDefinition();
-    List<HasType> oneOfTypes = task.oneOf().get();
+    OneOfType task = getTaskDefinition();
+    List<HasType> oneOfTypes = task.getOneOf();
 
     // First oneOf item is callTask which has its own oneOf
     RefType callTaskRef = (RefType) oneOfTypes.get(0);
-    ObjectType callTask = (ObjectType) callTaskRef.resolve();
+    OneOfType callTask = (OneOfType) callTaskRef.resolve();
 
-    assertTrue(callTask.oneOf().isPresent());
     // callTask has multiple call types: asyncapi, grpc, http, openapi, a2a, mcp, function
-    assertTrue(callTask.oneOf().get().size() >= 6);
+    assertTrue(callTask.getOneOf().size() >= 6);
   }
 
   @Test
   void testCallHttpHasAllOf() {
-    ObjectType callTask = (ObjectType) ((RefType) getTaskDefinition().oneOf().get().get(0)).resolve();
+    OneOfType callTask = (OneOfType) ((RefType) getTaskDefinition().getOneOf().get(0)).resolve();
 
     // Find HTTP call (index 2 - asyncapi, grpc, http)
-    HasType httpCallType = callTask.oneOf().get().get(2);
+    HasType httpCallType = callTask.getOneOf().get(2);
     assertInstanceOf(ObjectType.class, httpCallType);
 
     ObjectType httpCall = (ObjectType) httpCallType;
@@ -233,8 +230,8 @@ public class WorkflowTest {
   @Test
   void testProtocolEnumValues() {
     // Navigate to asyncapi call -> with -> protocol
-    ObjectType callTask = (ObjectType) ((RefType) getTaskDefinition().oneOf().get().get(0)).resolve();
-    ObjectType asyncApiCall = (ObjectType) callTask.oneOf().get().get(0);
+    OneOfType callTask = (OneOfType) ((RefType) getTaskDefinition().getOneOf().get(0)).resolve();
+    ObjectType asyncApiCall = (ObjectType) callTask.getOneOf().get(0);
 
     List<HasType> allOfItems = asyncApiCall.allOf().get();
     // Second allOf item contains properties
@@ -252,10 +249,10 @@ public class WorkflowTest {
 
   @Test
   void testCallConstValue() {
-    ObjectType callTask = (ObjectType) ((RefType) getTaskDefinition().oneOf().get().get(0)).resolve();
+    OneOfType callTask = (OneOfType) ((RefType) getTaskDefinition().getOneOf().get(0)).resolve();
 
     // HTTP call
-    ObjectType httpCall = (ObjectType) callTask.oneOf().get().get(2);
+    ObjectType httpCall = (ObjectType) callTask.getOneOf().get(2);
     ObjectType httpProps = (ObjectType) httpCall.allOf().get().get(1);
 
     StringType callProp = (StringType) httpProps.properties().get("call");
@@ -266,8 +263,8 @@ public class WorkflowTest {
   @Test
   void testPortMinMax() {
     // Navigate to grpc call -> with -> service -> port
-    ObjectType callTask = (ObjectType) ((RefType) getTaskDefinition().oneOf().get().get(0)).resolve();
-    ObjectType grpcCall = (ObjectType) callTask.oneOf().get().get(1);
+    OneOfType callTask = (OneOfType) ((RefType) getTaskDefinition().getOneOf().get(0)).resolve();
+    ObjectType grpcCall = (ObjectType) callTask.getOneOf().get(1);
 
     ObjectType grpcProps = (ObjectType) grpcCall.allOf().get().get(1);
     ObjectType withType = (ObjectType) grpcProps.properties().get("with");
@@ -347,11 +344,10 @@ public class WorkflowTest {
     assertEquals("#/$defs/duration", durationRef.ref());
 
     HasType resolved = durationRef.resolve();
-    assertInstanceOf(ObjectType.class, resolved);
+    assertInstanceOf(OneOfType.class, resolved);
 
-    ObjectType duration = (ObjectType) resolved;
-    assertTrue(duration.oneOf().isPresent());
-    assertEquals(3, duration.oneOf().get().size());
+    OneOfType duration = (OneOfType) resolved;
+    assertEquals(3, duration.getOneOf().size());
   }
 
   // ============== format Tests ==============
@@ -373,7 +369,7 @@ public class WorkflowTest {
   @Test
   void testDefaultValues() {
     // forTask -> for -> each has default "item"
-    RefType forTaskRef = (RefType) getTaskDefinition().oneOf().get().get(4);
+    RefType forTaskRef = (RefType) getTaskDefinition().getOneOf().get(4);
     ObjectType forTask = (ObjectType) forTaskRef.resolve();
 
     ObjectType forTaskProps = (ObjectType) forTask.allOf().get().get(1);
@@ -402,7 +398,7 @@ public class WorkflowTest {
   @Test
   void testSwitchArrayMinItems() {
     // switchTask -> switch is array with minItems: 1
-    RefType switchTaskRef = (RefType) getTaskDefinition().oneOf().get().get(9);
+    RefType switchTaskRef = (RefType) getTaskDefinition().getOneOf().get(9);
     ObjectType switchTask = (ObjectType) switchTaskRef.resolve();
 
     ObjectType switchProps = (ObjectType) switchTask.allOf().get().get(1);
@@ -415,7 +411,7 @@ public class WorkflowTest {
   @Test
   void testTryTaskStructure() {
     // tryTask has try (taskList) and catch (complex object)
-    RefType tryTaskRef = (RefType) getTaskDefinition().oneOf().get().get(10);
+    RefType tryTaskRef = (RefType) getTaskDefinition().getOneOf().get(10);
     ObjectType tryTask = (ObjectType) tryTaskRef.resolve();
 
     assertTrue(tryTask.required().isPresent());
@@ -441,7 +437,7 @@ public class WorkflowTest {
   @Test
   void testRunTaskOneOfVariants() {
     // runTask -> run has oneOf: container, script, shell, workflow
-    RefType runTaskRef = (RefType) getTaskDefinition().oneOf().get().get(7);
+    RefType runTaskRef = (RefType) getTaskDefinition().getOneOf().get(7);
     ObjectType runTask = (ObjectType) runTaskRef.resolve();
 
     ObjectType runProps = (ObjectType) runTask.allOf().get().get(1);
@@ -481,17 +477,16 @@ public class WorkflowTest {
     assertEquals("#/$defs/flowDirective", flowDirectiveRef.ref());
 
     HasType resolved = flowDirectiveRef.resolve();
-    assertInstanceOf(ObjectType.class, resolved);
+    assertInstanceOf(AnyOfType.class, resolved);
 
-    ObjectType flowDirective = (ObjectType) resolved;
-    assertTrue(flowDirective.anyOf().isPresent());
-    assertEquals(2, flowDirective.anyOf().get().size());
+    AnyOfType flowDirective = (AnyOfType) resolved;
+    assertEquals(2, flowDirective.getAnyOf().size());
   }
 
   @Test
   void testFlowDirectiveAnyOfContents() {
-    ObjectType flowDirective = (ObjectType) getDefByName("flowDirective");
-    List<HasType> anyOfTypes = flowDirective.anyOf().get();
+    AnyOfType flowDirective = (AnyOfType) getDefByName("flowDirective");
+    List<HasType> anyOfTypes = flowDirective.getAnyOf();
 
     // First is string with enum
     assertInstanceOf(StringType.class, anyOfTypes.get(0));
@@ -511,12 +506,11 @@ public class WorkflowTest {
 
   @Test
   void testUriTemplateAnyOf() {
-    ObjectType uriTemplate = (ObjectType) getDefByName("uriTemplate");
-    assertTrue(uriTemplate.anyOf().isPresent());
-    assertEquals(2, uriTemplate.anyOf().get().size());
+    AnyOfType uriTemplate = (AnyOfType) getDefByName("uriTemplate");
+    assertEquals(2, uriTemplate.getAnyOf().size());
 
     // Both are strings with format
-    for (HasType type : uriTemplate.anyOf().get()) {
+    for (HasType type : uriTemplate.getAnyOf()) {
       assertInstanceOf(StringType.class, type);
       StringType stringType = (StringType) type;
       assertTrue(stringType.format().isPresent());
@@ -528,9 +522,10 @@ public class WorkflowTest {
   @Test
   void testCallFunctionNotEnum() {
     // callFunction -> call has not: enum: [...]
-    ObjectType callTask = (ObjectType) getDefByName("callTask");
+    OneOfType callTask = (OneOfType) getDefByName("callTask");
     // Last oneOf item is CallFunction
-    HasType callFunctionType = callTask.oneOf().get().get(callTask.oneOf().get().size() - 1);
+    List<HasType> callOneOf = callTask.getOneOf();
+    HasType callFunctionType = callOneOf.get(callOneOf.size() - 1);
     assertInstanceOf(ObjectType.class, callFunctionType);
 
     ObjectType callFunction = (ObjectType) callFunctionType;
@@ -544,8 +539,9 @@ public class WorkflowTest {
   @Test
   void testObjectTypeNotMethod() {
     // Test that ObjectType exposes not() method
-    ObjectType callTask = (ObjectType) getDefByName("callTask");
-    ObjectType callFunction = (ObjectType) callTask.oneOf().get().get(callTask.oneOf().get().size() - 1);
+    OneOfType callTask = (OneOfType) getDefByName("callTask");
+    List<HasType> callOneOf = callTask.getOneOf();
+    ObjectType callFunction = (ObjectType) callOneOf.get(callOneOf.size() - 1);
     ObjectType callFunctionProps = (ObjectType) callFunction.allOf().get().get(1);
 
     // The properties object itself may have not
@@ -570,11 +566,10 @@ public class WorkflowTest {
   @Test
   void testRefResolvesToStringType() {
     // duration has oneOf with runtimeExpression ref
-    ObjectType duration = (ObjectType) getDefByName("duration");
-    assertTrue(duration.oneOf().isPresent());
+    OneOfType duration = (OneOfType) getDefByName("duration");
 
     // Second item should be ref to runtimeExpression
-    HasType secondItem = duration.oneOf().get().get(1);
+    HasType secondItem = duration.getOneOf().get(1);
     assertInstanceOf(RefType.class, secondItem);
 
     RefType ref = (RefType) secondItem;
@@ -629,7 +624,7 @@ public class WorkflowTest {
   @Test
   void testListenReadEnumWithDefault() {
     // listenTask -> listen -> read has enum with default
-    RefType listenTaskRef = (RefType) getTaskDefinition().oneOf().get().get(5);
+    RefType listenTaskRef = (RefType) getTaskDefinition().getOneOf().get(5);
     ObjectType listenTask = (ObjectType) listenTaskRef.resolve();
 
     ObjectType listenProps = (ObjectType) listenTask.allOf().get().get(1);
@@ -696,8 +691,8 @@ public class WorkflowTest {
   @Test
   void testBooleanPropertyRedirect() {
     // HTTP call -> with -> redirect is boolean
-    ObjectType callTask = (ObjectType) getDefByName("callTask");
-    ObjectType httpCall = (ObjectType) callTask.oneOf().get().get(2);
+    OneOfType callTask = (OneOfType) getDefByName("callTask");
+    ObjectType httpCall = (ObjectType) callTask.getOneOf().get(2);
 
     ObjectType httpProps = (ObjectType) httpCall.allOf().get().get(1);
     ObjectType withType = (ObjectType) httpProps.properties().get("with");
@@ -709,7 +704,7 @@ public class WorkflowTest {
   @Test
   void testBooleanPropertyCompete() {
     // forkTask -> fork -> compete is boolean with default
-    RefType forkTaskRef = (RefType) getTaskDefinition().oneOf().get().get(2);
+    RefType forkTaskRef = (RefType) getTaskDefinition().getOneOf().get(2);
     ObjectType forkTask = (ObjectType) forkTaskRef.resolve();
 
     ObjectType forkProps = (ObjectType) forkTask.allOf().get().get(1);
@@ -723,7 +718,7 @@ public class WorkflowTest {
   @Test
   void testBooleanPropertyAwait() {
     // runTask -> run -> await is boolean with default true
-    RefType runTaskRef = (RefType) getTaskDefinition().oneOf().get().get(7);
+    RefType runTaskRef = (RefType) getTaskDefinition().getOneOf().get(7);
     ObjectType runTask = (ObjectType) runTaskRef.resolve();
 
     ObjectType runProps = (ObjectType) runTask.allOf().get().get(1);
@@ -824,14 +819,14 @@ public class WorkflowTest {
 
   @Test
   void testEndpointOneOf() {
-    ObjectType endpoint = (ObjectType) getDefByName("endpoint");
-    assertTrue(endpoint.oneOf().isPresent());
-    assertEquals(3, endpoint.oneOf().get().size());
+    OneOfType endpoint = (OneOfType) getDefByName("endpoint");
+    List<HasType> oneOfList = endpoint.getOneOf();
+    assertEquals(3, oneOfList.size());
 
     // runtimeExpression, uriTemplate, object configuration
-    assertInstanceOf(RefType.class, endpoint.oneOf().get().get(0));
-    assertInstanceOf(RefType.class, endpoint.oneOf().get().get(1));
-    assertInstanceOf(ObjectType.class, endpoint.oneOf().get().get(2));
+    assertInstanceOf(RefType.class, oneOfList.get(0));
+    assertInstanceOf(RefType.class, oneOfList.get(1));
+    assertInstanceOf(ObjectType.class, oneOfList.get(2));
   }
 
   // ============== Timeout Definition Tests ==============
@@ -859,10 +854,9 @@ public class WorkflowTest {
 
     // from has oneOf (string or object)
     HasType fromType = input.properties().get("from");
-    assertInstanceOf(ObjectType.class, fromType);
-    ObjectType from = (ObjectType) fromType;
-    assertTrue(from.oneOf().isPresent());
-    assertEquals(2, from.oneOf().get().size());
+    assertInstanceOf(OneOfType.class, fromType);
+    OneOfType from = (OneOfType) fromType;
+    assertEquals(2, from.getOneOf().size());
   }
 
   @Test
@@ -957,8 +951,8 @@ public class WorkflowTest {
 
   @Test
   void testAllTasksInheritTaskBase() {
-    ObjectType task = getTaskDefinition();
-    List<HasType> taskTypes = task.oneOf().get();
+    OneOfType task = getTaskDefinition();
+    List<HasType> taskTypes = task.getOneOf();
 
     // Count tasks with allOf containing taskBase
     int tasksWithTaskBase = 0;
@@ -988,7 +982,7 @@ public class WorkflowTest {
   @Test
   void testContainerImageRequired() {
     // runTask -> run -> oneOf -> container -> image is required
-    RefType runTaskRef = (RefType) getTaskDefinition().oneOf().get().get(7);
+    RefType runTaskRef = (RefType) getTaskDefinition().getOneOf().get(7);
     ObjectType runTask = (ObjectType) runTaskRef.resolve();
 
     ObjectType runProps = (ObjectType) runTask.allOf().get().get(1);
@@ -1007,7 +1001,7 @@ public class WorkflowTest {
   @Test
   void testWorkflowSubflowVersionDefault() {
     // runTask -> run -> oneOf -> workflow -> version has default "latest"
-    RefType runTaskRef = (RefType) getTaskDefinition().oneOf().get().get(7);
+    RefType runTaskRef = (RefType) getTaskDefinition().getOneOf().get(7);
     ObjectType runTask = (ObjectType) runTaskRef.resolve();
 
     ObjectType runProps = (ObjectType) runTask.allOf().get().get(1);
@@ -1030,10 +1024,10 @@ public class WorkflowTest {
     return (ObjectType) taskList.getItems()[0].getType();
   }
 
-  private ObjectType getTaskDefinition() {
+  private OneOfType getTaskDefinition() {
     ObjectType taskItem = getTaskItemType();
     RefType taskRef = (RefType) taskItem.additionalProperties().get().getType().get();
-    return (ObjectType) taskRef.resolve();
+    return (OneOfType) taskRef.resolve();
   }
 
   private HasType getDefByName(String name) {

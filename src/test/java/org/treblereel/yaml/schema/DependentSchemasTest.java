@@ -215,14 +215,11 @@ public class DependentSchemasTest {
                    "Should have type dependency");
 
         HasType typeSchema = deps.get("type");
-        assertInstanceOf(ObjectType.class, typeSchema,
-                         "type schema should be ObjectType");
+        assertInstanceOf(OneOfType.class, typeSchema,
+                         "type schema should be OneOfType");
 
-        ObjectType typeObject = (ObjectType) typeSchema;
-        assertTrue(typeObject.oneOf().isPresent(),
-                   "type schema should have oneOf");
-
-        List<HasType> oneOfList = typeObject.oneOf().get();
+        OneOfType typeOneOf = (OneOfType) typeSchema;
+        List<HasType> oneOfList = typeOneOf.getOneOf();
         assertEquals(2, oneOfList.size(), "oneOf should have 2 alternatives");
     }
 

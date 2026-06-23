@@ -1,0 +1,11 @@
+type: object
+properties:
+  data:
+    $ref: '#loopA'
+$defs:
+  A:
+    $anchor: loopA
+    $ref: '#loopB'
+  B:
+    $anchor: loopB
+    $ref: '#loopA'

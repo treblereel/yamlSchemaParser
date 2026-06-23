@@ -13,7 +13,7 @@ record Applicators(SchemaDefinition schema, JsonNode node) {
     return Optional.ofNullable(node.get("oneOf"))
             .map(oneOf -> {
               if (!oneOf.isArray()) {
-                throw new IllegalStateException("Expected 'oneOf' to be an array");
+                throw new SchemaParseException("Expected 'oneOf' to be an array", "oneOf");
               }
 
               List<HasType> results = new ArrayList<>();
@@ -28,7 +28,7 @@ record Applicators(SchemaDefinition schema, JsonNode node) {
     return Optional.ofNullable(node.get("anyOf"))
             .map(anyOf -> {
               if (!anyOf.isArray()) {
-                throw new IllegalStateException("Expected 'anyOf' to be an array");
+                throw new SchemaParseException("Expected 'anyOf' to be an array", "anyOf");
               }
 
               List<HasType> results = new ArrayList<>();
@@ -48,7 +48,7 @@ record Applicators(SchemaDefinition schema, JsonNode node) {
     return Optional.ofNullable(node.get("allOf"))
             .map(allOf -> {
               if (!allOf.isArray()) {
-                throw new IllegalStateException("Expected 'allOf' to be an array");
+                throw new SchemaParseException("Expected 'allOf' to be an array", "allOf");
               }
 
               List<HasType> results = new ArrayList<>();
@@ -62,11 +62,6 @@ record Applicators(SchemaDefinition schema, JsonNode node) {
 
               return results;
             });
-  }
-
-  Optional<HasType> getNot() {
-    return Optional.ofNullable(node.get("not"))
-            .map(n -> NodeFactory.resolveType(schema, n));
   }
 
   Optional<HasType> getIf() {

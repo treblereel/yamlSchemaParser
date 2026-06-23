@@ -1,0 +1,15 @@
+title: Payment Method
+description: Exactly one payment method
+oneOf:
+  - type: object
+    properties:
+      cardNumber:
+        type: string
+    required:
+      - cardNumber
+  - type: object
+    properties:
+      accountNumber:
+        type: string
+    required:
+      - accountNumber

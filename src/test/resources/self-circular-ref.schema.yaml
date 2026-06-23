@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    $ref: '#/$defs/Loop'
+$defs:
+  Loop:
+    $ref: '#/$defs/Loop'

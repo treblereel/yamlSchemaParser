@@ -1,0 +1,15 @@
+type: object
+properties:
+  home:
+    $ref: '#address'
+  work:
+    $ref: '#address'
+$defs:
+  Address:
+    $anchor: address
+    type: object
+    properties:
+      street:
+        type: string
+      city:
+        type: string

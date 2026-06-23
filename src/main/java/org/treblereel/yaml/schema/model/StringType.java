@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 /**
  * Represents a string type schema.
  * <p>
@@ -119,110 +120,13 @@ public record StringType(SchemaDefinition schema, JsonNode node) implements HasT
     return Optional.ofNullable(node.get("default")).map(JsonNode::asText);
   }
 
-  /**
-   * Returns the title of this string type.
-   *
-   * @return the title if present
-   */
-  public Optional<String> title() {
-    return Optional.ofNullable(node.get("title")).map(JsonNode::asText);
-  }
-
-  /**
-   * Returns the description of this string type.
-   *
-   * @return the description if present
-   */
-  public Optional<String> description() {
-    return Optional.ofNullable(node.get("description")).map(JsonNode::asText);
-  }
-
-  /**
-   * Returns the deprecated flag (JSON Schema Draft 2019-09+).
-   * <p>
-   * When true, indicates this schema is deprecated and should not be used.
-   * This is metadata only and does not affect validation.
-   * </p>
-   *
-   * @return true if deprecated, false if not deprecated, empty if not specified
-   */
-  public Optional<Boolean> deprecated() {
-    return Optional.ofNullable(node.get("deprecated"))
-            .filter(JsonNode::isBoolean)
-            .map(JsonNode::booleanValue);
-  }
-
-  /**
-   * Returns the readOnly flag (JSON Schema Draft 7+, OpenAPI).
-   * <p>
-   * When true, indicates this property should only appear in responses,
-   * not in requests. Commonly used for server-generated fields like IDs
-   * and timestamps.
-   * </p>
-   *
-   * @return true if read-only, false if not, empty if not specified
-   */
-  public Optional<Boolean> readOnly() {
-    return Optional.ofNullable(node.get("readOnly"))
-            .filter(JsonNode::isBoolean)
-            .map(JsonNode::booleanValue);
-  }
-
-  /**
-   * Returns the writeOnly flag (JSON Schema Draft 7+, OpenAPI).
-   * <p>
-   * When true, indicates this property should only appear in requests,
-   * not in responses. Commonly used for sensitive fields like passwords.
-   * </p>
-   *
-   * @return true if write-only, false if not, empty if not specified
-   */
-  public Optional<Boolean> writeOnly() {
-    return Optional.ofNullable(node.get("writeOnly"))
-            .filter(JsonNode::isBoolean)
-            .map(JsonNode::booleanValue);
-  }
-
-  /**
-   * Returns the examples array (JSON Schema Draft 6+).
-   * <p>
-   * Provides example values for documentation purposes. These are metadata
-   * only and do not affect validation.
-   * </p>
-   *
-   * @return list of example values if specified
-   */
-  public Optional<List<JsonNode>> examples() {
-    return Optional.ofNullable(node.get("examples"))
-            .filter(JsonNode::isArray)
-            .map(examplesNode -> {
-              List<JsonNode> examples = new java.util.ArrayList<>();
-              examplesNode.forEach(examples::add);
-              return examples;
-            });
-  }
-
-  /**
-   * Returns the raw JsonNode for this string type.
-   * Used by default extension metadata methods to access x- prefixed properties.
-   *
-   * @return the underlying JsonNode
-   */
   @Override
   public JsonNode getRawNode() {
     return node;
   }
 
-  /**
-   * Returns the not combinator schema.
-   * <p>
-   * The string value must NOT validate against this schema.
-   * </p>
-   *
-   * @return the not schema if present
-   */
-  public Optional<HasType> not() {
-    return Optional.ofNullable(node.get("not"))
-            .map(n -> NodeFactory.resolveType(schema, n));
+  @Override
+  public SchemaDefinition getSchema() {
+    return schema;
   }
 }

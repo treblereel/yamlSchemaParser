@@ -1,9 +1,11 @@
 package org.treblereel.yaml.schema.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Represents a $ref reference to another schema definition.
@@ -27,6 +29,8 @@ import java.util.Optional;
  */
 public record RefType(SchemaDefinition schema, String ref) implements HasType {
 
+  private static final ThreadLocal<Set<String>> RESOLVING = ThreadLocal.withInitial(HashSet::new);
+
   /**
    * Resolves the reference and returns the target schema type.
    * <p>
@@ -35,18 +39,47 @@ public record RefType(SchemaDefinition schema, String ref) implements HasType {
    * </p>
    * <p>
    * Currently supports only local $defs references in the format "#/$defs/DefinitionName".
+   * Circular references are detected and reported as IllegalStateException.
    * </p>
    *
    * @return the resolved schema type
    * @throws IllegalArgumentException if the reference format is not supported
+   * @throws IllegalStateException if a circular $ref cycle is detected
    */
   public HasType resolve() {
-    if (ref.startsWith("#/$defs/")) {
-      String elementName = ref.substring(8);
-      JsonNode node = schema.node().get("$defs").get(elementName);
-      return NodeFactory.resolveType(schema, node);
+    Set<String> active = RESOLVING.get();
+    if (!active.add(ref)) {
+      throw new SchemaParseException("Circular $ref detected: " + ref, ref);
     }
-    throw new IllegalArgumentException("Only local $defs references are supported: " + ref);
+    try {
+      if (ref.startsWith("#/$defs/")) {
+        String elementName = ref.substring(8);
+        JsonNode node = schema.node().get("$defs").get(elementName);
+        return resolveNode(node);
+      }
+      if (ref.startsWith("#") && !ref.startsWith("#/")) {
+        String anchor = ref.substring(1);
+        JsonNode node = schema.index().findByAnchor(anchor)
+            .orElseThrow(() -> new SchemaParseException("$anchor not found: " + anchor, ref));
+        return resolveNode(node);
+      }
+      if (!ref.startsWith("#")) {
+        JsonNode node = schema.index().findById(ref)
+            .orElseThrow(() -> new SchemaParseException("$id not found in document: " + ref, ref));
+        return resolveNode(node);
+      }
+      throw new SchemaParseException("Unsupported $ref format: " + ref, ref);
+    } finally {
+      active.remove(ref);
+    }
+  }
+
+  private HasType resolveNode(JsonNode node) {
+    HasType result = NodeFactory.resolveType(schema, node);
+    if (result instanceof RefType nested) {
+      return nested.resolve();
+    }
+    return result;
   }
 
   /**
@@ -269,79 +302,48 @@ public record RefType(SchemaDefinition schema, String ref) implements HasType {
 
   // ============ Common metadata delegation ============
 
-  /**
-   * Delegates to resolved type's description().
-   */
-  public Optional<String> description() {
-    HasType resolved = resolve();
-    if (resolved instanceof ObjectType obj) return obj.description();
-    if (resolved instanceof ArrayType arr) return arr.description();
-    if (resolved instanceof StringType str) return str.description();
-    return Optional.empty();
-  }
-
-  /**
-   * Delegates to resolved type's title().
-   */
+  @Override
   public Optional<String> title() {
-    HasType resolved = resolve();
-    if (resolved instanceof ArrayType arr) return arr.title();
-    if (resolved instanceof StringType str) return str.title();
-    return Optional.empty();
+    return resolve().title();
   }
 
-  /**
-   * Delegates to resolved type's deprecated().
-   */
+  @Override
+  public Optional<String> description() {
+    return resolve().description();
+  }
+
+  @Override
   public Optional<Boolean> deprecated() {
-    HasType resolved = resolve();
-    if (resolved instanceof ObjectType obj) return obj.deprecated();
-    if (resolved instanceof ArrayType arr) return arr.deprecated();
-    if (resolved instanceof StringType str) return str.deprecated();
-    return Optional.empty();
+    return resolve().deprecated();
   }
 
-  /**
-   * Delegates to resolved type's readOnly().
-   */
+  @Override
   public Optional<Boolean> readOnly() {
-    HasType resolved = resolve();
-    if (resolved instanceof ObjectType obj) return obj.readOnly();
-    if (resolved instanceof ArrayType arr) return arr.readOnly();
-    if (resolved instanceof StringType str) return str.readOnly();
-    return Optional.empty();
+    return resolve().readOnly();
   }
 
-  /**
-   * Delegates to resolved type's writeOnly().
-   */
+  @Override
   public Optional<Boolean> writeOnly() {
-    HasType resolved = resolve();
-    if (resolved instanceof ObjectType obj) return obj.writeOnly();
-    if (resolved instanceof ArrayType arr) return arr.writeOnly();
-    if (resolved instanceof StringType str) return str.writeOnly();
-    return Optional.empty();
+    return resolve().writeOnly();
   }
 
-  // ============ Extension metadata delegation ============
+  @Override
+  public Optional<java.util.List<JsonNode>> examples() {
+    return resolve().examples();
+  }
 
-  /**
-   * Delegates to resolved type's getExtensions().
-   * Returns empty map if resolved type is null.
-   */
+  @Override
+  public Optional<HasType> not() {
+    return resolve().not();
+  }
+
   @Override
   public Map<String, JsonNode> getExtensions() {
-    HasType resolved = resolve();
-    return resolved != null ? resolved.getExtensions() : Map.of();
+    return resolve().getExtensions();
   }
 
-  /**
-   * Delegates to resolved type's getExtension().
-   * Returns empty Optional if resolved type is null.
-   */
   @Override
   public Optional<JsonNode> getExtension(String key) {
-    HasType resolved = resolve();
-    return resolved != null ? resolved.getExtension(key) : Optional.empty();
+    return resolve().getExtension(key);
   }
 }

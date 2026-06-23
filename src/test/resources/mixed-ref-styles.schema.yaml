@@ -1,0 +1,24 @@
+type: object
+properties:
+  name:
+    $ref: '#/$defs/NameType'
+  home:
+    $ref: '#address'
+  billing:
+    $ref: 'https://example.com/schemas/phone'
+$defs:
+  NameType:
+    type: string
+    minLength: 1
+  Address:
+    $anchor: address
+    type: object
+    properties:
+      street:
+        type: string
+  Phone:
+    $id: 'https://example.com/schemas/phone'
+    type: object
+    properties:
+      number:
+        type: string

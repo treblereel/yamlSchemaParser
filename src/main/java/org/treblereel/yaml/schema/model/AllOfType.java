@@ -66,32 +66,13 @@ public record AllOfType(SchemaDefinition schema, JsonNode node) implements HasTy
     return Optional.ofNullable(node.get("unevaluatedProperties")).map(JsonNode::asBoolean);
   }
 
-  /**
-   * Returns the title of this allOf combinator.
-   *
-   * @return the title if present
-   */
-  public Optional<String> title() {
-    return Optional.ofNullable(node.get("title")).map(JsonNode::asText);
-  }
-
-  /**
-   * Returns the raw JsonNode for this allOf type.
-   * Used by default extension metadata methods to access x- prefixed properties.
-   *
-   * @return the underlying JsonNode
-   */
   @Override
   public JsonNode getRawNode() {
     return node;
   }
 
-  /**
-   * Returns the description of this allOf combinator.
-   *
-   * @return the description if present
-   */
-  public Optional<String> description() {
-    return Optional.ofNullable(node.get("description")).map(JsonNode::asText);
+  @Override
+  public SchemaDefinition getSchema() {
+    return schema;
   }
 }

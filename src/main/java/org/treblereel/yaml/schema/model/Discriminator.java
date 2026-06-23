@@ -34,7 +34,7 @@ public record Discriminator(
      */
     public Discriminator {
         if (propertyName == null || propertyName.isBlank()) {
-            throw new IllegalArgumentException("Discriminator must have propertyName field");
+            throw new SchemaParseException("Discriminator must have propertyName field");
         }
 
         // Defensive copy and ensure non-null

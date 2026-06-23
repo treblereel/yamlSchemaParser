@@ -2,7 +2,9 @@ package org.treblereel.yaml.schema.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,12 +38,78 @@ public interface HasType {
 
     /**
      * Returns the raw JsonNode for this type.
-     * Used by default extension metadata methods.
+     * Used by default metadata methods.
      *
-     * @return JsonNode or null if not applicable (e.g., NullType)
+     * @return JsonNode or null if not applicable
      */
     default JsonNode getRawNode() {
         return null;
+    }
+
+    /**
+     * Returns the schema definition this type belongs to.
+     * Used by default methods that need to resolve nested schemas.
+     *
+     * @return SchemaDefinition or null if not applicable
+     */
+    default SchemaDefinition getSchema() {
+        return null;
+    }
+
+    default Optional<String> title() {
+        JsonNode node = getRawNode();
+        if (node == null) return Optional.empty();
+        return Optional.ofNullable(node.get("title")).map(JsonNode::asText);
+    }
+
+    default Optional<String> description() {
+        JsonNode node = getRawNode();
+        if (node == null) return Optional.empty();
+        return Optional.ofNullable(node.get("description")).map(JsonNode::asText);
+    }
+
+    default Optional<Boolean> deprecated() {
+        JsonNode node = getRawNode();
+        if (node == null) return Optional.empty();
+        return Optional.ofNullable(node.get("deprecated"))
+                .filter(JsonNode::isBoolean)
+                .map(JsonNode::booleanValue);
+    }
+
+    default Optional<Boolean> readOnly() {
+        JsonNode node = getRawNode();
+        if (node == null) return Optional.empty();
+        return Optional.ofNullable(node.get("readOnly"))
+                .filter(JsonNode::isBoolean)
+                .map(JsonNode::booleanValue);
+    }
+
+    default Optional<Boolean> writeOnly() {
+        JsonNode node = getRawNode();
+        if (node == null) return Optional.empty();
+        return Optional.ofNullable(node.get("writeOnly"))
+                .filter(JsonNode::isBoolean)
+                .map(JsonNode::booleanValue);
+    }
+
+    default Optional<List<JsonNode>> examples() {
+        JsonNode node = getRawNode();
+        if (node == null) return Optional.empty();
+        return Optional.ofNullable(node.get("examples"))
+                .filter(JsonNode::isArray)
+                .map(examplesNode -> {
+                    List<JsonNode> result = new ArrayList<>();
+                    examplesNode.forEach(result::add);
+                    return result;
+                });
+    }
+
+    default Optional<HasType> not() {
+        JsonNode node = getRawNode();
+        SchemaDefinition schema = getSchema();
+        if (node == null || schema == null) return Optional.empty();
+        return Optional.ofNullable(node.get("not"))
+                .map(n -> NodeFactory.resolveType(schema, n));
     }
 
     /**

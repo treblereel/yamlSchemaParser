@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.WeakHashMap;
 
 /**
  * Represents a parsed YAML schema definition.
@@ -28,6 +29,17 @@ import java.util.Optional;
  * @author Dmitrii Tikhomirov
  */
 public record SchemaDefinition(JsonNode node) {
+
+  private static final Map<JsonNode, SchemaIndex> INDEX_CACHE =
+      Collections.synchronizedMap(new WeakHashMap<>());
+
+  /**
+   * Returns the index of {@code $anchor} and {@code $id} values in this schema.
+   * Built lazily on first access and cached for the lifetime of the root node.
+   */
+  public SchemaIndex index() {
+    return INDEX_CACHE.computeIfAbsent(node, SchemaIndex::new);
+  }
 
   /**
    * Returns the schema identifier ($id).

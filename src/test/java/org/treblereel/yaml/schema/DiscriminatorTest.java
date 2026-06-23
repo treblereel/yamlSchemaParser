@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.treblereel.yaml.schema.model.Discriminator;
 import org.treblereel.yaml.schema.model.ObjectType;
 import org.treblereel.yaml.schema.model.SchemaDefinition;
+import org.treblereel.yaml.schema.model.SchemaParseException;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -32,18 +33,18 @@ class DiscriminatorTest {
     @Test
     void should_throw_when_propertyName_is_null() {
         assertThatThrownBy(() -> new Discriminator(null, Map.of()))
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(SchemaParseException.class)
             .hasMessageContaining("Discriminator must have propertyName field");
     }
 
     @Test
     void should_throw_when_propertyName_is_blank() {
         assertThatThrownBy(() -> new Discriminator("", Map.of()))
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(SchemaParseException.class)
             .hasMessageContaining("Discriminator must have propertyName field");
         
         assertThatThrownBy(() -> new Discriminator("   ", Map.of()))
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(SchemaParseException.class)
             .hasMessageContaining("Discriminator must have propertyName field");
     }
 
@@ -207,7 +208,7 @@ class DiscriminatorTest {
         Parser parser = new Parser();
         
         assertThatThrownBy(() -> parser.parseYaml(yaml).requireObject())
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(SchemaParseException.class)
             .hasMessageContaining("Discriminator must have propertyName field");
     }
 }

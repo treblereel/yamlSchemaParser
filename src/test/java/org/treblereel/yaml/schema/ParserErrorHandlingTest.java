@@ -5,6 +5,7 @@ import org.treblereel.yaml.schema.model.HasType;
 import org.treblereel.yaml.schema.model.NullType;
 import org.treblereel.yaml.schema.model.RefType;
 import org.treblereel.yaml.schema.model.SchemaDefinition;
+import org.treblereel.yaml.schema.model.SchemaParseException;
 
 import java.io.File;
 import java.net.URI;
@@ -25,25 +26,25 @@ public class ParserErrorHandlingTest {
 
     @Test
     void testParseNonExistentFile() {
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(SchemaParseException.class, () -> {
             parser.parse("non-existent-file.yaml");
-        }, "Should throw RuntimeException when file does not exist");
+        }, "Should throw SchemaParseException when file does not exist");
     }
 
     @Test
     void testParseNonExistentFileObject() {
         File nonExistent = new File("non-existent-schema.yaml");
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(SchemaParseException.class, () -> {
             parser.parse(nonExistent);
-        }, "Should throw RuntimeException when File object points to non-existent file");
+        }, "Should throw SchemaParseException when File object points to non-existent file");
     }
 
     @Test
     void testParseInvalidURI() {
         URI invalidUri = URI.create("file:///absolutely/non/existent/path/schema.yaml");
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(SchemaParseException.class, () -> {
             parser.parse(invalidUri);
-        }, "Should throw RuntimeException when URI points to non-existent resource");
+        }, "Should throw SchemaParseException when URI points to non-existent resource");
     }
 
     // ============== Invalid YAML Tests ==============
@@ -86,9 +87,9 @@ public class ParserErrorHandlingTest {
         // Create a RefType with unsupported format (external reference)
         RefType externalRef = new RefType(schema, "http://example.com/external-schema.json#/definitions/Address");
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(SchemaParseException.class, () -> {
             externalRef.resolve();
-        }, "Should throw IllegalArgumentException for unsupported reference format");
+        }, "Should throw SchemaParseException for unsupported reference format");
     }
 
     @Test
@@ -98,9 +99,9 @@ public class ParserErrorHandlingTest {
         // Relative reference (not supported)
         RefType relativeRef = new RefType(schema, "../other-schema.yaml#/$defs/Type");
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(SchemaParseException.class, () -> {
             relativeRef.resolve();
-        }, "Should throw IllegalArgumentException for relative reference paths");
+        }, "Should throw SchemaParseException for relative reference paths");
     }
 
     // ============== Null Safety Tests ==============

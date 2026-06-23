@@ -3,12 +3,14 @@ package org.treblereel.yaml.schema.generator;
 import org.junit.jupiter.api.Test;
 import org.treblereel.yaml.schema.Parser;
 import org.treblereel.yaml.schema.model.AllOfType;
+import org.treblereel.yaml.schema.model.AnyOfType;
 import org.treblereel.yaml.schema.model.ArrayType;
 import org.treblereel.yaml.schema.model.BooleanType;
 import org.treblereel.yaml.schema.model.HasType;
 import org.treblereel.yaml.schema.model.IntegerType;
 import org.treblereel.yaml.schema.model.NumberType;
 import org.treblereel.yaml.schema.model.ObjectType;
+import org.treblereel.yaml.schema.model.OneOfType;
 import org.treblereel.yaml.schema.model.RefType;
 import org.treblereel.yaml.schema.model.SchemaDefinition;
 import org.treblereel.yaml.schema.model.StringType;
@@ -309,9 +311,9 @@ public class ObjectParserTest {
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
     assertTrue(objectType.properties().isEmpty() == false);
-    ObjectType contactType = (ObjectType) objectType.properties().get("contact");
-    assertTrue(contactType.anyOf().isPresent());
-    assertEquals(2, contactType.anyOf().get().size());
+    assertInstanceOf(AnyOfType.class, objectType.properties().get("contact"));
+    AnyOfType contactType = (AnyOfType) objectType.properties().get("contact");
+    assertEquals(2, contactType.getAnyOf().size());
   }
 
   @Test
@@ -321,9 +323,9 @@ public class ObjectParserTest {
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
     assertTrue(objectType.properties().isEmpty() == false);
-    ObjectType paymentType = (ObjectType) objectType.properties().get("payment");
-    assertTrue(paymentType.oneOf().isPresent());
-    assertEquals(2, paymentType.oneOf().get().size());
+    assertInstanceOf(OneOfType.class, objectType.properties().get("payment"));
+    OneOfType paymentType = (OneOfType) objectType.properties().get("payment");
+    assertEquals(2, paymentType.getOneOf().size());
   }
 
   @Test
@@ -332,10 +334,10 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.getTitle().isPresent());
-    assertEquals("User Profile", objectType.getTitle().get());
-    assertTrue(objectType.getDescription().isPresent());
-    assertTrue(objectType.getDescription().get().contains("user profile"));
+    assertTrue(objectType.title().isPresent());
+    assertEquals("User Profile", objectType.title().get());
+    assertTrue(objectType.description().isPresent());
+    assertTrue(objectType.description().get().contains("user profile"));
   }
 
   @Test
@@ -567,12 +569,12 @@ public class ObjectParserTest {
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
     assertTrue(objectType.properties().isEmpty() == false);
-    ObjectType configType = (ObjectType) objectType.properties().get("config");
-    assertTrue(configType.anyOf().isPresent());
-    assertEquals(2, configType.anyOf().get().size());
-    ObjectType settingType = (ObjectType) objectType.properties().get("setting");
-    assertTrue(settingType.oneOf().isPresent());
-    assertEquals(2, settingType.oneOf().get().size());
+    assertInstanceOf(AnyOfType.class, objectType.properties().get("config"));
+    AnyOfType configType = (AnyOfType) objectType.properties().get("config");
+    assertEquals(2, configType.getAnyOf().size());
+    assertInstanceOf(OneOfType.class, objectType.properties().get("setting"));
+    OneOfType settingType = (OneOfType) objectType.properties().get("setting");
+    assertEquals(2, settingType.getOneOf().size());
   }
 
   @Test
@@ -640,8 +642,8 @@ public class ObjectParserTest {
     HasType type = definition.model();
     assertInstanceOf(ObjectType.class, type);
     ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.getTitle().isPresent());
-    assertTrue(objectType.getDescription().isPresent());
+    assertTrue(objectType.title().isPresent());
+    assertTrue(objectType.description().isPresent());
     assertTrue(objectType.additionalProperties().isPresent());
     assertFalse(objectType.additionalProperties().get().isAllowed());
     assertTrue(objectType.required().isPresent());
@@ -810,23 +812,21 @@ public class ObjectParserTest {
   public void testRootAnyOf() {
     SchemaDefinition definition = new Parser().parse(BASE_PATH + "root-anyof.schema.yaml");
     HasType type = definition.model();
-    assertInstanceOf(ObjectType.class, type);
-    ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.anyOf().isPresent());
-    assertEquals(2, objectType.anyOf().get().size());
-    assertInstanceOf(ObjectType.class, objectType.anyOf().get().get(0));
-    assertInstanceOf(ObjectType.class, objectType.anyOf().get().get(1));
+    assertInstanceOf(AnyOfType.class, type);
+    AnyOfType anyOfType = (AnyOfType) type;
+    assertEquals(2, anyOfType.getAnyOf().size());
+    assertInstanceOf(ObjectType.class, anyOfType.getAnyOf().get(0));
+    assertInstanceOf(ObjectType.class, anyOfType.getAnyOf().get(1));
   }
 
   @Test
   public void testRootOneOf() {
     SchemaDefinition definition = new Parser().parse(BASE_PATH + "root-oneof.schema.yaml");
     HasType type = definition.model();
-    assertInstanceOf(ObjectType.class, type);
-    ObjectType objectType = (ObjectType) type;
-    assertTrue(objectType.oneOf().isPresent());
-    assertEquals(2, objectType.oneOf().get().size());
-    ObjectType cardType = (ObjectType) objectType.oneOf().get().get(0);
+    assertInstanceOf(OneOfType.class, type);
+    OneOfType oneOfType = (OneOfType) type;
+    assertEquals(2, oneOfType.getOneOf().size());
+    ObjectType cardType = (ObjectType) oneOfType.getOneOf().get(0);
     assertTrue(cardType.properties().isEmpty() == false);
     assertTrue(cardType.required().isPresent());
   }
@@ -962,10 +962,9 @@ public class ObjectParserTest {
     List<HasType> allOfList = allOfType.getAllOf();
     assertEquals(2, allOfList.size());
     assertInstanceOf(ObjectType.class, allOfList.get(0));
-    assertInstanceOf(ObjectType.class, allOfList.get(1));
-    ObjectType secondPart = (ObjectType) allOfList.get(1);
-    assertTrue(secondPart.anyOf().isPresent());
-    assertEquals(2, secondPart.anyOf().get().size());
+    assertInstanceOf(AnyOfType.class, allOfList.get(1));
+    AnyOfType secondPart = (AnyOfType) allOfList.get(1);
+    assertEquals(2, secondPart.getAnyOf().size());
   }
 
   @Test
@@ -979,9 +978,9 @@ public class ObjectParserTest {
     List<HasType> allOfList = dataAllOf.getAllOf();
     assertEquals(2, allOfList.size());
     assertInstanceOf(ObjectType.class, allOfList.get(0));
-    ObjectType secondPart = (ObjectType) allOfList.get(1);
-    assertTrue(secondPart.oneOf().isPresent());
-    assertEquals(2, secondPart.oneOf().get().size());
+    assertInstanceOf(OneOfType.class, allOfList.get(1));
+    OneOfType secondPart = (OneOfType) allOfList.get(1);
+    assertEquals(2, secondPart.getOneOf().size());
   }
 
   @Test

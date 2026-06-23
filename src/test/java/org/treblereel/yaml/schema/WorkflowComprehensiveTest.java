@@ -73,20 +73,20 @@ public class WorkflowComprehensiveTest {
         // Test most important $ref definitions
         assertRefResolvesTo("input", ObjectType.class);
         assertRefResolvesTo("taskList", ArrayType.class);
-        assertRefResolvesTo("task", ObjectType.class);
+        assertRefResolvesTo("task", OneOfType.class);
         assertRefResolvesTo("taskBase", ObjectType.class);
         assertRefResolvesTo("authenticationPolicy", ObjectType.class);
         assertRefResolvesTo("error", ObjectType.class);
         assertRefResolvesTo("retryPolicy", ObjectType.class);
-        assertRefResolvesTo("duration", ObjectType.class);
+        assertRefResolvesTo("duration", OneOfType.class);
         assertRefResolvesTo("runtimeExpression", HasType.class);
-        assertRefResolvesTo("endpoint", ObjectType.class);
+        assertRefResolvesTo("endpoint", OneOfType.class);
     }
 
     @Test
     void testTaskTypeReferences() {
-        // Test all task type $refs
-        assertRefResolvesTo("callTask", ObjectType.class);
+        // Test all task type $refs - callTask has no explicit type, has oneOf → OneOfType
+        assertRefResolvesTo("callTask", OneOfType.class);
         assertRefResolvesTo("doTask", ObjectType.class);
         assertRefResolvesTo("emitTask", ObjectType.class);
         assertRefResolvesTo("forTask", ObjectType.class);
@@ -157,7 +157,7 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testAllOfInCallTask() {
-        ObjectType callTask = (ObjectType) resolveDef("callTask");
+        OneOfType callTask = (OneOfType) resolveDef("callTask");
         // callTask structure may vary, just verify it exists
         assertNotNull(callTask);
     }
@@ -166,24 +166,21 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testAnyOfInFlowDirective() {
-        ObjectType flowDirective = (ObjectType) resolveDef("flowDirective");
-        assertTrue(flowDirective.anyOf().isPresent(), "flowDirective should have anyOf");
-        List<HasType> anyOf = flowDirective.anyOf().get();
+        AnyOfType flowDirective = (AnyOfType) resolveDef("flowDirective");
+        List<HasType> anyOf = flowDirective.getAnyOf();
         assertEquals(2, anyOf.size(), "flowDirective anyOf should have 2 options");
     }
 
     @Test
     void testAnyOfInUriTemplate() {
-        ObjectType uriTemplate = (ObjectType) resolveDef("uriTemplate");
-        assertTrue(uriTemplate.anyOf().isPresent());
-        assertEquals(2, uriTemplate.anyOf().get().size());
+        AnyOfType uriTemplate = (AnyOfType) resolveDef("uriTemplate");
+        assertEquals(2, uriTemplate.getAnyOf().size());
     }
 
     @Test
     void testAnyOfInTimeout() {
-        // timeout is in root properties, not in $defs
-        ObjectType timeout = (ObjectType) root.properties().get("timeout");
-        // timeout may have oneOf instead of anyOf
+        // timeout is in root properties, not in $defs - has oneOf without type → OneOfType
+        OneOfType timeout = (OneOfType) root.properties().get("timeout");
         assertNotNull(timeout);
     }
 
@@ -191,9 +188,8 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testOneOfInTask() {
-        ObjectType task = (ObjectType) resolveDef("task");
-        assertTrue(task.oneOf().isPresent(), "task should have oneOf");
-        List<HasType> oneOf = task.oneOf().get();
+        OneOfType task = (OneOfType) resolveDef("task");
+        List<HasType> oneOf = task.getOneOf();
         assertEquals(12, oneOf.size(), "task oneOf should have 12 task types");
 
         // All should be references
@@ -204,9 +200,8 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testOneOfInTimeout() {
-        ObjectType timeout = (ObjectType) root.properties().get("timeout");
-        assertTrue(timeout.oneOf().isPresent());
-        assertEquals(2, timeout.oneOf().get().size());
+        OneOfType timeout = (OneOfType) root.properties().get("timeout");
+        assertEquals(2, timeout.getOneOf().size());
     }
 
     @Test
@@ -297,7 +292,7 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testFormatUriTemplate() {
-        ObjectType uriTemplate = (ObjectType) resolveDef("uriTemplate");
+        AnyOfType uriTemplate = (AnyOfType) resolveDef("uriTemplate");
         assertNotNull(uriTemplate);
         // uriTemplate anyOf contains string with uri-template format
     }
@@ -333,9 +328,9 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testEnumInFlowDirective() {
-        ObjectType flowDirective = (ObjectType) resolveDef("flowDirective");
+        AnyOfType flowDirective = (AnyOfType) resolveDef("flowDirective");
         // flowDirective has anyOf with enum options
-        assertTrue(flowDirective.anyOf().isPresent());
+        assertFalse(flowDirective.getAnyOf().isEmpty());
     }
 
     // ==================== Const Values (7 usages) ====================
@@ -349,7 +344,7 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testConstInCallTask() {
-        ObjectType callTask = (ObjectType) resolveDef("callTask");
+        OneOfType callTask = (OneOfType) resolveDef("callTask");
         assertNotNull(callTask);
         // callTask exists and is valid
     }
@@ -358,7 +353,7 @@ public class WorkflowComprehensiveTest {
 
     @Test
     void testMinLengthInEndpoint() {
-        ObjectType endpoint = (ObjectType) resolveDef("endpoint");
+        OneOfType endpoint = (OneOfType) resolveDef("endpoint");
         assertNotNull(endpoint);
         // endpoint contains minLength constraints
     }
@@ -479,7 +474,7 @@ public class WorkflowComprehensiveTest {
     @Test
     void testUnevaluatedPropertiesInTaskTypes() {
         // Most task types should have unevaluatedProperties: false
-        ObjectType callTask = (ObjectType) resolveDef("callTask");
+        OneOfType callTask = (OneOfType) resolveDef("callTask");
         ObjectType doTask = (ObjectType) resolveDef("doTask");
         ObjectType emitTask = (ObjectType) resolveDef("emitTask");
 
@@ -531,18 +526,17 @@ public class WorkflowComprehensiveTest {
         assertTrue(taskItem.additionalProperties().isPresent());
         RefType taskRef = (RefType) taskItem.additionalProperties().get().getType().get();
 
-        // task has oneOf with 12 task types
-        ObjectType task = (ObjectType) taskRef.resolve();
-        assertTrue(task.oneOf().isPresent());
-        assertEquals(12, task.oneOf().get().size());
+        // task has oneOf with 12 task types → now OneOfType
+        OneOfType task = (OneOfType) taskRef.resolve();
+        assertEquals(12, task.getOneOf().size());
 
         // Each task type is a $ref
-        for (HasType type : task.oneOf().get()) {
+        for (HasType type : task.getOneOf()) {
             assertInstanceOf(RefType.class, type);
 
-            // Resolve and verify it's an ObjectType with allOf
+            // Resolve and verify it's a HasType (most are ObjectType, callTask is OneOfType)
             HasType resolved = ((RefType) type).resolve();
-            assertInstanceOf(ObjectType.class, resolved);
+            assertNotNull(resolved);
         }
     }
 
@@ -564,7 +558,7 @@ public class WorkflowComprehensiveTest {
     @Test
     void testCallTaskExists() {
         // Test callTask definition exists and is valid
-        ObjectType callTask = (ObjectType) resolveDef("callTask");
+        OneOfType callTask = (OneOfType) resolveDef("callTask");
         assertNotNull(callTask);
     }
 

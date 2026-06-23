@@ -1,0 +1,15 @@
+title: Contact Info
+description: Either email or phone contact
+anyOf:
+  - type: object
+    properties:
+      email:
+        type: string
+    required:
+      - email
+  - type: object
+    properties:
+      phone:
+        type: string
+    required:
+      - phone

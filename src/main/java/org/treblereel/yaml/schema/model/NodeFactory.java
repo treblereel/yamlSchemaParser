@@ -31,16 +31,20 @@ class NodeFactory {
         case "object" -> new ObjectType(schema, value);
         case "array" -> new ArrayType(schema, value);
         case "null" -> new NullType(value);
-        default -> throw new IllegalArgumentException("Type not supported: " + value.get("type") + " ? " + type);
+        default -> throw new SchemaParseException("Type not supported: " + value.get("type") + " ? " + type, type);
       };
     } else if (value.has("allOf")) {
       return new AllOfType(schema, value);
+    } else if (value.has("anyOf")) {
+      return new AnyOfType(schema, value);
+    } else if (value.has("oneOf")) {
+      return new OneOfType(schema, value);
     } else if (value.has("$ref")) {
       return new RefType(schema, value.get("$ref").asText());
     } else if (value.getNodeType().equals(JsonNodeType.OBJECT)) {
       return new ObjectType(schema, value);
     } else {
-      throw new IllegalArgumentException("Type not supported: " + value.getNodeType());
+      throw new SchemaParseException("Type not supported: " + value.getNodeType(), value.getNodeType().toString());
     }
   }
 }

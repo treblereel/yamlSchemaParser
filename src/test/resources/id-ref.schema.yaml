@@ -1,0 +1,13 @@
+type: object
+properties:
+  billing:
+    $ref: 'https://example.com/schemas/address'
+$defs:
+  Address:
+    $id: 'https://example.com/schemas/address'
+    type: object
+    properties:
+      street:
+        type: string
+      zip:
+        type: string

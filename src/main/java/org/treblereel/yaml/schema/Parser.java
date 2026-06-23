@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.treblereel.yaml.schema.model.SchemaDefinition;
+import org.treblereel.yaml.schema.model.SchemaParseException;
 
 import java.io.File;
 import java.io.IOException;
@@ -111,7 +112,7 @@ public class Parser {
         try (InputStream in = uri.toURL().openStream()) {
             return mapper.readTree(in);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new SchemaParseException("Failed to load schema from " + uri, uri.toString(), e);
         }
     }
 
@@ -161,7 +162,7 @@ public class Parser {
             JsonNode root = mapper.readTree(yamlContent);
             return new SchemaDefinition(root);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new SchemaParseException("Failed to parse YAML content", "yaml content", e);
         }
     }
 }

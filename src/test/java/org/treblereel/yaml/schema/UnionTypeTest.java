@@ -8,6 +8,7 @@ import org.treblereel.yaml.schema.model.StringType;
 import org.treblereel.yaml.schema.model.IntegerType;
 import org.treblereel.yaml.schema.model.NullType;
 import org.treblereel.yaml.schema.model.HasType;
+import org.treblereel.yaml.schema.model.SchemaParseException;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -122,7 +123,7 @@ class UnionTypeTest {
         Parser parser = new Parser();
 
         assertThatThrownBy(() -> parser.parseYaml(yaml).model())
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(SchemaParseException.class)
             .hasMessageContaining("Union type must contain at least one type");
     }
 
@@ -178,7 +179,7 @@ class UnionTypeTest {
         UnionType unionType = (UnionType) schema.model();
 
         assertThatThrownBy(() -> unionType.getResolvedTypes())
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(SchemaParseException.class)
             .hasMessageContaining("Type not supported");
     }
 }

@@ -74,10 +74,9 @@ public class TypeResolutionTest {
         SchemaDefinition schema = parser.parse("src/test/resources/root-anyof.schema.yaml");
         HasType type = schema.model();
 
-        assertInstanceOf(ObjectType.class, type, "Should resolve to ObjectType");
-        ObjectType objectType = (ObjectType) type;
-        assertTrue(objectType.anyOf().isPresent(), "Should have anyOf at root");
-        assertEquals(2, objectType.anyOf().get().size(), "anyOf should have 2 alternatives");
+        assertInstanceOf(AnyOfType.class, type, "Should resolve to AnyOfType");
+        AnyOfType anyOfType = (AnyOfType) type;
+        assertEquals(2, anyOfType.getAnyOf().size(), "anyOf should have 2 alternatives");
     }
 
     @Test
@@ -85,10 +84,44 @@ public class TypeResolutionTest {
         SchemaDefinition schema = parser.parse("src/test/resources/root-oneof.schema.yaml");
         HasType type = schema.model();
 
-        assertInstanceOf(ObjectType.class, type, "Should resolve to ObjectType");
+        assertInstanceOf(OneOfType.class, type, "Should resolve to OneOfType");
+        OneOfType oneOfType = (OneOfType) type;
+        assertEquals(2, oneOfType.getOneOf().size(), "oneOf should have 2 alternatives");
+    }
+
+    @Test
+    void testRootAnyOfMetadata() {
+        SchemaDefinition schema = parser.parse("src/test/resources/root-anyof-metadata.schema.yaml");
+        HasType type = schema.model();
+
+        assertInstanceOf(AnyOfType.class, type);
+        assertTrue(type.title().isPresent(), "Should have title");
+        assertEquals("Contact Info", type.title().get());
+        assertTrue(type.description().isPresent(), "Should have description");
+        assertEquals("Either email or phone contact", type.description().get());
+    }
+
+    @Test
+    void testRootOneOfMetadata() {
+        SchemaDefinition schema = parser.parse("src/test/resources/root-oneof-metadata.schema.yaml");
+        HasType type = schema.model();
+
+        assertInstanceOf(OneOfType.class, type);
+        assertTrue(type.title().isPresent(), "Should have title");
+        assertEquals("Payment Method", type.title().get());
+        assertTrue(type.description().isPresent(), "Should have description");
+        assertEquals("Exactly one payment method", type.description().get());
+    }
+
+    @Test
+    void testOneOfWithTypeFieldStillReturnsObjectType() {
+        SchemaDefinition schema = parser.parse("src/test/resources/discriminator.schema.yaml");
+        HasType type = schema.model();
+
+        assertInstanceOf(ObjectType.class, type, "type: object + oneOf should still be ObjectType");
         ObjectType objectType = (ObjectType) type;
-        assertTrue(objectType.oneOf().isPresent(), "Should have oneOf at root");
-        assertEquals(2, objectType.oneOf().get().size(), "oneOf should have 2 alternatives");
+        assertTrue(objectType.oneOf().isPresent(), "Should have oneOf");
+        assertEquals(3, objectType.oneOf().get().size());
     }
 
     // ============== allOf Type Resolution ==============
@@ -142,8 +175,8 @@ public class TypeResolutionTest {
         ObjectType objectType = (ObjectType) type;
 
         // Should have multiple constraints
-        assertTrue(objectType.getTitle().isPresent(), "Should have title");
-        assertTrue(objectType.getDescription().isPresent(), "Should have description");
+        assertTrue(objectType.title().isPresent(), "Should have title");
+        assertTrue(objectType.description().isPresent(), "Should have description");
         assertTrue(objectType.additionalProperties().isPresent(), "Should have additionalProperties");
         assertFalse(objectType.additionalProperties().get().isAllowed(), "additionalProperties should be false");
         assertTrue(objectType.required().isPresent(), "Should have required");

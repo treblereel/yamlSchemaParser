@@ -1,0 +1,9 @@
+type: object
+properties:
+  data:
+    $ref: '#/$defs/A'
+$defs:
+  A:
+    $ref: '#/$defs/B'
+  B:
+    $ref: '#/$defs/A'

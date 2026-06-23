@@ -318,22 +318,9 @@ public class ObjectType implements HasType {
             .map(n -> new AdditionalProperties(n, schema));
   }
 
-  /**
-   * Returns the description of this object type.
-   *
-   * @return the description if present
-   */
-  public Optional<String> getDescription() {
-    return Optional.ofNullable(node.get("description")).map(JsonNode::asText);
-  }
-
-  /**
-   * Returns the title of this object type.
-   *
-   * @return the title if present
-   */
-  public Optional<String> getTitle() {
-    return Optional.ofNullable(node.get("title")).map(JsonNode::asText);
+  @Override
+  public SchemaDefinition getSchema() {
+    return schema;
   }
 
   /**
@@ -451,92 +438,6 @@ public class ObjectType implements HasType {
   }
 
   /**
-   * Returns the description of this object type.
-   *
-   * @return the description if present
-   */
-  public Optional<String> description() {
-    return Optional.ofNullable(node.get("description")).map(JsonNode::asText);
-  }
-
-  /**
-   * Returns the deprecated flag (JSON Schema Draft 2019-09+).
-   * <p>
-   * When true, indicates this schema is deprecated and should not be used.
-   * This is metadata only and does not affect validation.
-   * </p>
-   *
-   * @return true if deprecated, false if not deprecated, empty if not specified
-   */
-  public Optional<Boolean> deprecated() {
-    return Optional.ofNullable(node.get("deprecated"))
-            .filter(JsonNode::isBoolean)
-            .map(JsonNode::booleanValue);
-  }
-
-  /**
-   * Returns the readOnly flag (JSON Schema Draft 7+, OpenAPI).
-   * <p>
-   * When true, indicates this property should only appear in responses,
-   * not in requests. Commonly used for server-generated fields like IDs
-   * and timestamps.
-   * </p>
-   *
-   * @return true if read-only, false if not, empty if not specified
-   */
-  public Optional<Boolean> readOnly() {
-    return Optional.ofNullable(node.get("readOnly"))
-            .filter(JsonNode::isBoolean)
-            .map(JsonNode::booleanValue);
-  }
-
-  /**
-   * Returns the writeOnly flag (JSON Schema Draft 7+, OpenAPI).
-   * <p>
-   * When true, indicates this property should only appear in requests,
-   * not in responses. Commonly used for sensitive fields like passwords.
-   * </p>
-   *
-   * @return true if write-only, false if not, empty if not specified
-   */
-  public Optional<Boolean> writeOnly() {
-    return Optional.ofNullable(node.get("writeOnly"))
-            .filter(JsonNode::isBoolean)
-            .map(JsonNode::booleanValue);
-  }
-
-  /**
-   * Returns the examples array (JSON Schema Draft 6+).
-   * <p>
-   * Provides example values for documentation purposes. These are metadata
-   * only and do not affect validation.
-   * </p>
-   *
-   * @return list of example values if specified
-   */
-  public Optional<List<JsonNode>> examples() {
-    return Optional.ofNullable(node.get("examples"))
-            .filter(JsonNode::isArray)
-            .map(examplesNode -> {
-              List<JsonNode> examples = new ArrayList<>();
-              examplesNode.forEach(examples::add);
-              return examples;
-            });
-  }
-
-  /**
-   * Returns the not combinator schema.
-   * <p>
-   * The instance must NOT validate against this schema.
-   * </p>
-   *
-   * @return the not schema if present
-   */
-  public Optional<HasType> not() {
-    return applicators.getNot();
-  }
-
-  /**
    * Returns the if condition schema.
    * <p>
    * If present, this schema is evaluated first. If the instance validates against
@@ -593,7 +494,7 @@ public class ObjectType implements HasType {
     JsonNode discNode = node.get("discriminator");
     
     if (!discNode.has("propertyName")) {
-      throw new IllegalArgumentException("Discriminator must have propertyName field");
+      throw new SchemaParseException("Discriminator must have propertyName field");
     }
     
     String propertyName = discNode.get("propertyName").asText();
